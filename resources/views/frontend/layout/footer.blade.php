@@ -404,7 +404,53 @@ $('#log-pass-eye').on('click', function() {
     }
 });
 
+    function  caluculateGuestCartPrice() {
+        let cart_amoutnt = $('.cart_price_span').text();
+        let cart_quantity = $('.cart_quantity').text();
+        let guest_cart_amoutnt = $('.guest_cart_amount').val();
+        let guest_cart_quantity = $('.guest_cart_quantity').val();
+        let final_cart_amount = Number(cart_amoutnt) + Number(guest_cart_amoutnt);
+        $('.custom_cart_price_span').text(final_cart_amount.toFixed(2));
+        $('.custom_cart_quantity').text(Number(cart_quantity) + Number(guest_cart_quantity));
+
+    }
+
+    function removeGuestCart(that) {
+        if (confirm('Are you sure to remove this item from your cart')) {
+            var cart_id = $(that).closest('a').find('i').attr('data-cart_id');
+            var url = "{{route('remove_guest_cart_item')}}?id="+cart_id;
+            window.location.replace(url);
+        }
+    }
+
+    $(document).on('ready', function () {
+        let guest_id = localStorage.getItem("guest_id");
+        if(guest_id) {
+            $.ajax({
+                url: "{{route('guest_cart_view')}}",
+                type:"GET",
+                data:{
+                    guest_id: guest_id,
+                },
+                success:function(response){
+                    if(response) {
+                        $('.guest_user_cart_section').html(response);
+                        caluculateGuestCartPrice();
+                    }
+                },
+                error: function(error) {
+                    // alertify.error(JSON.parse(error.responseText).message);
+                }, finally: function() {
+                    // caluculateGuestCartPrice();
+                }
+            });
+        }
+
+    });
+
 </script>
+
+
 
 @stack('script')
 

@@ -246,7 +246,7 @@
                                 <li class="col pr-xl-0 px-2 px-sm-3 d-xl-none">
                                     <a href="{{route('cart')}}" class="text-gray-90 position-relative d-flex " data-toggle="tooltip" data-placement="top" title="Cart">
                                         <i class="font-size-22 ec ec-shopping-bag"></i>
-                                        <span class="bg-lg-down-black width-22 height-22 bg-primary position-absolute d-flex align-items-center justify-content-center rounded-circle left-12 top-8 font-weight-bold font-size-12">{{count($carts)}}</span>
+                                        <span class="bg-lg-down-black width-22 height-22 bg-primary position-absolute d-flex align-items-center justify-content-center rounded-circle left-12 top-8 font-weight-bold font-size-12 cart_quantity custom_cart_quantity">{{count($carts)}}</span>
                                         <span class="d-none d-xl-block font-weight-bold font-size-16 text-gray-90 ml-3">
                                             @php
                                             $cart_amount  = 0;
@@ -260,7 +260,7 @@
                                                 }
                                             }
                                             @endphp
-                                            ৳{{number_format($cart_amount,2,".","")}}
+                                            ৳ <span class="cart_price_span custom_cart_price_span">{{number_format($cart_amount,2,".","")}}</span>
                                         </span>
                                     </a>
                                 </li>
@@ -278,12 +278,11 @@
                                         data-unfold-animation-in="slideInUp"
                                         data-unfold-animation-out="fadeOut">
                                         <i class="font-size-22 ec ec-shopping-bag"></i>
-                                        <span class="bg-lg-down-black width-22 height-22 bg-primary position-absolute d-flex align-items-center justify-content-center rounded-circle left-12 top-8 font-weight-bold font-size-12">{{count($carts)}}</span>
-                                        <span class="d-none d-xl-block font-weight-bold font-size-16 text-gray-90 ml-3">৳0.00</span>
+                                        <span class="bg-lg-down-black width-22 height-22 bg-primary position-absolute d-flex align-items-center justify-content-center rounded-circle left-12 top-8 font-weight-bold font-size-12 custom_cart_quantity">{{count($carts)}}</span>
+                                        <span class="d-none d-xl-block font-weight-bold font-size-16 text-gray-90 ml-3">৳ <span class="custom_cart_price_span">{{number_format($cart_amount,2,".","")}}</span></span>
                                     </div>
                                     <div id="basicDropdownHover" class="cart-dropdown dropdown-menu dropdown-unfold border-top border-top-primary mt-3 border-width-2 border-left-0 border-right-0 border-bottom-0 left-auto right-0" aria-labelledby="basicDropdownHoverInvoker">
                                         <ul class="list-unstyled px-3 pt-3">
-                                            
                                             @foreach ($carts as $key => $cart)
                                                 <li class="border-bottom pb-3 mb-3">
                                                     <div class="">
@@ -292,8 +291,23 @@
                                                                 <img style="max-width: 100px;" class="img-fluid" src="{{asset('storage/product')}}/{{$cart->productInfo->image ?? ''}}" alt="Image Description">
                                                             </li>
                                                             <li class="px-2 col">
-                                                                <h5 class="text-blue font-size-14 font-weight-bold">{{$cart->productInfo->name ?? ''}}</h5>
+                                                                <h5 class="text-blue font-size-14 font-weight-bold mb-0">{{$cart->productInfo->name ?? ''}}</h5>
+                                                                @if ($cart->variation_id > 0)
+                                                                    <span class="font-size-14">
+                                                                        <small style="color: #b36a0d;font-weight: bold;">
+                                                                            @foreach (($cart->varientDataInfo ?? []) as $varientDataInfo)
+                                                                                @if ($loop->last)
+                                                                                    {{$varientDataInfo->varientTypeInfo->name ?? ''}}: {{$varientDataInfo->data_value}}
+                                                                                @else
+                                                                                    {{$varientDataInfo->varientTypeInfo->name ?? ''}}: {{$varientDataInfo->data_value}},
+                                                                                @endif
+                                                                            @endforeach
+                                                                        </small>
+                                                                    </span> <br/>
+                                                                @endif
+                                                                
                                                                 <span class="font-size-14">{{$cart->quantity}} × ৳@if ($cart->variation_id == 0){{$cart->productInfo->discount_price ?? ''}} @else {{$cart->varientInfo->discount_price ?? 0}} @endif</span>
+                                                                
                                                             </li>
                                                             <li class="px-2 col-auto">
                                                                 <a href="#" class="text-gray-90"><i data-cart_id="{{$cart->id}}" class="remove-cart ec ec-close-remove"></i></a>
@@ -303,6 +317,9 @@
                                                 </li>
                                             @endforeach
                                         </ul>
+                                        <div class="guest_user_cart_section">
+                                            
+                                        </div>
                                         <div class="flex-center-between px-4 pt-2">
                                             <a href="{{ route('cart') }}" class="btn btn-soft-secondary mb-3 mb-md-0 font-weight-normal px-5 px-md-4 px-lg-5">View cart</a>
                                             <a href="{{route('checkout')}}" class="btn btn-primary-dark-w ml-md-2 px-5 px-md-4 px-lg-5">Checkout</a>

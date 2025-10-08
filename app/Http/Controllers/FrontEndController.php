@@ -33,6 +33,7 @@ use App\Models\PackingType;
 use App\Models\Slider;
 use App\Models\District;
 use App\Models\Upazila;
+use App\Models\GuestCart;
 use App\Models\ShippingAddress;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -354,12 +355,21 @@ class FrontendController extends Controller
     
     public function cart(Request $request)
     {
-        $carts = [];
-        if (auth()->check()) {
-            $carts = Cart::where('user_id', auth()->user()->id)->with('productInfo','varientInfo')->latest()->get();
-        }
-        $setting = Setting::oldest()->first();
-        return view('frontend.cart', compact('carts','setting'));
+        
+        // $carts = Cart::where('user_id', auth()->user()->id ?? 0)->with('productInfo','varientInfo')->latest()->get();
+        
+        // $setting = Setting::oldest()->first();
+        return view('frontend.cart');
+    }
+    
+    public function view_cart_section(Request $request)
+    {
+        
+        $carts = Cart::where('user_id', auth()->user()->id ?? 0)->with('productInfo','varientInfo')->latest()->get();
+        $guest_carts = GuestCart::where('user_id', ($request->guest_id ?? 0))->with('productInfo','varientInfo')->latest()->get();
+        
+        // $setting = Setting::oldest()->first();
+        return view('frontend.view_cart_section', compact('carts','guest_carts'));
     }
     
     public function update_cart(Request $request)
@@ -719,7 +729,7 @@ class FrontendController extends Controller
                 return response()->json([
                     'status' => 'success',
                     'message' => 'Update your cart successfully'
-                ], 404);
+                ], 200);
             }
 
 
@@ -752,78 +762,86 @@ class FrontendController extends Controller
     
     public function guest_add_to_cart(Request $request)
     {
-        if($request->quantity <= 0){
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Quantity must be at least 1'
-            ], 404);
-        }
-        $check_cart = Cart::where([
-            'product_id' => $request->product_id,
-            'variation_id' => $request->varient,
-            'user_id' => $request->guest_id,
-        ])->first();
+        if (auth()->check()) {
+            return $this->add_to_cart($request);
+        } else {
+            if($request->quantity <= 0){
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Quantity must be at least 1'
+                ], 404);
+            }
+            $check_cart = GuestCart::where([
+                'product_id' => $request->product_id,
+                'variation_id' => $request->varient,
+                'user_id' => $request->guest_id,
+            ])->first();
 
-        $check_stock = Stock::where([
-            'product_id' => $request->product_id,
-            'varient_id' => $request->varient,
-        ])->latest()->first();
+            $check_stock = Stock::where([
+                'product_id' => $request->product_id,
+                'varient_id' => $request->varient,
+            ])->latest()->first();
 
-        $quantity = $check_stock->quantity ?? 0;
-        
+            $quantity = $check_stock->quantity ?? 0;
+            
 
-        if ($check_cart) {
-            if ($quantity < ($check_cart->quantity + $request->quantity)) {
+            if ($check_cart) {
+                if ($quantity < ($check_cart->quantity + $request->quantity)) {
+                    if($request->ajax()){
+                        return response()->json([
+                            'status' => 'error',
+                            'message' => 'Quantity is out of stock'
+                        ], 404);
+                    }
+                }
+
+                
+                $check_cart->quantity = $check_cart->quantity + $request->quantity;
+                $check_cart->save();
+
                 if($request->ajax()){
                     return response()->json([
-                        'status' => 'error',
-                        'message' => 'Quantity is out of stock'
+                        'status' => 'success',
+                        'message' => 'Update your cart successfully'
                     ], 404);
                 }
-            }
 
-            
-            $check_cart->quantity = $check_cart->quantity + $request->quantity;
-            $check_cart->save();
+
+            } else {
+                if ($quantity < $request->quantity) {
+                    if($request->ajax()){
+                        return response()->json([
+                            'status' => 'error',
+                            'message' => 'Quantity is out of stock'
+                        ], 404);
+                    }
+                }
+                $data['product_id'] = $request->product_id;
+                $data['variation_id'] = $request->varient;
+                $data['quantity'] = $request->quantity;
+                $data['user_id'] = $request->guest_id;
+                GuestCart::create($data);
+            }
 
             if($request->ajax()){
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'Update your cart successfully'
-                ], 404);
+                    'message' => 'Added to your cart successfully'
+                ], 200);
             }
-
-
-        } else {
-            if ($quantity < $request->quantity) {
-                if($request->ajax()){
-                    return response()->json([
-                        'status' => 'error',
-                        'message' => 'Quantity is out of stock'
-                    ], 404);
-                }
-            }
-            $data['product_id'] = $request->product_id;
-            $data['variation_id'] = $request->varient;
-            $data['quantity'] = $request->quantity;
-            $data['created_by'] = $request->guest_id;
-            $data['user_id'] = $request->guest_id;
-            Cart::create($data);
-        }
-
-        
-
-        if($request->ajax()){
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Added to your cart successfully'
-            ], 200);
         }
     }
     
     public function remove_cart_item(Request $request)
     {
         $check_cart = Cart::find($request->id)->delete();
+
+        return redirect()->back()->with('success','Item removed from your cart');
+    }
+    
+    public function remove_guest_cart_item(Request $request)
+    {
+        $check_cart = GuestCart::find($request->id)->delete();
 
         return redirect()->back()->with('success','Item removed from your cart');
     }
@@ -1082,5 +1100,11 @@ class FrontendController extends Controller
         $order->save();
 
         return redirect()->back()->with('success', 'Order Canceled Successfully!');
+    }
+    
+    public function guest_cart_view(Request $request)
+    {
+        $carts = GuestCart::where('user_id', $request->guest_id)->with('productInfo','varientInfo')->latest()->get();
+        return view('frontend.guest_cart_view', compact('carts'));
     }
 }

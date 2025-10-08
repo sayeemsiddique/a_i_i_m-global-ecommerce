@@ -759,7 +759,7 @@
                 // alert();
                 $.ajax({
                     url: "{{route('add_to_cart')}}",
-                    type:"POST",
+                    type:"GET",
                     data:{
                         product_id: {{$product->id}},
                         varient: varient_id,
@@ -805,7 +805,7 @@
 
                 $.ajax({
                     url: "{{route('add_to_cart')}}",
-                    type:"POST",
+                    type:"GET",
                     data:{
                         product_id: {{$product->id}},
                         varient: 0,
@@ -848,6 +848,13 @@
             
 
         });
+
+        function randomNumericId(length = 16) {
+            const array = new Uint8Array(length);
+            crypto.getRandomValues(array);
+            // Map each byte to a digit (0–9)
+            return Array.from(array, byte => (byte % 10).toString()).join('');
+        }
         
         $('.guest-add-to-cart-button').click(function() {
             var has_varient = $('.has_varient').val();
@@ -864,13 +871,13 @@
                 var data_token = $('.token').val();
                 let guest_id = localStorage.getItem("guest_id");
                 if(!guest_id) {
-                    guest_id = Math.floor(Math.random() * 1000000000) + 1;
+                    guest_id = randomNumericId();
                     localStorage.setItem("guest_id", guest_id);
                 }
                 // alert();
                 $.ajax({
                     url: "{{route('guest_add_to_cart')}}",
-                    type:"POST",
+                    type:"GET",
                     data:{
                         product_id: {{$product->id}},
                         varient: varient_id,
@@ -902,8 +909,8 @@
                 var data_token = $('.token').val();
 
                 $.ajax({
-                    url: "{{route('add_to_cart')}}",
-                    type:"POST",
+                    url: "{{route('guest_add_to_cart')}}",
+                    type:"GET",
                     data:{
                         product_id: {{$product->id}},
                         varient: 0,

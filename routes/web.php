@@ -103,8 +103,7 @@ Route::middleware([SetLocale::class])->group(function () {
         Route::post('/edit-address/{user}', [FrontendController::class, 'edit_address'])->name('edit_address');
         Route::post('/edit-info/{user}', [FrontendController::class, 'edit_info'])->name('edit_info');
         Route::post('/edit-password/{user}', [FrontendController::class, 'edit_password'])->name('edit_password');
-        Route::post('/add-to-cart', [FrontendController::class, 'add_to_cart'])->name('add_to_cart');
-        Route::post('/guest-add-to-cart', [FrontendController::class, 'guest_add_to_cart'])->name('guest_add_to_cart');
+        Route::get('/add-to-cart', [FrontendController::class, 'add_to_cart'])->name('add_to_cart');
         Route::post('/cart-update', [FrontendController::class, 'update_cart'])->name('update_cart');
 
         Route::prefix('shipping-address')->as('shipping_address.')->group(function () {
@@ -454,6 +453,10 @@ Route::middleware([SetLocale::class])->group(function () {
         Route::get('/remove-cart-item', [FrontendController::class, 'remove_cart_item'])->name('remove_cart_item');
     });
     Route::get('/', [FrontendController::class, 'index'])->name('index');
+    Route::get('/guest-add-to-cart', [FrontendController::class, 'guest_add_to_cart'])->name('guest_add_to_cart');
+    Route::get('/guest-cart-view', [FrontendController::class, 'guest_cart_view'])->name('guest_cart_view');
+    Route::get('/remove-guest-cart-item', [FrontendController::class, 'remove_guest_cart_item'])->name('remove_guest_cart_item');
+    Route::get('/view-cart-section', [FrontendController::class, 'view_cart_section'])->name('view_cart_section');
     
 
 });
