@@ -24,20 +24,6 @@
 							<form class="form" action="{{ route('admin.designation.update',$designation) }}" method="post" id="kt_form_1">
                                 @csrf
 
-                                <div class="form-group row">
-                                    <label class="col-form-label text-right col-lg-4 col-sm-12">Level: <span class="text-danger">*</span></label>
-                                    <div class="col-lg-5 col-sm-12">
-                                        <select class="form-control select2" name="level_id" id="level_id" required>
-                                            @if ($designation->level_id == 1)
-                                                <option value="1" selected>Management Level</option>
-                                                <option value="2">Authorized Level</option>
-                                            @else
-                                                <option value="1">Management Level</option>
-                                                <option value="2" selected>Authorized Level</option>
-                                            @endif
-                                        </select>
-                                    </div>
-                                </div>
                                 
                                 <div class="form-group row">
                                     <label class="col-form-label text-right col-lg-4 col-sm-12">Designation Title:  <span class="text-danger">*</span></label>

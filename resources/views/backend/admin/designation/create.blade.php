@@ -26,17 +26,6 @@
                             @csrf
 
                             <div class="card-body">
-                                <div class="form-group row">
-                                    <label class="col-form-label text-right col-lg-4 col-sm-12">Level: <span class="text-danger">*</span></label>
-                                    <div class="col-lg-5 col-sm-12">
-                                        <select class="form-control select2" name="level_id" id="level_id" required>
-                                            <option value="">--Select Level--</option> 
-
-                                            <option value="1">Management Level</option>
-                                            <option value="2">Authorized Level</option>
-                                        </select>
-                                    </div>
-                                </div>
 
                             
                                 <div class="form-group row">

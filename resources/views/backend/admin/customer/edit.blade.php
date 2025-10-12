@@ -71,15 +71,6 @@
 														</div>
 													</div>
 
-													@if ($user->corporation_name)
-														<div class="form-group row">
-															<label class="col-form-label text-right col-lg-4 col-sm-12">Corporation Name: <span class="text-danger"></span></label>
-															<div class="col-lg-5 col-sm-12">
-																<textarea class="form-control" name="corporation_name" row="2" required> {{ $user->corporation_name }}</textarea>
-															</div>
-														</div>
-													@endif
-
 													<div class="form-group row">
 														<label class="col-form-label text-right col-lg-4 col-sm-12">Mobile: <span class="text-danger">*</span></label>
 														<div class="col-lg-5 col-sm-12">

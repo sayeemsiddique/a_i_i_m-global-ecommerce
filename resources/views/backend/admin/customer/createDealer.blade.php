@@ -57,13 +57,6 @@
 											</div>
 										</div>
 
-                                        <div class="form-group row">
-											<label class="col-form-label text-right col-lg-4 col-sm-12">Corporation Name: <span class="text-danger">*</span></label>
-											<div class="col-lg-5 col-sm-12">
-												<input type="text" class="form-control" name="corporation_name" placeholder="Enter Corporation Name" value="{{old('corporation_name')}}" required id="corporation_name" />
-											</div>
-										</div>
-
 										<div class="form-group row">
 											<label class="col-form-label text-right col-lg-4 col-sm-12">First Name: <span class="text-danger">*</span></label>
 											<div class="col-lg-5 col-sm-12">

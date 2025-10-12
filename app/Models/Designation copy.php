@@ -10,10 +10,4 @@ class Designation extends Model
     use HasFactory;
 
     protected $guarded = [];
-
-
-    public function level_id()
-    {
-        return $this->belongsTo(Level::class, 'level', 'id');
-    }
 }

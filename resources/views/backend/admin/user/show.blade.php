@@ -64,15 +64,6 @@
                                                     </div>
                                                 </div>
 
-                                                @if ($user->corporation_name)
-                                                    <div class="form-group row">
-                                                        <label class="col-xl-3 col-lg-3 col-form-label text-right font-weight-bold">Corporation Name : </label>
-                                                        <div class="col-lg-9 col-xl-6">
-                                                            <input class="form-control form-control-lg form-control-solid" value="{{ $user->corporation_name }}" disabled/>
-                                                        </div>
-                                                    </div>
-                                                @endif
-
                                                 @if ($user->department)
                                                     <div class="form-group row">
                                                         <label class="col-xl-3 col-lg-3 col-form-label text-right font-weight-bold">Department : </label>

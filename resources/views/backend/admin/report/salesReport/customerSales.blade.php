@@ -107,17 +107,6 @@
                                                 <input class="form-control" type="text" value="{{ isset($orderId) ? $orderId : '' }}" name="orderId" id="orderId" placeholder="Search by Order Id">
                                             </div>
                                         </td>
-                                        {{-- <td>
-                                            <div class="form-group">
-                                                <label class="pr-2 pl-2">Corporation :</label>
-                                                <select name="dealer" class="select2 form-control">
-                                                    <option value="">--Select Corporation--</option>
-                                                    @foreach ($dealers as $dealer)
-                                                        <option value="{{$dealer->id}}">{{$dealer->corporation_name }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </td> --}}
                                         <td>
                                             <button type="submit" class="btn btn-success ml-2">Search</button>
                                         </td>

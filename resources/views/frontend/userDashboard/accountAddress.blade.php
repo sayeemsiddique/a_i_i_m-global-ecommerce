@@ -61,12 +61,6 @@
                                                     <td>{{ $user->first_name }} {{ $user->last_name }}</td>
                                                 </tr>
 
-                                                @if ($user->corporation_name)
-                                                    <tr>
-                                                        <th>Company:</th>
-                                                        <td>{{ $user->corporation_name }}</td>
-                                                    </tr> 
-                                                @endif
 
                                                 <tr>
                                                     <th>Address:</th>
@@ -120,12 +114,6 @@
                                                         <td>{{ $user->first_name }} {{ $user->last_name }}</td>
                                                     </tr>
 
-                                                    @if ($user->corporation_name)
-                                                        <tr>
-                                                            <th>Company:</th>
-                                                            <td>{{ $user->corporation_name }}</td>
-                                                        </tr> 
-                                                    @endif
 
                                                     <tr>
                                                         <th>Address:</th>

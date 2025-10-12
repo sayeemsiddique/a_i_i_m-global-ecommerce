@@ -371,7 +371,6 @@ class CustomerController extends Controller
                 'last_name'         => 'required|max:255',
                 'mobile'            => 'required|unique:users',
                 'image'             => 'mimes:jpg,jpeg,png',
-                'corporation_name'  => 'required|max:255',
                 'nid_no'            => 'required',
                 'nid'               => 'mimes:jpg,jpeg,png',
                 'bin_no'            => 'required',
@@ -390,7 +389,6 @@ class CustomerController extends Controller
         $user->present_address      = $request->present_address;
         $user->mobile               = $request->mobile;
         $user->email                = $request->email;
-        $user->corporation_name     = $request->corporation_name;
         $user->nid_no               = $request->nid_no;
         $user->bin_no               = $request->bin_no;
         $user->tin_no               = $request->tin_no;
@@ -546,7 +544,6 @@ class CustomerController extends Controller
 
         $user->first_name           = $request->first_name;
         $user->last_name            = $request->last_name;
-        $user->corporation_name     = $request->corporation_name;
 
         if ($request->password) {
             $user->password         = bcrypt($request->password);

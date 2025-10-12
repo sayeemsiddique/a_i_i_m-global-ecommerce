@@ -84,7 +84,6 @@ class DesignationController extends Controller
     {
         $validation = Validator::make($request->all(),
         [ 
-            'level_id'  => ['required'],
             'title'     => ['required','min:3','string'],
         ]);
 
@@ -106,7 +105,6 @@ class DesignationController extends Controller
 
         $designation                = new Designation;
 
-        $designation->level_id      = $request->level_id;
         $designation->name          = $request->title;
         $designation->created_by    = Auth::id();
         $designation->status        = 1;
@@ -168,7 +166,6 @@ class DesignationController extends Controller
     {
         $validation = Validator::make($request->all(),
         [ 
-            'level_id'  => ['required'],
             'title'     => ['required','min:3','string'],
         ]);
 
@@ -188,7 +185,6 @@ class DesignationController extends Controller
             ->withErrors($validation);
         }
 
-        $designation->level_id      = $request->level_id;
         $designation->name          = $request->title;
         $designation->updated_by    = Auth::id();
        

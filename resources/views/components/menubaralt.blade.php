@@ -22,7 +22,6 @@
                                     </li>
                                 @else
                                     <li class="list-inline-item mr-0 u-header-topbar__nav-item u-header-topbar__nav-item-border">
-                                        <!-- Account Sidebar Toggle Button -->
                                         <a id="sidebarNavToggler" href="javascript:;" role="button" class="u-header-topbar__nav-link signup_js"
                                             aria-controls="sidebarContent"
                                             aria-haspopup="true"
@@ -36,10 +35,8 @@
                                             data-unfold-duration="500">
                                             <i class="ec ec-user mr-1"></i> Register 
                                         </a>
-                                        <!-- End Account Sidebar Toggle Button -->
                                     </li>
                                     <li class="list-inline-item mr-0 u-header-topbar__nav-item u-header-topbar__nav-item-border">
-                                        <!-- Account Sidebar Toggle Button -->
                                         <a id="sidebarNavToggler" href="javascript:;" role="button" class="u-header-topbar__nav-link login_js"
                                             aria-controls="sidebarContent"
                                             aria-haspopup="true"
@@ -53,7 +50,6 @@
                                             data-unfold-duration="500">
                                             <i class="ec ec-newsletter mr-1"></i> Sign in 
                                         </a>
-                                        <!-- End Account Sidebar Toggle Button -->
                                     </li>
                                 @endif
                             

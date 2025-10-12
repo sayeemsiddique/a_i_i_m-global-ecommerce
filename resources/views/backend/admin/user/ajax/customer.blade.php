@@ -21,13 +21,9 @@
                 <td>{{ $i }}</td>
                 <td align="left">{{ ucfirst($user->first_name) }} {{ ucfirst($user->last_name) }}</td>
 
-                @if ($user->type == 2)
-                    <td align="left">Corporate Consumer</td>
-                @else
-                    <td align="left">Dealer</td>
-                @endif
-
-                <td align="left">{{ $user->corporation_name }}</td>
+                
+                <td align="left">Dealer</td>
+                
                 <td>{{ $user->mobile }}</td>
                 <td align="left">{{ $user->email ? $user->email : 'Not Given' }}</td>
                 <td>

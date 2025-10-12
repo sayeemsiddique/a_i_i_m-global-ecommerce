@@ -87,7 +87,6 @@ class DepartmentController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            // 'level_id'     => 'required',
             'name'      => 'required|max:255',
         ]);
 
@@ -175,11 +174,9 @@ class DepartmentController extends Controller
     public function update(Request $request, Department $department)
     {
         $request->validate([
-            // 'level_id'     => 'required',
             'name'      => 'required|max:255',
         ]);
 
-        // $department->level_id       = $request->level_id;
         $department->name        = $request->name;
         $department->status         = $request->status;
         $department->updated_by     = Auth::id();

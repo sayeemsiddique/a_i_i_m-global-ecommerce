@@ -35,11 +35,6 @@
                 <td align="left">{{ $user->role ? $user->role->name : 'N/A' }}</td>
                 <td align="left">{{ $user->department ? $user->department->name : 'N/A' }}</td>
                 
-                {{-- @if ($user->level_id == 1)
-                    <td align="left">Management Level</td>
-                @else
-                    <td align="left">Authorized Level</td>
-                @endif --}}
 
                 <td align="left">{{ $user->designation ? $user->designation->name : 'N/A' }}</td>
 

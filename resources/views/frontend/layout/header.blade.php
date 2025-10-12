@@ -36,8 +36,8 @@
         <style> 
             .avatar-upload {
                 position: relative;
-                max-width: 205px;
-                margin: 20px auto;
+                max-width: 130px;
+                margin: 0px auto;
             }
             .avatar-upload .avatar-edit {
                 position: absolute;

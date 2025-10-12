@@ -66,15 +66,6 @@
 														</div>
 													</div>
 
-													{{-- @if ($user->corporation_name)
-														<div class="form-group row">
-															<label class="col-form-label text-right col-lg-4 col-sm-12">Corporation Name: <span class="text-danger"></span></label>
-															<div class="col-lg-5 col-sm-12">
-																<textarea class="form-control" name="corporation_name" row="2" > {{ $user->corporation_name }}</textarea>
-															</div>
-														</div>
-													@endif --}}
-
 													@if ($user->role_id != 7)
 														<div class="form-group row">
 															<label class="col-form-label text-right col-lg-4 col-sm-12">Role: <span class="text-danger">*</span></label>
@@ -96,27 +87,6 @@
 																	@foreach ($departments as $department)
 																		<option value="{{ $department->id }}" {{ ($department->id == $user->department_id) ? 'selected' : '' }}>{{ $department->name }}</option>
 																	@endforeach
-																</select>
-															</div>
-														</div>
-													@endif
-
-													@if ($user->role_id != 7)
-														<div class="form-group row">
-															<label class="col-form-label text-right col-lg-4 col-sm-12">Level: <span class="text-danger">*</span></label>
-
-															<div class="col-lg-5 col-sm-12">
-																<select class="form-control select2" name="level_id" id="level_id" required>
-																	@if ($user->level_id == 1)
-																		<option value="1" selected>Management Level</option>
-																		<option value="2">Authorized Level</option>
-																	@elseif($user->level_id == 2)
-																		<option value="1">Management Level</option>
-																		<option value="2" selected>Authorized Level</option>
-																	@else 
-																		<option value="1">Management Level</option>
-																		<option value="2">Authorized Level</option>
-																	@endif
 																</select>
 															</div>
 														</div>

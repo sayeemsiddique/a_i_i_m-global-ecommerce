@@ -79,13 +79,7 @@
                                     </div>
                                 </div>
                             </div>
-
-                            @if ($user->corporation_name)
-                                <div class="form-group mb-3">
-                                    <label for="corporation_name">Corporation Name: <span class="text-danger">*</span></label>
-                                    <input type="text" id="corporation_name" name="corporation_name" placeholder="Enter Corporation Name" class="form-control form-control-md mb-0" value="{{ $user->corporation_name }}" required>
-                                </div>
-                            @endif                          
+                       
 
                             @if ($user->email)
                                 <div class="form-group mb-6">

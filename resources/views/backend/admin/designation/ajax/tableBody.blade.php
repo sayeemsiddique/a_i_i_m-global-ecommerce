@@ -18,13 +18,6 @@
                     <td>
                         {{$i}}
                     </td>
-                    <td align="left">
-                        @if ($designation->level_id == 1)
-                            Management Level
-                        @else
-                            Authorized Level
-                        @endif
-                    </td>
 
                     <td align="left">
                         {{ $designation->name }}

@@ -179,7 +179,6 @@ class UserController extends Controller
         $request->validate([
             'role_id'           => 'required',
             'department_id'     => 'required',
-            // 'level_id'          => 'required',
             'designation_id'    => 'required',
             'password'          => 'required|confirmed|min:8',
             'first_name'        => 'required|max:255',
@@ -193,7 +192,6 @@ class UserController extends Controller
 
         $user->role_id              = $request->role_id;
         $user->department_id        = $request->department_id;
-        $user->level_id             = $request->level_id;
         $user->designation_id       = $request->designation_id;
         $user->password             = bcrypt($request->password);
         $user->first_name           = $request->first_name;
@@ -337,7 +335,6 @@ class UserController extends Controller
             $request->validate([
                 'role_id'           => 'required',
                 'department_id'     => 'required',
-                'level_id'          => 'required',
                 'designation_id'    => 'required',
                 'password'          => 'required|confirmed|min:8',
                 'first_name'        => 'required|max:255',
@@ -350,7 +347,6 @@ class UserController extends Controller
             $request->validate([
                 'role_id'           => 'required',
                 'department_id'     => 'required',
-                'level_id'          => 'required',
                 'designation_id'    => 'required',
                 'first_name'        => 'required|max:255',
                 'last_name'         => 'required|max:255',
@@ -367,7 +363,6 @@ class UserController extends Controller
         $user->first_name           = $request->first_name;
         $user->last_name            = $request->last_name;
         $user->department_id        = $request->department_id;
-        $user->level_id             = $request->level_id;
         $user->designation_id       = $request->designation_id;
 
         if ($request->password) {

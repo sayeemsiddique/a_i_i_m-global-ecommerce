@@ -59,12 +59,6 @@
                                     <td>{{ date('d M Y', strtotime($orderDetails->created_at)) }}</td>
                                 </tr>
 
-                                @if ($user->corporation_name)
-                                    <tr>
-                                        <th>Company:</th>
-                                        <td>{{ $user->corporation_name }}</td>
-                                    </tr> 
-                                @endif
 
                                 <tr>
                                     <th>Order ID:</th>

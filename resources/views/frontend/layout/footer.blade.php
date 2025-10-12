@@ -1,16 +1,14 @@
 @php
     $main_categories = App\Models\Category::withCount('SellProducts')
-                                ->where([
-                                    'parent_id' => 0,
-                                    'status' => 1,
-                                ])->orderBy('sl', 'asc')
-                                ->limit(4)->get();
+                        ->where([
+                            'parent_id' => 0,
+                            'status' => 1,
+                        ])->orderBy('sl', 'asc')
+                        ->limit(4)->get();
 @endphp
 
 <!-- ========== FOOTER ========== -->
 <footer>
-
-
     <!-- Footer-bottom-widgets -->
     <div class="pt-8 pb-4 bg-gray-13">
         <div class="container mt-1">
@@ -219,9 +217,9 @@ data-hide-effect="slideOutDown">
 
 <!-- JS Implementing Plugins -->
 <script src="{{asset('frontend/assets/vendor/appear.js')}}"></script>
-<script src="{{asset('frontend/assets/vendor/jquery.countdown.min.js')}}"></script>
+{{-- <script src="{{asset('frontend/assets/vendor/jquery.countdown.min.js')}}"></script> --}}
 <script src="{{asset('frontend/assets/vendor/hs-megamenu/src/hs.megamenu.js')}}"></script>
-<script src="{{asset('frontend/assets/vendor/svg-injector/dist/svg-injector.min.js')}}"></script>
+{{-- <script src="{{asset('frontend/assets/vendor/svg-injector/dist/svg-injector.min.js')}}"></script> --}}
 <script src="{{asset('frontend/assets/vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js')}}"></script>
 <script src="{{asset('frontend/assets/vendor/jquery-validation/dist/jquery.validate.min.js')}}"></script>
 <script src="{{asset('frontend/assets/vendor/fancybox/jquery.fancybox.min.js')}}"></script>
@@ -243,7 +241,7 @@ data-hide-effect="slideOutDown">
 <script src="{{asset('frontend/assets/js/components/hs.onscroll-animation.js')}}"></script>
 <script src="{{asset('frontend/assets/js/components/hs.slick-carousel.js')}}"></script>
 <script src="{{asset('frontend/assets/js/components/hs.show-animation.js')}}"></script>
-<script src="{{asset('frontend/assets/js/components/hs.svg-injector.js')}}"></script>
+{{-- <script src="{{asset('frontend/assets/js/components/hs.svg-injector.js')}}"></script> --}}
 <script src="{{asset('frontend/assets/js/components/hs.go-to.js')}}"></script>
 <script src="{{asset('frontend/assets/js/components/hs.selectpicker.js')}}"></script>
 

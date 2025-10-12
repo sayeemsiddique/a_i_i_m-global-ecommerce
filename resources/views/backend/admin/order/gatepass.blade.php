@@ -65,11 +65,6 @@
                                     <div class="col-md-9 text-left"> 
                                         <h6 class="text-left">তারিখ- {{ date('d-m-Y') }}</h6>
 
-                                        @if ($type == 2)
-                                            <h6 class="text-left">ক্রেতার নাম- {{ $order->user ? ($order->user->first_name.' '.$order->user->last_name) : '' }}</h6>
-                                        @else
-                                            <h6 class="text-left">মেসার্স- {{ $order->user ? $order->user->corporation_name : '' }}</h6>
-                                        @endif
                                     </div>
 
                                     <div class="col-md-3 text-right"> 

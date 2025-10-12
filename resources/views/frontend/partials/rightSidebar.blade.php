@@ -85,6 +85,9 @@
                                        data-target="#signup" data-link-group="idForm"
                                        data-animation-in="slideInUp">Signup
                                    </a>
+                                   {{-- <a href="{{ route('sign_up') }}">
+                                        Signup
+                                   </a> --}}
                                </div>
                            </div>
                         </form>
@@ -100,7 +103,22 @@
                                    <p>Fill out the form to get started.</p>
                                </header>
                                <!-- End Title -->
-                               
+
+                               <div class="otp-form-section" style="display: block">
+                                    <div class="form-group">
+                                        <label for="phone_number">{{__('Mobile Number')}} <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="phone_number" name="phone_number" placeholder="{{__('Mobile Number')}}" required>
+                                    </div>
+                                    <div class="btn btn-primary d-block text-white send_otp">{{__('Send OTP')}}</div>
+                               </div>
+
+                               <div class="registration-section" style="display: none">
+                                    <input type="hidden" name="type" value="1" id="user_type">
+                                    <div class="mb-2">
+                                        <button type="submit" class="btn btn-block btn-sm btn-primary transition-3d-hover">Sign Up</button>
+                                    </div>
+                               </div>
+
                                 <!-- Form Group -->
                                 {{-- <div class="form-group">
                                     <div class="js-form-message js-focus-state">
@@ -122,12 +140,12 @@
                                     </div>
                                 </div> --}}
                                 <!-- End Input -->
-                                <input type="hidden" name="type" value="1" id="user_type">
+
 
                                 <!-- Form Group -->
-                                <div class="form-group dealer-reg" style="display: none;">
+                                {{-- <div class="form-group dealer-reg">
                                     <div class="js-form-message js-focus-state">
-                                        <label class="" style="font-weight: bold;" for="imageUpload">Profile Image/Corporation Logo: </label>
+                                        <label class="" style="font-weight: bold;" for="imageUpload">Profile Image: </label>
 
                                         <div class="avatar-upload">
                                             <div class="avatar-edit">
@@ -140,11 +158,11 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                                 <!-- End Input -->
 
                                 <!-- Form Group -->
-                                <div class="form-group">
+                                {{-- <div class="form-group">
                                     <div class="js-form-message js-focus-state">
                                         <label class="" style="font-weight: bold;" for="first_name">First Name: <span class="text-danger">*</span></label>
 
@@ -158,11 +176,11 @@
                                             <input type="text" class="form-control" name="first_name" id="first_name" placeholder="Enter Your First Name" aria-label="first_name" aria-describedby="firstNameLabel" value="{{ old('first_name') }}" required>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                                 <!-- End Input -->
 
                                 <!-- Form Group -->
-                                <div class="form-group">
+                                {{-- <div class="form-group">
                                     <div class="js-form-message js-focus-state">
                                         <label class="" style="font-weight: bold;" for="last_name">Last Name: <span class="text-danger">*</span></label>
 
@@ -176,29 +194,11 @@
                                             <input type="text" class="form-control" name="last_name" id="last_name" placeholder="Enter Your Last Name" aria-label="last_name" aria-describedby="lastNameLabel" value="{{ old('last_name') }}" required>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                                 <!-- End Input -->
 
                                 <!-- Form Group -->
-                                <div class="form-group dealer-reg" style="display: none;">
-                                    <div class="js-form-message js-focus-state">
-                                        <label class="" style="font-weight: bold;" for="corporation_name">Corporation Name: <span class="text-danger">*</span></label>
-
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text" id="corporation_nameLabel">
-                                                    <span class="fa fa-microchip"></span>
-                                                </span>
-                                            </div>
-
-                                            <input type="text" class="form-control" name="corporation_name" id="corporation_name" placeholder="Enter Your Corporation Name" aria-label="corporation_name" aria-describedby="corporation_nameLabel" value="{{ old('corporation_name') }}" required>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- End Input -->
-
-                                <!-- Form Group -->
-                                <div class="form-group">
+                                {{-- <div class="form-group">
                                     <div class="js-form-message js-focus-state">
                                         <label class="" style="font-weight: bold;" for="mobile">Mobile No: <span class="text-danger">*</span></label>
 
@@ -212,11 +212,11 @@
                                             <input type="text" class="form-control" name="mobile" id="mobile" placeholder="Enter Your Mobile No." aria-label="mobile" aria-describedby="mobileLabel" value="{{ old('mobile') }}" required>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                                 <!-- End Input -->
 
                                 <!-- Form Group -->
-                                <div class="form-group">
+                                {{-- <div class="form-group">
                                     <div class="js-form-message js-focus-state">
                                         <label class="" style="font-weight: bold;" for="signupEmail">Email: <span class="text-danger">*</span></label>
 
@@ -230,11 +230,11 @@
                                             <input type="email" class="form-control" name="email" id="signupEmail" placeholder="Enter Your Email Address" aria-label="Email" aria-describedby="signupEmailLabel" value="{{ old('email') }}" required>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                                 <!-- End Input -->
 
                                <!-- Form Group -->
-                               <div class="form-group">
+                               {{-- <div class="form-group">
                                    <div class="js-form-message js-focus-state">
                                        <label class="" style="font-weight: bold;" for="signupPassword">Password: <span class="text-danger">*</span></label>
 
@@ -244,7 +244,7 @@
                                                     <span class="fas fa-lock"></span>
                                                 </span>
                                             </div>
-                                           
+
                                             <input type="password" class="form-control" name="password" id="signupPassword" minlength="8" placeholder="Minimum 8 Characters" aria-label="Password" aria-describedby="signupPasswordLabel" required data-msg="Your password is invalid. Please try again." data-error-class="u-has-error" data-success-class="u-has-success">
 
                                             <div class="pass-eye-icon" id="pass-eye" style="cursor: pointer;">
@@ -252,11 +252,11 @@
                                             </div>
                                        </div>
                                    </div>
-                               </div>
+                               </div> --}}
                                <!-- End Input -->
 
                                <!-- Form Group -->
-                               <div class="form-group">
+                               {{-- <div class="form-group">
                                    <div class="js-form-message js-focus-state">
                                        <label class="" style="font-weight: bold;" for="signupConfirmPassword">Confirm Password: <span class="text-danger">*</span></label>
 
@@ -274,11 +274,11 @@
                                             </div>
                                        </div>
                                    </div>
-                               </div>
+                               </div> --}}
                                <!-- End Input -->
 
                                 <!-- Form Group -->
-                                <div class="form-group">
+                                {{-- <div class="form-group">
                                     <div class="js-form-message js-focus-state">
                                         <label class="present_address_label" style="font-weight: bold;" for="present_address">Address (Optional): </label> <span class="text-danger present_address_star" style="display: none;">*</span>
 
@@ -292,11 +292,11 @@
                                             <input type="text" class="form-control" name="present_address" id="present_address" placeholder="Enter Your Address" aria-label="present_address" aria-describedby="present_addressLabel" value="{{ old('present_address') }}">
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                                 <!-- End Input -->
 
                                 <!-- Form Group -->
-                                <div class="form-group dealer-reg" style="display: none;">
+                                {{-- <div class="form-group dealer-reg" style="display: none;">
                                     <div class="js-form-message js-focus-state">
                                         <label class="" style="font-weight: bold;" for="nid_no">NID: <span class="text-danger present_address_star" style="display: none;">*</span></label>
 
@@ -310,10 +310,10 @@
                                             <input type="text" class="form-control" name="nid_no" id="nid_no" placeholder="Enter Your NID" aria-label="nid_no" aria-describedby="nid_noLabel" value="{{ old('nid_no') }}">
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                                 <!-- End Input -->
                                 <!-- Form Group -->
-                                <div class="form-group dealer-reg" style="display: none;">
+                                {{-- <div class="form-group dealer-reg" style="display: none;">
                                     <div class="js-form-message js-focus-state">
                                         <label class="" style="font-weight: bold;" for="nid">NID (PDF/Image): <span class="text-danger present_address_star" style="display: none;">*</span></label>
 
@@ -327,11 +327,11 @@
                                             <input type="file" class="form-control" name="nid" id="nid">
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                                 <!-- End Input -->
 
                                 <!-- Form Group -->
-                                <div class="form-group dealer-reg" style="display: none;">
+                                {{-- <div class="form-group dealer-reg" style="display: none;">
                                     <div class="js-form-message js-focus-state">
                                         <label class="" style="font-weight: bold;" for="bin_no">Company BIN: <span class="text-danger">*</span></label>
 
@@ -345,10 +345,10 @@
                                             <input type="text" class="form-control" name="bin_no" id="bin_no" placeholder="Enter Your Company BIN" aria-label="bin_no" aria-describedby="bin_noLabel" value="{{ old('bin_no') }}" required>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                                 <!-- End Input -->
                                 <!-- Form Group -->
-                                <div class="form-group dealer-reg" style="display: none;">
+                                {{-- <div class="form-group dealer-reg" style="display: none;">
                                     <div class="js-form-message js-focus-state">
                                         <label class="" style="font-weight: bold;" for="bin">Company BIN (PDF/Image): <span class="text-danger present_address_star" style="display: none;">*</span></label>
 
@@ -362,11 +362,11 @@
                                             <input type="file" class="form-control" name="bin" id="bin">
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                                 <!-- End Input -->
 
                                 <!-- Form Group -->
-                                <div class="form-group dealer-reg" style="display: none;">
+                                {{-- <div class="form-group dealer-reg" style="display: none;">
                                     <div class="js-form-message js-focus-state">
                                         <label class="" style="font-weight: bold;" for="tin_no">Company TIN: <span class="text-danger">*</span></label>
 
@@ -380,10 +380,10 @@
                                             <input type="text" class="form-control" name="tin_no" id="tin_no" placeholder="Enter Your Company TIN" aria-label="tin_no" aria-describedby="tin_noLabel" value="{{ old('tin_no') }}" required>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                                 <!-- End Input -->
                                 <!-- Form Group -->
-                                <div class="form-group dealer-reg" style="display: none;">
+                                {{-- <div class="form-group dealer-reg" style="display: none;">
                                     <div class="js-form-message js-focus-state">
                                         <label class="" style="font-weight: bold;" for="tin">Company TIN (PDF/Image): <span class="text-danger present_address_star" style="display: none;">*</span></label>
 
@@ -397,12 +397,8 @@
                                             <input type="file" class="form-control" name="tin" id="tin">
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                                 <!-- End Input -->
-
-                               <div class="mb-2">
-                                   <button type="submit" class="btn btn-block btn-sm btn-primary transition-3d-hover">Sign Up</button>
-                               </div>
 
                                <div class="text-center mb-4">
                                    <span class="small text-muted">Already have an account?</span>
@@ -485,7 +481,30 @@
         }
     </script>
 
-    <script> 
+    <script>
+        $('.send_otp').click(function() {
+            let phone_number = $('#phone_number').val();
+            $.ajax({
+                url: "{{route('sent_otp_code')}}",
+                type:"POST",
+                data:{
+                    _token: "{{csrf_token()}}",
+                    phone_number: phone_number,
+                },
+                success:function(response){
+                    alertify.success(response.message)
+                },
+                error: function(error) {
+                    alertify.error(error.responseJSON.message);
+                }, finally: function() {
+                    // caluculateGuestCartPrice();
+                }
+            });
+        });
+
+
+
+
         $('#user_type').on('change', function() {
             let user_type = $(this).val();
 
@@ -493,8 +512,6 @@
                 $('.dealer-reg').hide();
                 $('.present_address_star').hide();
 
-                $('#corporation_name').val('');
-                $('#corporation_name').removeAttr('required');
                 $('#nid_no').val('');
                 $('#nid_no').removeAttr('required');
                 $('#bin_no').val('');
@@ -515,7 +532,6 @@
                 $('.dealer-reg').show();
                 $('.present_address_star').hide();
 
-                $('#corporation_name').attr('required', 'required');
                 $('#nid_no').val('');
                 $('#nid_no').removeAttr('required');
                 $('#bin_no').attr('required', 'required');
@@ -533,8 +549,6 @@
                 $('.dealer-reg').show();
                 $('.present_address_star').show();
                 $('.present_address_label').text('Address: ');
-
-                $('#corporation_name').attr('required', 'required');
                 $('#nid_no').attr('required', 'required');
                 $('#bin_no').attr('required', 'required');
                 $('#tin_no').attr('required', 'required');

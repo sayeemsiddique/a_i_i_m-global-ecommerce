@@ -34,6 +34,7 @@ use App\Models\Slider;
 use App\Models\District;
 use App\Models\Upazila;
 use App\Models\GuestCart;
+use App\Models\Otpvarification;
 use App\Models\ShippingAddress;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -56,10 +57,10 @@ class FrontendController extends Controller
         ])->with('productVarient')->limit(12)->orderBy('discount_price')->get()->chunk(4);
 
         $sliders = Slider::where('status', 1)->orderBy('sl')->get();
-        
+
         return view('frontend.index', compact('main_categories', 'featured_products', 'sliders'));
     }
-    
+
     public function user_login(Request $request)
     {
         $previousPath = parse_url(url()->previous(), PHP_URL_PATH);
@@ -128,14 +129,13 @@ class FrontendController extends Controller
                 'password'      => 'required|confirmed|min:8',
             ]);
 
-        } 
+        }
         // else {
 
         //     $request->validate([
         //         'type'              => 'required',
         //         'first_name'        => 'required|max:255',
         //         'last_name'         => 'required|max:255',
-        //         'corporation_name'  => 'required|unique:users|max:255',
         //         'mobile'            => 'required|min:11|unique:users',
         //         'email'             => 'unique:users',
         //         'password'          => 'required|confirmed|min:8',
@@ -156,7 +156,6 @@ class FrontendController extends Controller
         $user->type                 = $request->type;
         $user->first_name           = $request->first_name;
         $user->last_name            = $request->last_name;
-        $user->corporation_name     = $request->corporation_name;
         $user->mobile               = $request->mobile;
         $user->email                = $request->email;
         $user->present_address      = $request->present_address;
@@ -201,7 +200,7 @@ class FrontendController extends Controller
 
             $user->image = $randomFileName;
             $user->save();
-      	} 
+      	}
         if($request->hasFile('nid'))
         {
             $cp = $request->file('nid');
@@ -212,7 +211,7 @@ class FrontendController extends Controller
 
             $user->nid = $randomFileName;
             $user->save();
-      	} 
+      	}
         if($request->hasFile('bin'))
         {
             $cp = $request->file('bin');
@@ -223,7 +222,7 @@ class FrontendController extends Controller
 
             $user->bin = $randomFileName;
             $user->save();
-      	} 
+      	}
         if($request->hasFile('tin'))
         {
             $cp = $request->file('tin');
@@ -242,7 +241,7 @@ class FrontendController extends Controller
             return back()->with('success', 'Registration Successful! Please wait for approval.');
         }
     }
-    
+
     // Notification redirect
     public function notificationRedirect($id, $type)
     {
@@ -272,20 +271,20 @@ class FrontendController extends Controller
             });
         }
         if ($request->b) {
-            
+
             $query = $query->whereIn('brand_id', $request->b);
         }
-        
+
         if (isset($request->v) and $request->v != '') {
             $query->whereHas('productVarientData', function ($q) use ($request) {
                 $q->whereHas('productInfo', function ($r) use ($q, $request) {
                     $r->where('has_varient', 1);
                     $q->where('varient_value_id', $request->v);
                 });
-                
+
             });
         }
-        
+
         if (isset($request->range) and $request->range != '') {
             $range_data = explode('%3B', $request->range);
             $product_min_price_from = explode(";",$range_data[0])[0];
@@ -303,8 +302,8 @@ class FrontendController extends Controller
                     $qq->whereBetween('discount_price', [$product_min_price_from, $product_max_price_to]);
                 })->OrWhereBetween('discount_price', [$product_min_price_from, $product_max_price_to])->where('has_varient',0);
             });
-            
-            
+
+
 
 
         }
@@ -313,15 +312,15 @@ class FrontendController extends Controller
             $query->where('slug', 'like', '%'.$request->searchProduct.'%');
         }
 
-        
-        
+
+
 
         $paginate = 20;
 
         if ($request->per_page) {
             $paginate = $request->per_page;
         }
-        
+
         if ($request->sort_option) {
             if ($request->sort_option == 1) {
                 $query->orderBy('sl_price', 'ASC');
@@ -334,12 +333,12 @@ class FrontendController extends Controller
         } else {
             $query->latest();
         }
-        
+
         $products = $query->with('productVarient','productVarientData')->paginate($paginate);
         // dd($products);
         return view('frontend.store_grid', compact('products'));
     }
-    
+
     public function store_category(Request $request,$id)
     {
         $products = Product::where([
@@ -349,35 +348,35 @@ class FrontendController extends Controller
         ])->latest()->paginate(20);
 
         $category = Category::where('id',$id)->latest()->first();
-        
+
         return view('frontend.store_category', compact('products','category'));
     }
-    
+
     public function cart(Request $request)
     {
-        
+
         // $carts = Cart::where('user_id', auth()->user()->id ?? 0)->with('productInfo','varientInfo')->latest()->get();
-        
+
         // $setting = Setting::oldest()->first();
         return view('frontend.cart');
     }
-    
+
     public function view_cart_section(Request $request)
     {
-        
+
         $carts = Cart::where('user_id', auth()->user()->id ?? 0)->with('productInfo','varientInfo')->latest()->get();
         $guest_carts = GuestCart::where('user_id', ($request->guest_id ?? 0))->with('productInfo','varientInfo')->latest()->get();
-        
+
         // $setting = Setting::oldest()->first();
         return view('frontend.view_cart_section', compact('carts','guest_carts'));
     }
-    
+
     public function update_cart(Request $request)
     {
         if (in_array(0, $request->quantity)) {
             return redirect()->back()->with('error', 'Quantity must be at least 1');
         }
-        
+
         foreach ($request->cart_id as $key => $cart_id) {
             $data['quantity'] = $request->quantity[$key];
             $data['update_by'] = auth()->user()->id;
@@ -390,12 +389,12 @@ class FrontendController extends Controller
 
         return back()->with('success', 'Your cart has been updated');
     }
-    
+
     public function order_track(Request $request)
     {
         return view('frontend.order_track');
     }
-    
+
     public function product_detail($id)
     {
         $id = Crypt::decryptString($id);
@@ -414,7 +413,7 @@ class FrontendController extends Controller
         if (($product->status ?? 0) == 0) {
             return back()->with('danger', "Product not found");
         }
-        
+
         $related_products = Product::inRandomOrder()->where('category_id', $product->category_id)->where('id', '!=', $id)->limit(4)->get();
         if (auth()->check()) {
             $latest_cart_item = Cart::where('user_id',auth()->user()->id)->latest()->first();
@@ -438,7 +437,7 @@ class FrontendController extends Controller
             $user_review = '';
             $user_already_purchased = '';
         }
-        
+
         return view('frontend.product_detail', compact('product', 'related_products', 'reviews', 'review_count', 'review_avg', 'review_count1', 'review_count2', 'review_count3', 'review_count4', 'review_count5','latest_cart_item','user_review','user_already_purchased'));
     }
 
@@ -469,7 +468,7 @@ class FrontendController extends Controller
 
     public function edit_info(Request $request, User $user)
     {
-        
+
         if ($user->type == 1) {
             $request->validate([
                 'first_name'    => 'required|max:255',
@@ -481,7 +480,6 @@ class FrontendController extends Controller
             $request->validate([
                 'first_name'        => 'required|max:255',
                 'last_name'         => 'required|max:255',
-                'corporation_name'  => 'required|max:255|unique:users,corporation_name,'.$user->id,
                 'mobile'            => 'required|min:11|unique:users,mobile,'.$user->id,
                 'email'             => 'email|unique:users,email,'.$user->id,
                 'nid_no'            => 'required|unique:users,nid_no,'.$user->id,
@@ -500,7 +498,6 @@ class FrontendController extends Controller
         } else {
             $user->first_name           = $request->first_name;
             $user->last_name            = $request->last_name;
-            $user->corporation_name     = $request->corporation_name;
             $user->mobile               = $request->mobile;
             $user->email                = $request->email;
             $user->nid_no               = $request->nid_no;
@@ -534,7 +531,7 @@ class FrontendController extends Controller
 
                 $user->image = $randomFileName;
                 $user->save();
-            } 
+            }
             if($request->hasFile('nid_new'))
             {
                 $cp = $request->file('nid_new');
@@ -555,7 +552,7 @@ class FrontendController extends Controller
 
                 $user->nid = $randomFileName;
                 $user->save();
-            } 
+            }
             if($request->hasFile('bin_new'))
             {
                 $cp = $request->file('bin_new');
@@ -576,7 +573,7 @@ class FrontendController extends Controller
 
                 $user->bin = $randomFileName;
                 $user->save();
-            } 
+            }
             if($request->hasFile('tin_new'))
             {
                 $cp = $request->file('tin_new');
@@ -597,7 +594,7 @@ class FrontendController extends Controller
 
                 $user->tin = $randomFileName;
                 $user->save();
-            } 
+            }
         }
 
         return back()->with('success', 'Information Updated Successfully.');
@@ -613,9 +610,9 @@ class FrontendController extends Controller
 
             $user->present_address      = $request->present_address;
         }
-        
+
         if ($request->permanent_address) {
-            
+
             $request->validate([
                 'permanent_address' => 'required',
             ]);
@@ -656,7 +653,7 @@ class FrontendController extends Controller
             return back()->with('error', 'Password can not be empty');
         }
     }
-    
+
     public function set_local_value(Request $request)
     {
         if(Session::get('lang') == 'en'){
@@ -672,13 +669,13 @@ class FrontendController extends Controller
         $wings = Wing::where('status',1)->get();
         return view('frontend.query', compact('wings'));
     }
-    
+
     public function page_details($id,$slag)
     {
         $page = Page::where('id',$id)->latest()->first();
         return view('frontend.pageDetails', compact('page'));
     }
-    
+
     public function user_logout(Request $request)
     {
         Auth::logout();
@@ -688,7 +685,7 @@ class FrontendController extends Controller
     }
 
 
-    
+
     public function add_to_cart(Request $request)
     {
         if($request->quantity <= 0){
@@ -709,7 +706,7 @@ class FrontendController extends Controller
         ])->latest()->first();
 
         $quantity = $check_stock->quantity ?? 0;
-        
+
 
         if ($check_cart) {
             if ($quantity < ($check_cart->quantity + $request->quantity)) {
@@ -721,7 +718,7 @@ class FrontendController extends Controller
                 }
             }
 
-            
+
             $check_cart->quantity = $check_cart->quantity + $request->quantity;
             $check_cart->save();
 
@@ -750,7 +747,7 @@ class FrontendController extends Controller
             Cart::create($data);
         }
 
-        
+
 
         if($request->ajax()){
             return response()->json([
@@ -759,7 +756,7 @@ class FrontendController extends Controller
             ], 200);
         }
     }
-    
+
     public function guest_add_to_cart(Request $request)
     {
         if (auth()->check()) {
@@ -783,7 +780,7 @@ class FrontendController extends Controller
             ])->latest()->first();
 
             $quantity = $check_stock->quantity ?? 0;
-            
+
 
             if ($check_cart) {
                 if ($quantity < ($check_cart->quantity + $request->quantity)) {
@@ -795,7 +792,7 @@ class FrontendController extends Controller
                     }
                 }
 
-                
+
                 $check_cart->quantity = $check_cart->quantity + $request->quantity;
                 $check_cart->save();
 
@@ -831,21 +828,21 @@ class FrontendController extends Controller
             }
         }
     }
-    
+
     public function remove_cart_item(Request $request)
     {
         $check_cart = Cart::find($request->id)->delete();
 
         return redirect()->back()->with('success','Item removed from your cart');
     }
-    
+
     public function remove_guest_cart_item(Request $request)
     {
         $check_cart = GuestCart::find($request->id)->delete();
 
         return redirect()->back()->with('success','Item removed from your cart');
     }
-    
+
     public function checkout_complete(Request $request)
     {
         DB::transaction(function () use ($request) {
@@ -867,7 +864,7 @@ class FrontendController extends Controller
             if (!$shipping_address) {
                 return back()->with('error', "Shipping address not found");
             }
-            
+
             if (count($carts) == 0) {
                 return back()->with('error', "Your cart is empty");
             }
@@ -883,7 +880,7 @@ class FrontendController extends Controller
                     $product_before_discount +=  ($cart->varientInfo->price ?? 0)  * $cart->quantity;
                 }
             }
-            
+
 
             $order_data['tracking_code'] = date("yhis");
             $order_data['user_id'] = auth()->user()->id;
@@ -904,10 +901,10 @@ class FrontendController extends Controller
             $order_data['personal_vehicle'] = $request->personal_vehicle ?? 0;
             $order_data['delivery_option'] = $request->delivery_option ?? 0;
 
-            
+
 
             $order = Order::create($order_data);
-            
+
             foreach ($carts as $key => $cart) {
                 $order_detail['order_id'] = $order->id;
                 $order_detail['product_id'] = $cart->product_id;
@@ -936,7 +933,7 @@ class FrontendController extends Controller
                 $path = Str::replace('public/document', '', $path);
                 $payment_data['document'] = Str::replace('/', '', $path);
             }
-            
+
             if (isset($request->mb_document) and $request->file('mb_document')) {
                 $path = $request->file('mb_document')->store('/public/mb_document');
                 $path = Str::replace('public/mb_document', '', $path);
@@ -953,7 +950,7 @@ class FrontendController extends Controller
 
             Cart::where('user_id', auth()->user()->id)->delete();
         });
-        
+
 
         return redirect()->route('account_orders')->with('success','Your order is under review');
 
@@ -1005,14 +1002,14 @@ class FrontendController extends Controller
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        
+
         return redirect('/');
     }
 
     public function getOrderTrack(Request $request)
     {
         $validation = Validator::make($request->all(),
-        [ 
+        [
             'tracking_code'     => 'required',
             'mobile'      => 'required'
         ]);
@@ -1034,11 +1031,11 @@ class FrontendController extends Controller
         // else{
         //     $order = '';
         // }
-        
+
         return view('frontend.order_track_details',[
             'order'=>$order
         ]);
-        
+
     }
 
     public function forget_password(Request $request)
@@ -1101,10 +1098,57 @@ class FrontendController extends Controller
 
         return redirect()->back()->with('success', 'Order Canceled Successfully!');
     }
-    
+
     public function guest_cart_view(Request $request)
     {
         $carts = GuestCart::where('user_id', $request->guest_id)->with('productInfo','varientInfo')->latest()->get();
         return view('frontend.guest_cart_view', compact('carts'));
+    }
+
+    public function sign_up()
+    {
+        return view('frontend.sign_up');
+    }
+
+    public function sendOtp(Request $request)
+    {
+        $validated = $request->validate([
+            'phone_number' => 'required|regex:/^01[3-9]\d{8}$/|unique:users,mobile',
+        ], [
+            'phone_number.required' => __('The phone number is required'),
+            'phone_number.regex' => __('The phone number must follow the valid pattern'),
+            'phone_number.unique' => __('This phone number is already taken'),
+        ]);
+
+
+        $phoneNumber = $request->phone_number;
+
+        // Generate a random 6-digit OTP
+        $otp = rand(100000, 999999);
+
+        // Save OTP to the database
+        $user = new Otpvarification;
+        $user->mobile = $phoneNumber;
+        $user->otp_code = $otp;
+        $user->verification_expire = Carbon::now()->addMinutes(15);
+        $user->save();
+
+        $check_user_in_user_table = User::where('mobile', $request->phone_number)->first();
+
+
+        if ($check_user_in_user_table) {
+            return response()->json(['message' => __('pages.User already exist')], 400);
+        }
+
+
+        // Send OTP via SMS using Nexmo
+        if(($request->phone_number) != ''){
+            $data['number'] = $request->phone_number;
+            $data['message'] = 'UCEP - Your verification code for registration is: '.$otp;
+
+            $this->sms_send($data);
+        }
+
+        return response()->json(['message' =>  __('pages.OTP sent successfully, use OTP before') .$user->verification_expire, 'phone_number' => $phoneNumber]);
     }
 }
