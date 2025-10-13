@@ -30,13 +30,13 @@
 
 @push('script')
 <!-- JavaScript -->
-<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+{{-- <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 
 <!-- CSS -->
 <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
 
 <!-- Bootstrap theme -->
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/bootstrap.min.css"/>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/bootstrap.min.css"/> --}}
 
 {{-- data-cart_id --}}
 <script>
@@ -50,24 +50,24 @@
 
     function js_minus_action(that){
         var quantity = $(that).closest(".js-quantity").find('.js-result').val();
-        
+
         if (quantity > 1 ) {
             $(that).closest(".js-quantity").find('.js-result').val(Number(quantity) - 1);
         } else if (quantity == 1) {
             alertify.error("Quantity can't be bellow 1");
         }
     }
-    
+
     function js_plus_action(that){
-        
+
         // console.log(data);
         // stock_quantity
         var quantity = $(that).closest(".js-quantity").find('.js-result').val();
         var in_stock = $(that).closest(".js-quantity").find('.js-plus-action').attr('data-stock_quantity');
-        
+
         if (Number(quantity) >= Number(in_stock) ) {
             alertify.error("Stock exit");
-            
+
         } else {
             $(that).closest(".js-quantity").find('.js-result').val(Number(quantity) + 1);
         }
@@ -77,7 +77,7 @@
         var quantity = $(that).closest(".js-quantity").find('.js-result').val();
         var in_stock = $(that).closest(".js-quantity").find('.js-result').attr('data-stock_quantity');
         var actual_quantity = $(that).closest(".js-quantity").find('.actual_quantity').val();
-        
+
         if (Number(quantity) >= Number(in_stock) ) {
             alertify.error("Stock exit");
             quantity = $(that).closest(".js-quantity").find('.js-result').val(actual_quantity);
@@ -108,7 +108,7 @@
         }
 
     });
-        
+
 </script>
 
 @endpush

@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\{
-    
+
     // Front-end contoller
     FrontEndController,
     IndexController,
@@ -44,14 +44,14 @@ Route::get('/clear', function() {
     $exitCode = Artisan::call('route:clear');
     $exitCode = Artisan::call('config:clear');
     $exitCode = Artisan::call('view:clear');
-    
+
     return "Clean";
     // return what you want
 });
 
 Route::get('/link-storage', function() {
     $exitCode = Artisan::call('storage:link');
-    
+
     return "Linked";
     // return what you want
 });
@@ -60,7 +60,7 @@ Route::middleware([SetLocale::class])->group(function () {
     Route::post('/notification-read', [DynamicDependentController::class, 'notification_read'])->name('notification_read');
     Route::post('/forget-password', [FrontendController::class, 'forget_password'])->name('forget_password');
     Route::get('/child-category', [CategoryController::class, 'get_child_category'])->name('get_child_category');
-    
+
     Route::get('/user-login', [FrontendController::class, 'login'])->name('bjkb.login');
     Route::post('/user-login', [FrontendController::class, 'user_login'])->name('login');
     Route::post('/registration', [FrontendController::class, 'registration'])->name('user_.registration');
@@ -156,7 +156,7 @@ Route::middleware([SetLocale::class])->group(function () {
                 Route::post('/store-stock', [ProductController::class, 'store_inventory'])->name('store_inventory');
 
                 // material
-                
+
                 Route::get('/materials', [ProductController::class, 'material_index'])->name('material_index');
                 Route::post('/material-store', [ProductController::class, 'material_store'])->name('material_store');
                 Route::post('/material-update/{id}', [ProductController::class, 'material_update'])->name('material_update');
@@ -231,7 +231,7 @@ Route::middleware([SetLocale::class])->group(function () {
                 Route::post('/update/{id}', [RoleController::class, 'update'])->name('update');
                 Route::get('/status/change/{id}', [RoleController::class, 'statusChange'])->name('statusChange');
             });
-            
+
             Route::prefix('permission')->as('permission.')->group(function () {
                 Route::get('/index', [PermissionController::class, 'index'])->name('index');
                 Route::post('/create', [PermissionController::class, 'create'])->name('create');
@@ -361,7 +361,7 @@ Route::middleware([SetLocale::class])->group(function () {
                 Route::get('/edit-template/{template}',[SettingController::class, 'editTemplate'])->name('editTemplate');
                 Route::get('/create-template',[SettingController::class, 'createTemplate'])->name('createTemplate');
                 Route::post('/store-template',[SettingController::class, 'storeTemplate'])->name('storeTemplate');
-                Route::post('/update-template/{template}',[SettingController::class, 'updateTemplate'])->name('updateTemplate');        
+                Route::post('/update-template/{template}',[SettingController::class, 'updateTemplate'])->name('updateTemplate');
                 Route::post('/destroy/{template}',[SettingController::class, 'destroy'])->name('destroy');
 
             });
@@ -422,7 +422,7 @@ Route::middleware([SetLocale::class])->group(function () {
             Route::group(['prefix' => '/gatepass', 'as' => 'gatepass.'], function() {
                 Route::get('/report', [ReportController::class, 'gatepass_report'])->name('report');
                 Route::get('/report_filter', [ReportController::class, 'gatepass_report_filter'])->name('report_filter');
-                
+
             });
 
             Route::group(['prefix' => '/slider', 'as' => 'slider.'], function() {
@@ -443,9 +443,9 @@ Route::middleware([SetLocale::class])->group(function () {
             Route::group(['prefix' => '/upload', 'as' => 'upload.'], function() {
 
                 Route::get('/remove/{id}', [ProductController::class, 'upload_remove'])->name('remove');
-                
+
             });
-            
+
         });
 
         Route::get('/accountDashboard', [FrontendController::class, 'account'])->name('account');
@@ -457,7 +457,11 @@ Route::middleware([SetLocale::class])->group(function () {
     Route::get('/guest-cart-view', [FrontendController::class, 'guest_cart_view'])->name('guest_cart_view');
     Route::get('/remove-guest-cart-item', [FrontendController::class, 'remove_guest_cart_item'])->name('remove_guest_cart_item');
     Route::get('/view-cart-section', [FrontendController::class, 'view_cart_section'])->name('view_cart_section');
-    
+    Route::post('/sent-otp-code', [FrontendController::class, 'sent_otp_code'])->name('sent_otp_code');
+    Route::post('/resend-otp', [FrontEndController::class, 'resendOtp'])->name('resendOtp');
+    Route::post('/verify-otp', [FrontEndController::class, 'verifyOtp'])->name('verifyOtp');
+    Route::get('/check-auth', [FrontEndController::class, 'check_auth'])->name('check_auth');
+
 
 });
 

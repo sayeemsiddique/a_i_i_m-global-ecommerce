@@ -33,7 +33,7 @@
                     <div class="mb-4">
                         <h6 class="mb-1 font-weight-bold">Contact info</h6>
                         <address class="">
-                            {{ $global_setting->sub_title }} 
+                            {{ $global_setting->sub_title }}
                             <br>
                             {{ $global_setting->address }}
                         </address>
@@ -100,7 +100,7 @@
                                             data-unfold-animation-in="fadeInRight"
                                             data-unfold-animation-out="fadeOutRight"
                                             data-unfold-duration="500">
-                                            Sign in 
+                                            Sign in
                                         </a>
                                         <!-- End Account Sidebar Toggle Button -->
                                     </li>
@@ -117,7 +117,7 @@
                             </ul>
                             <!-- End List Group -->
                         </div>
-                        
+
                         <div class="col-12 col-md mb-4 mb-md-0">
                             <h6 class="mb-3 font-weight-bold">Categories</h6>
                             <!-- List Group -->
@@ -144,8 +144,8 @@
                     </div>
                 </div>
 
-                <div class="col-lg-4"> 
-                    {{-- <div class="ssl-banner"> 
+                <div class="col-lg-4">
+                    {{-- <div class="ssl-banner">
                         <img loading="lazy" src="{{ asset('frontend/ssl.jpg') }}" alt="SSL Banner" style="max-width: 100%;">
                     </div> --}}
                 </div>
@@ -246,7 +246,10 @@ data-hide-effect="slideOutDown">
 <script src="{{asset('frontend/assets/js/components/hs.selectpicker.js')}}"></script>
 
 <script src="{{asset('frontend/assets/js/components/hs.quantity-counter.js')}}"></script>
+<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 
+<!-- CSS -->
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
 <!-- JS Plugins Init. -->
 <script>
 
@@ -283,7 +286,7 @@ $(document).on('ready', function () {
     // initialization of popups
     $.HSCore.components.HSFancyBox.init('.js-fancybox');
 
-    @if (request()->route()->getName() == 'store.grid') 
+    @if (request()->route()->getName() == 'store.grid')
         $.HSCore.components.HSRangeSlider.init('.js-range-slider');
     @endif
 

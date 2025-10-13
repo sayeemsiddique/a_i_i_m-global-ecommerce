@@ -92,7 +92,7 @@
                            </div>
                         </form>
 
-                        <form class="js-validate" action="{{ route('user_.registration') }}" method="POST" enctype="multipart/form-data">
+                        <form class="js-validate"  action="{{ route('user_.registration') }}" method="POST" enctype="multipart/form-data">
                             @csrf
 
                            <!-- Signup -->
@@ -109,13 +109,81 @@
                                         <label for="phone_number">{{__('Mobile Number')}} <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="phone_number" name="phone_number" placeholder="{{__('Mobile Number')}}" required>
                                     </div>
-                                    <div class="btn btn-primary d-block text-white send_otp">{{__('Send OTP')}}</div>
+                                    <div style="cursor: pointer;" class="btn btn-primary d-block text-white send_otp">{{__('Send OTP')}}</div>
                                </div>
 
                                <div class="registration-section" style="display: none">
-                                    <input type="hidden" name="type" value="1" id="user_type">
-                                    <div class="mb-2">
-                                        <button type="submit" class="btn btn-block btn-sm btn-primary transition-3d-hover">Sign Up</button>
+                                    {{-- <input type="hidden" name="type" value="1" id="user_type"> --}}
+                                    <input type="hidden" name="mobile" value="" id="otp_mobile_number">
+                                    <div class="form-group">
+                                        <div class="js-form-message js-focus-state">
+                                            <label class="" style="font-weight: bold;" for="mobile_otp_code">Your OTP Code: <span class="text-danger">*</span></label>
+
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="set_otp_level">
+                                                        <span class="fas fa-mobile"></span>
+                                                    </span>
+                                                </div>
+
+                                                <input type="text" class="form-control" name="mobile_otp_code" id="mobile_otp_code" placeholder="Enter Your First Name" aria-label="mobile_otp_code" aria-describedby="set_otp_level" value="{{ old('mobile_otp_code') }}" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="js-form-message js-focus-state">
+                                            <label class="" style="font-weight: bold;" for="first_name">First Name: <span class="text-danger">*</span></label>
+
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="firstNameLabel">
+                                                        <span class="fas fa-user"></span>
+                                                    </span>
+                                                </div>
+
+                                                <input type="text" class="form-control" name="first_name" id="first_name" placeholder="Enter Your First Name" aria-label="first_name" aria-describedby="firstNameLabel" value="{{ old('first_name') }}" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="js-form-message js-focus-state">
+                                            <label class="" style="font-weight: bold;" for="last_name">Last Name: <span class="text-danger">*</span></label>
+
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="lastNameLabel">
+                                                        <span class="fas fa-user"></span>
+                                                    </span>
+                                                </div>
+
+                                                <input type="text" class="form-control" name="last_name" id="last_name" placeholder="Enter Your Last Name" aria-label="last_name" aria-describedby="lastNameLabel" value="{{ old('last_name') }}" required>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="js-form-message js-focus-state">
+                                       <label class="" style="font-weight: bold;" for="signupPassword">Password: <span class="text-danger">*</span></label>
+
+                                       <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="signupPasswordLabel">
+                                                    <span class="fas fa-lock"></span>
+                                                </span>
+                                            </div>
+
+                                            <input type="password" class="form-control" name="password" id="signupPassword" minlength="8" placeholder="Minimum 8 Characters" aria-label="Password" aria-describedby="signupPasswordLabel" required data-msg="Your password is invalid. Please try again." data-error-class="u-has-error" data-success-class="u-has-success">
+
+                                            <div class="pass-eye-icon" id="pass-eye" style="cursor: pointer;">
+                                                <i class="fa fa-eye"></i>
+                                            </div>
+                                       </div>
+                                   </div>
+
+                                    <div class="mb-2 mt-4">
+                                        <button id="customer_registration" type="button" class="btn btn-block btn-sm btn-primary transition-3d-hover">Sign Up</button>
+                                    </div>
+                                    <div class="mb-2 mt-1">
+                                        <button type="button" id="resend-otp" class="btn btn-link">{{__('Resend OTP')}}</button>
                                     </div>
                                </div>
 
@@ -482,6 +550,36 @@
     </script>
 
     <script>
+        $('#customer_registration').click(function() {
+        // $('#customer_registration').on('submit',function(event){
+            // event.preventDefault();
+            const phoneNumber = $('#otp_mobile_number').val();
+            const otp = $('#mobile_otp_code').val();
+            const first_name = $('#first_name').val();
+            const last_name = $('#last_name').val();
+            const password = $('#signupPassword').val();
+
+            $.ajax({
+                url: "{{route('verifyOtp')}}",
+                method: 'POST',
+                data: {
+                    _token: "{{csrf_token()}}",
+                    phone_number: phoneNumber,
+                    otp: otp,
+                    first_name: first_name,
+                    last_name: last_name,
+                    password: password,
+                },
+                success: function(response) {
+                    alertify.success(response.message);
+                    location.reload();
+
+                },
+                error: function(error) {
+                    alertify.error(error.responseJSON.message);
+                }
+            });
+        });
         $('.send_otp').click(function() {
             let phone_number = $('#phone_number').val();
             $.ajax({
@@ -492,12 +590,35 @@
                     phone_number: phone_number,
                 },
                 success:function(response){
-                    alertify.success(response.message)
+                    alertify.success(response.message);
+                    $('.otp-form-section').hide();
+                    $('.registration-section').show();
+                    $('#otp_mobile_number').val(phone_number);
                 },
                 error: function(error) {
                     alertify.error(error.responseJSON.message);
                 }, finally: function() {
                     // caluculateGuestCartPrice();
+                }
+            });
+        });
+
+        $('#resend-otp').on('click', function() {
+            let phone_number = $('#phone_number').val();
+
+            $.ajax({
+                url: "{{route('resendOtp')}}",
+                method: 'POST',
+                data: {
+                    _token: "{{csrf_token()}}",
+                    phone_number: phone_number
+                },
+                success: function(response) {
+                    alertify.success(response.message);
+                    $('#otp_mobile_number').val(phone_number);
+                },
+                error: function(error) {
+                    alertify.error(error.responseJSON.message);
                 }
             });
         });

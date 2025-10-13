@@ -84,7 +84,7 @@
             }
         }
 
-        
+
     } else {
         $in_stock = $product->productAllStock()->where('varient_id', 0)->sum('quantity');
         $sale_price = $product->discount_price;
@@ -100,7 +100,7 @@
             $sale_price = $product->price;
         }
     }
-    
+
 @endphp
 <!-- ========== MAIN CONTENT ========== -->
 <main id="content" role="main">
@@ -143,7 +143,7 @@
                         </div>
 
                         @foreach ($product->productGallery as $Gallery)
-                        
+
                         <div class="js-slide">
                             <div class="zoom-box" style="display: inline-block;width: 200px;height: 300px;">
 
@@ -151,7 +151,7 @@
                             </div>
                         </div>
                         @endforeach
-                        
+
                     </div>
 
                     <div id="sliderSyncingThumb" class="js-slick-carousel u-slick u-slick--slider-syncing u-slick--slider-syncing-size u-slick--gutters-1 u-slick--transform-off"
@@ -162,14 +162,14 @@
 
                         <div class="js-slide" style="cursor: pointer;">
                             <img loading="lazy" style="height: auto" class="img-fluid" src="{{asset('storage/product')}}/{{$product->image}}" alt="Image Description">
-                            
+
                         </div>
                         @foreach ($product->productGallery as $Gallery)
                         <div class="js-slide" style="cursor: pointer;">
                             <img loading="lazy" style="height: auto" class="img-fluid" src="{{asset('storage/gallery')}}/{{$Gallery->name}}" alt="Image Description">
                         </div>
                         @endforeach
-                        
+
                     </div>
                 </div>
                 <div class="col-md-7 mb-md-6 mb-lg-0">
@@ -228,8 +228,8 @@
                             <div class="d-md-flex align-items-center">
                                 <i class="fas fa-shopping-cart @if ($in_stock > 0) text-green @else text-danger @endif" style="font-size: 13px; margin: 10px 0;"></i>
 
-                                <div class="ml-md-3 text-gray-9 font-size-14">Availability: 
-                                    
+                                <div class="ml-md-3 text-gray-9 font-size-14">Availability:
+
                                     @if ($in_stock > 0)
                                             <input type="hidden" class="stock_quantity" value="{{$in_stock}}">
                                         <span class="text-green font-weight-bold">In stock</span>
@@ -241,20 +241,20 @@
                         </div>
                         {{-- <div class="flex-horizontal-center flex-wrap mb-4"> --}}
                             {{-- <a href="#" class="text-gray-6 font-size-13 mr-2"><i class="ec ec-favorites mr-1 font-size-15"></i> Wishlist</a> --}}
-                            
+
                         {{-- </div> --}}
                         <p style="margin-bottom: 12px;"><strong>Code:</strong> {{$product->code}}</p>
                         <div class="mb-4">
                             <div class="d-flex align-items-baseline">
                                 <ins class="font-size-36 text-decoration-none">
-                                    
+
                                     ৳ <span class="price_append_area">{{$sale_price}}</span>
                                     @if ($has_discount == 1)
                                         <del class="font-size-20 ml-2 text-danger">৳ {{$sale_price_without_discount}}</del>
                                     @endif
-                                    
+
                                 </ins>
-                                
+
                                 {{-- <del class="font-size-20 ml-2 text-gray-6">৳ 2,299.00</del> --}}
                             </div>
                         </div>
@@ -262,13 +262,13 @@
                         <div class="py-3 mb-4">
                             <div class="d-flex align-items-center">
                                 <h6 class="font-size-14 mb-0"><strong>Variant: </strong></h6>
-                                
+
                                 <!-- Select -->
                                 <select style="max-width:280px;" class="form-control ml-3 varient_id"
                                     data-style="btn-sm bg-white font-weight-normal py-2 border" required autocomplete="off">
                                     <option value="">Select</option>
                                     @foreach ($product->productVarient as $productVarient)
-                                    
+
                                         <option @if (($productVarient->productStock->quantity ?? 0) <= 0) style='color: #963e3eff' @endif data-price="{{$productVarient->discount_price}}" data-quantity="{{$productVarient->productStock->quantity ?? 0}}" value="{{$productVarient->id}}">
                                             @foreach ($productVarient->productVarientData as $VarientData)
                                                 {{-- {{$VarientData}} --}}
@@ -277,7 +277,7 @@
                                              @if (($productVarient->productStock->quantity ?? 0) <= 0)- Out of stock @endif
                                         </option>
                                     @endforeach
-                                    
+
                                 </select>
                                 <!-- End Select -->
                             </div>
@@ -285,7 +285,7 @@
                         @else
                             <input type="hidden" class="productSingleStock" value="{{$product->productSingleStock->quantity ?? 0}}">
                         @endif
-                        
+
                         <div class="d-md-flex align-items-end mb-3">
                             <div class="max-width-150 mb-4 mb-md-0">
                                 <h6 class="font-size-14"><strong>Quantity</strong></h6>
@@ -326,9 +326,9 @@
                                                 data-unfold-animation-in="fadeInRight"
                                                 data-unfold-animation-out="fadeOutRight"
                                                 data-unfold-duration="500">
-                                                <i class="ec ec-user mr-1"></i> Login before add to cart 
+                                                <i class="ec ec-user mr-1"></i> Login before add to cart
                                     </div> --}}
-                                
+
                                 @endif
                             </div>
                         </div>
@@ -348,7 +348,7 @@
                     <li class="nav-item flex-shrink-0 flex-xl-shrink-1 z-index-2">
                         <a class="nav-link active" id="Jpills-two-example1-tab" data-toggle="pill" href="#Jpills-two-example1" role="tab" aria-controls="Jpills-two-example1" aria-selected="false">Description</a>
                     </li>
-                    
+
                     <li class="nav-item flex-shrink-0 flex-xl-shrink-1 z-index-2">
                         <a class="nav-link" id="Jpills-four-example1-tab" data-toggle="pill" href="#Jpills-four-example1" role="tab" aria-controls="Jpills-four-example1" aria-selected="false">Reviews</a>
                     </li>
@@ -357,14 +357,14 @@
             <!-- Tab Content -->
             <div class="borders-radius-17 border p-4 mt-4 mt-md-0 px-lg-10 py-lg-9">
                 <div class="tab-content" id="Jpills-tabContent">
-                    
+
                     <div class="tab-pane fade active show" id="Jpills-two-example1" role="tabpanel" aria-labelledby="Jpills-two-example1-tab">
                         <h3 class="font-size-24 mb-3">Description</h3>
                         <div class="w-100">
                             {!!$product->productInfo->description ?? ''!!}
                         </div>
                     </div>
-                    
+
                     <div class="tab-pane fade" id="Jpills-four-example1" role="tabpanel" aria-labelledby="Jpills-four-example1-tab">
                         <div class="row mb-8">
                             <div class="col-md-6">
@@ -510,7 +510,7 @@
                                                         <label for="star2" title="text">2 stars</label>
                                                         <input type="radio" id="star1" class="rate" name="rating" value="1" @if($user_review and ($user_review->rating ?? 0) == 1) checked @endif/>
                                                         <label for="star1" title="text">1 star</label>
-                                                        
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -546,7 +546,7 @@
                                 @endif
                             </div>
                         </div>
-                        
+
                         <div class="mb-3">
                             <h2 class="font-size-30 font-weight-bold text-lh-1 mb-0">All Reviews</h2>
                         </div>
@@ -619,7 +619,7 @@
                                                     @else
                                                         {{ $related_product->discount_price }}
                                                     @endif
-                                                    
+
                                                 </div>
                                             </div>
                                         </div>
@@ -634,10 +634,10 @@
                             </div>
                         </li>
                 @endforeach
-                
-                
-                
-                
+
+
+
+
             </ul>
         </div>
         <!-- End Related products -->
@@ -645,7 +645,7 @@
         <input type="hidden" class="token" value="{{ csrf_token() }}">
 
         <input type="hidden" class="has_varient" @if($product->has_varient == 1)value="on" @else value="no" @endif>
-        
+
     </div>
 </main>
 <!-- ========== END MAIN CONTENT ========== -->
@@ -655,7 +655,7 @@
     <script src="{{asset('frontend/assets/js/components/hs.scroll-nav.js')}}"></script>
 
     <script>
-        
+
 
         $(document).on('ready', function () {
 
@@ -668,7 +668,7 @@
             $.HSCore.components.HSQantityCounter.init('.js-quantity');
 
             $('.js-minus-action').click(function() {
-                
+
                 var quantity = $('.js-result').val();
                 if (quantity > 1 ) {
                     $('.js-result').val(Number(quantity) - 1);
@@ -678,18 +678,18 @@
             });
 
             $('.js-plus-action').on('click', function () {
-                
+
                 var varient_stock_quantity = $('.varient_id option:selected').attr('data-quantity');
                 var quantity = $('.js-result').val();
                 var has_varient = $('.has_varient').val();
                 var stock_quantity = $('.stock_quantity').val();
-                
+
 
                 if (has_varient == 'on') {
-                    
-                    
+
+
                     if (varient_stock_quantity) {
-                        
+
                         if (Number(quantity) >= Number(stock_quantity) ) {
                             alertify.error("Stock exit");
                         } else {
@@ -698,46 +698,46 @@
                     }  else {
                         alertify.error("Please select variant first");
                     }
-                    
-                    
+
+
                 } else {
                     if (Number(quantity) >= Number(stock_quantity) ) {
                         alertify.error("Stock exit");
                     } else {
                         $('.js-result').val(Number(quantity) + Number(1));
-                        
+
                     }
                 }
-                
-                
+
+
             });
         });
 
         $('.varient_id').change(function() {
             var price = $('.varient_id option:selected').attr('data-price');
             var stock_quantity = $('.varient_id option:selected').attr('data-quantity');
-            
+
             if (price) {
                 $('.price_append_area').text(price);
             }
             if (stock_quantity) {
                 $('.stock_quantity').val(Number(stock_quantity));
             }
-            
+
         });
-        
+
         $('.add-to-cart-button').click(function() {
 
             // var cart_category = {{-- {{$cart_category}} --}};
             // var product_category = {{-- {{$product_category}} --}};
             // if (Number(cart_category) > 0 ) {
             //     if (cart_category != product_category) {
-                    
+
             //             alertify.error("Different category product not allowed to add to cart");
             //             return false;
-                    
+
             //     }
-                
+
             // }
             var has_varient = $('.has_varient').val();
             var quantity = $('.js-result').val();
@@ -773,7 +773,7 @@
                             setTimeout(function(){
                                 window.location.reload(1);
                             }, 2000);
-                            
+
                         }
                     },
                     error: function(error) {
@@ -794,13 +794,13 @@
                 //     alertify.error("Quantity can't be bellow 1");
                 //     return false;
                 // }
-               
+
                 // if (Number(productSingleStock) < Number(quantity)) {
                 //     alertify.error("Stock exit!");
                 //     return false;
                 // }
 
-                
+
                 var data_token = $('.token').val();
 
                 $.ajax({
@@ -819,7 +819,7 @@
                         setTimeout(function(){
                             window.location.reload(1);
                         }, 2000);
-                        
+
                       }
                     },
                     error: function(error) {
@@ -838,14 +838,14 @@
 
             // var price = $('.varient_id option:selected').attr('data-price');
             // var stock_quantity = $('.varient_id option:selected').attr('data-quantity');
-            
+
             // if (price) {
             //     $('.price_append_area').text(price);
             // }
             // if (stock_quantity) {
             //     $('.stock_quantity').text(Number(stock_quantity));
             // }
-            
+
 
         });
 
@@ -855,83 +855,112 @@
             // Map each byte to a digit (0–9)
             return Array.from(array, byte => (byte % 10).toString()).join('');
         }
-        
+
         $('.guest-add-to-cart-button').click(function() {
-            var has_varient = $('.has_varient').val();
-            var quantity = $('.js-result').val();
-            var varient_id = 0;
-            if (has_varient == 'on') {
-                varient_id = $('.varient_id option:selected').val();
-                var varient_stock_quantity = $('.varient_id option:selected').attr('data-quantity');
-                if (!varient_stock_quantity) {
-                    alertify.error("Please select variant");
-                    return false;
-                }
+            //  checking auth
+            $.ajax({
+                url: "{{route('check_auth')}}",
+                type:"GET",
+                // data:{
+                //     product_id: {{$product->id}},
+                //     varient: 0,
+                //     _token: data_token,
+                //     quantity: quantity,
+                // },
+                success:function(response){
+                    if (response.code == 200) {
 
-                var data_token = $('.token').val();
-                let guest_id = localStorage.getItem("guest_id");
-                if(!guest_id) {
-                    guest_id = randomNumericId();
-                    localStorage.setItem("guest_id", guest_id);
-                }
-                // alert();
-                $.ajax({
-                    url: "{{route('guest_add_to_cart')}}",
-                    type:"GET",
-                    data:{
-                        product_id: {{$product->id}},
-                        varient: varient_id,
-                        _token: data_token,
-                        quantity: quantity,
-                        guest_id: guest_id,
-                    },
-                    success:function(response){
-                        if(response) {
-                            var data = JSON.stringify(response.message);
-                            alertify.success(data.replace(/"/g, ''));
-                            setTimeout(function(){
-                                window.location.reload(1);
-                            }, 2000);
-                            
-                        }
-                    },
-                    error: function(error) {
-                        alertify.error(JSON.parse(error.responseText).message);
+                    } else {
+                        // sidebarContent
+                        // u-sidebar u-sidebar__lg u-unfold--css-animation fadeInRight
+                        // u-sidebar u-sidebar__lg u-unfold--css-animation u-unfold--hidden
                     }
-                });
+                },
+                error: function(error) {
 
-            } else {
+                //  console.log(error);
+                //   $('#nameError').text(response.responseJSON.errors.name);
+                //   $('#emailError').text(response.responseJSON.errors.email);
+                //   $('#mobileError').text(response.responseJSON.errors.mobile);
+                //   $('#messageError').text(response.responseJSON.errors.message);
+                }
+            });
 
-                var quantity = $('.js-result').val();
-                var productSingleStock = $('.productSingleStock').val();
+            // var has_varient = $('.has_varient').val();
+            // var quantity = $('.js-result').val();
+            // var varient_id = 0;
+            // if (has_varient == 'on') {
+            //     varient_id = $('.varient_id option:selected').val();
+            //     var varient_stock_quantity = $('.varient_id option:selected').attr('data-quantity');
+            //     if (!varient_stock_quantity) {
+            //         alertify.error("Please select variant");
+            //         return false;
+            //     }
 
-                
-                var data_token = $('.token').val();
+            //     var data_token = $('.token').val();
+            //     let guest_id = localStorage.getItem("guest_id");
+            //     if(!guest_id) {
+            //         guest_id = randomNumericId();
+            //         localStorage.setItem("guest_id", guest_id);
+            //     }
+            //     // alert();
+            //     $.ajax({
+            //         url: "{{route('guest_add_to_cart')}}",
+            //         type:"GET",
+            //         data:{
+            //             product_id: {{$product->id}},
+            //             varient: varient_id,
+            //             _token: data_token,
+            //             quantity: quantity,
+            //             guest_id: guest_id,
+            //         },
+            //         success:function(response){
+            //             if(response) {
+            //                 var data = JSON.stringify(response.message);
+            //                 alertify.success(data.replace(/"/g, ''));
+            //                 setTimeout(function(){
+            //                     window.location.reload(1);
+            //                 }, 2000);
 
-                $.ajax({
-                    url: "{{route('guest_add_to_cart')}}",
-                    type:"GET",
-                    data:{
-                        product_id: {{$product->id}},
-                        varient: 0,
-                        _token: data_token,
-                        quantity: quantity,
-                    },
-                    success:function(response){
-                      if(response) {
-                        var data = JSON.stringify(response.message);
-                        alertify.success(data.replace(/"/g, ''));
-                        setTimeout(function(){
-                            window.location.reload(1);
-                        }, 2000);
-                        
-                      }
-                    },
-                    error: function(error) {
-                        alertify.error(JSON.parse(error.responseText).message);
-                    }
-                });
-            }
+            //             }
+            //         },
+            //         error: function(error) {
+            //             alertify.error(JSON.parse(error.responseText).message);
+            //         }
+            //     });
+
+            // } else {
+
+            //     var quantity = $('.js-result').val();
+            //     var productSingleStock = $('.productSingleStock').val();
+
+
+            //     var data_token = $('.token').val();
+
+            //     $.ajax({
+            //         url: "{{route('guest_add_to_cart')}}",
+            //         type:"GET",
+            //         data:{
+            //             product_id: {{$product->id}},
+            //             varient: 0,
+            //             _token: data_token,
+            //             quantity: quantity,
+            //         },
+            //         success:function(response){
+            //           if(response) {
+            //             var data = JSON.stringify(response.message);
+            //             alertify.success(data.replace(/"/g, ''));
+            //             setTimeout(function(){
+            //                 window.location.reload(1);
+            //             }, 2000);
+
+            //           }
+            //         },
+            //         error: function(error) {
+            //             alertify.error(JSON.parse(error.responseText).message);
+            //         }
+            //     });
+            // }
 
         });
 
@@ -939,8 +968,8 @@
             $('.login_js').css("cursor","pointer");
         });
 
-        
-        
+
+
     </script>
 
     <!-- JavaScript -->

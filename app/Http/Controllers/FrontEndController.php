@@ -38,8 +38,9 @@ use App\Models\Otpvarification;
 use App\Models\ShippingAddress;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-
+use Carbon\Carbon;
 use Validator;
+use Illuminate\Support\Facades\Hash;
 
 class FrontendController extends Controller
 {
@@ -118,18 +119,21 @@ class FrontendController extends Controller
 
     public function registration(Request $request)
     {
-        if ($request->type == 1) {
+        // dd($request->all());
+        // if ($request->type == 1) {
+
+        dd('ds');
 
             $request->validate([
-                'type'          => 'required',
+                // 'type'          => 'required',
                 'first_name'    => 'required|max:255',
                 'last_name'     => 'required|max:255',
                 'mobile'        => 'required|min:11|unique:users',
-                'email'         => 'unique:users',
-                'password'      => 'required|confirmed|min:8',
+                // 'email'         => 'unique:users',
+                'password'      => 'required|min:8',
             ]);
 
-        }
+        // }
         // else {
 
         //     $request->validate([
@@ -153,42 +157,43 @@ class FrontendController extends Controller
         $user = new User;
 
         $user->role_id              = 0;
-        $user->type                 = $request->type;
+        $user->type                 = 1;
         $user->first_name           = $request->first_name;
         $user->last_name            = $request->last_name;
         $user->mobile               = $request->mobile;
-        $user->email                = $request->email;
-        $user->present_address      = $request->present_address;
+        $user->email                = $request->email ?? '';
+        $user->present_address      = $request->present_address ?? '';
         $user->password             = bcrypt($request->password);
-        $user->nid_no               = $request->nid_no;
-        $user->bin_no               = $request->bin_no;
-        $user->tin_no               = $request->tin_no;
-        $user->username               = 'temp';
-        if ($request->type == 1) {
-            $user->status           = 1;
-        } else {
-            $user->status           = 3;
-        }
+        $user->nid_no               = $request->nid_no ?? '';
+        $user->bin_no               = $request->bin_no ?? '';
+        $user->tin_no               = $request->tin_no ?? '';
+        $user->username               = Str::lower($request->first_name.$request->last_name.$user->id);
+        $user->status           = 1;
+        // if ($request->type == 1) {
+        //     $user->status           = 1;
+        // } else {
+        //     $user->status           = 3;
+        // }
 
         $user->save();
 
-        $user->username             = Str::lower($request->first_name.$request->last_name.$user->id);
+        // $user->username             = Str::lower($request->first_name.$request->last_name.$user->id);
         $user->created_by           = $user->id;
 
         $user->save();
 
         // Send notification of new corporate consumer or dealer
-        if ($request->type != 1) {
-            $notification = new Notify;
-            $notification->type = $request->type;
-            if($request->type == 2){
-                $notification->data = 'New Corporate Consumer account is pending';
-            }else{
-                $notification->data = 'New Dealer account is pending';
-            }
-            $notification->status = 1;
-            $notification->save();
-        }
+        // if ($request->type != 1) {
+        //     $notification = new Notify;
+        //     $notification->type = $request->type;
+        //     if($request->type == 2){
+        //         $notification->data = 'New Corporate Consumer account is pending';
+        //     }else{
+        //         $notification->data = 'New Dealer account is pending';
+        //     }
+        //     $notification->status = 1;
+        //     $notification->save();
+        // }
 
         if($request->hasFile('image'))
         {
@@ -235,11 +240,7 @@ class FrontendController extends Controller
             $user->save();
       	}
 
-        if ($request->type == 1) {
-            return back()->with('success', 'Registration Successful! Login to your account.');
-        } else {
-            return back()->with('success', 'Registration Successful! Please wait for approval.');
-        }
+        return back()->with('success', 'Registration Successful! Login to your account.');
     }
 
     // Notification redirect
@@ -1110,7 +1111,7 @@ class FrontendController extends Controller
         return view('frontend.sign_up');
     }
 
-    public function sendOtp(Request $request)
+    public function sent_otp_code(Request $request)
     {
         $validated = $request->validate([
             'phone_number' => 'required|regex:/^01[3-9]\d{8}$/|unique:users,mobile',
@@ -1137,18 +1138,137 @@ class FrontendController extends Controller
 
 
         if ($check_user_in_user_table) {
-            return response()->json(['message' => __('pages.User already exist')], 400);
+            return response()->json(['message' => __('User already exist')], 400);
         }
 
 
         // Send OTP via SMS using Nexmo
         if(($request->phone_number) != ''){
             $data['number'] = $request->phone_number;
-            $data['message'] = 'UCEP - Your verification code for registration is: '.$otp;
+            $data['message'] = 'Your verification code for registration is: '.$otp;
+
+            // $this->sms_send($data);
+        }
+
+        return response()->json(['message' =>  __('OTP sent successfully, use OTP within 15 minutes.'), 'phone_number' => $phoneNumber]);
+    }
+
+    public function sms_send($data)
+    {
+        $url = "http://bulksmsbd.net/api/smsapi";
+        $api_key = "y3FfVATWkcvMDn67cNkp";
+        $senderid = "8809617611033";
+        $number = $data['number'];
+        $message = $data['message'];
+
+        $data = [
+            "api_key" => $api_key,
+            "senderid" => $senderid,
+            "number" => $number,
+            "message" => $message
+        ];
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $response = curl_exec($ch);
+        curl_close($ch);
+        return $response;
+    }
+
+    public function resendOtp(Request $request)
+    {
+        // $request->validate([
+        //     'phone_number' => 'required|regex:/^01[3-9]\d{8}$/|unique:users,mobile', // E.164 phone number format
+        // ]);
+        $validated = $request->validate([
+            'phone_number' => 'required|regex:/^01[3-9]\d{8}$/|unique:users,mobile',
+        ], [
+            'phone_number.required' => __('The phone number is required'),
+            'phone_number.regex' => __('The phone number must follow the valid pattern'),
+            'phone_number.unique' => __('This phone number is already taken'),
+        ]);
+
+        $phoneNumber = $request->phone_number;
+
+        // Generate a new OTP
+        $otp = rand(100000, 999999);
+
+        // Save the new OTP to the database
+        Otpvarification::updateOrCreate(
+            ['mobile' => $phoneNumber],
+            ['otp_code' => $otp, 'verification_expire' => Carbon::now()->addMinutes(15)]
+        );
+
+        // Send the new OTP via SMS
+        if(($request->phone_number) != ''){
+            $data['number'] = $request->phone_number;
+            $data['message'] = 'Your verification code for registration is: '.$otp;
 
             $this->sms_send($data);
         }
 
-        return response()->json(['message' =>  __('pages.OTP sent successfully, use OTP before') .$user->verification_expire, 'phone_number' => $phoneNumber]);
+        return response()->json(['message' => __('OTP resent successfully')]);
+    }
+
+    public function verifyOtp(Request $request)
+    {
+        $request->validate([
+            'phone_number' => 'required|regex:/^01[3-9]\d{8}$/|unique:users,mobile',
+            'otp' => 'required|numeric',
+        ]);
+
+        $phoneNumber = $request->phone_number;
+        $otp = $request->otp;
+
+        // Check if OTP exists and is valid
+        $otpRecord = Otpvarification::where('mobile', $phoneNumber)->whereDate('verification_expire', '<', date('Y-m-d h:i:s'))->where('otp_code', $otp)->first();
+
+        if (!$otpRecord) {
+            return response()->json(['message' => 'Invalid OTP'], 400);
+        }
+
+        $user = new User;
+        $user->role_id = 0;
+        $user->type  = 1;
+        $user->first_name           = $request->first_name;
+        $user->last_name            = $request->last_name;
+        $user->email = $request->email ?? '';
+        $user->present_address      = $request->present_address ?? '';
+        $user->status = 1;
+        $user->username               = Str::lower($request->first_name.$request->last_name.$user->id);
+        $user->mobile = $request->phone_number;
+        $user->nid_no               = $request->nid_no ?? '';
+        $user->bin_no               = $request->bin_no ?? '';
+        $user->tin_no               = $request->tin_no ?? '';
+        // $user->otp_code = $otp;
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        $user->created_by           = $user->id;
+
+        $user->save();
+        // OTP is correct, proceed with registration
+        $otpRecord->delete();
+
+        return response()->json(['message' => __('pages.OTP verified successfully, now you can login')]);
+
+    }
+
+    public function check_auth()
+    {
+        if (auth()->check()) {
+            return response()->json([
+                'status' => 'success',
+                'code' => 200
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 'success',
+                'code' => 401
+            ], 200);
+        }
     }
 }
