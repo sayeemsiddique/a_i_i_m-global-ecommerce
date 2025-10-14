@@ -199,6 +199,12 @@ Route::middleware([SetLocale::class])->group(function () {
             });
 
             Route::prefix('page')->as('page.')->group(function () {
+                Route::get('/', [PageController::class, 'index'])->name('index');
+                Route::patch('/update/{id}', [PageController::class, 'update'])->name('update');
+                Route::get('/update/{id}', [PageController::class, 'show'])->name('show');
+                Route::get('/edit/{id}', [PageController::class, 'edit'])->name('edit');
+                Route::get('/delete/{id}', [PageController::class, 'delete'])->name('delete');
+
                 Route::get('/about-us', [PageController::class, 'aboutus'])->name('aboutus');
                 Route::post('/update/about-us', [PageController::class, 'updateAboutus'])->name('updateAboutus');
                 Route::get('/contact-us', [PageController::class, 'contactus'])->name('contactus');

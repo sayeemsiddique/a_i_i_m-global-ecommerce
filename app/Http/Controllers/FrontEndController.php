@@ -64,13 +64,18 @@ class FrontendController extends Controller
 
     public function user_login(Request $request)
     {
-        $previousPath = parse_url(url()->previous(), PHP_URL_PATH);
+        // dd($request->all());
+        // $previousPath = parse_url(url()->previous(), PHP_URL_PATH);
         $login = $request->input('username');
         $password = $request->input('password');
 
         // Check if fields are empty
         if (!$login || !$password) {
-            return back()->withErrors(['login' => 'Please provide both login and password.'])->withInput();
+            // return back()->withErrors(['login' => 'Please provide both login and password.'])->withInput();
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Please provide both login email or mbile and password'
+            ], 404);
         }
 
         // Determine login type: email or mobile
@@ -83,14 +88,32 @@ class FrontendController extends Controller
 
         // Attempt login
         if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
+            // $request->session()->regenerate();
+            if (($request->product_id > 0) and ($request->quantity > 0)) {
+                // $data['product_id'] = $request->product_id;
+                // $data['varient'] = $request->varient;
+                // $data['quantity'] = $request->quantity;
 
-            // Redirect to intended page or home
-            if ($previousPath == '/user-login') {
-                return redirect()->intended('/admin');
-            } else {
-                return back()->with('success', 'Login in successful');
+                // use Illuminate\Http\Request;
+                $data = new Request([
+                    'product_id' => $request->product_id,
+                    'varient' => $request->varient,
+                    'quantity' => $request->quantity,
+                ]);
+
+                $this->add_to_cart($data);
             }
+
+            return response()->json([
+                    'status' => 'success',
+                    'message' => 'Login successfully'
+                ], 200);
+            // Redirect to intended page or home
+            // if ($previousPath == '/user-login') {
+            //     return redirect()->intended('/admin');
+            // } else {
+            //     return back()->with('success', 'Login in successful');
+            // }
         }
 
         // Login failed, redirect back with error
@@ -122,7 +145,7 @@ class FrontendController extends Controller
         // dd($request->all());
         // if ($request->type == 1) {
 
-        dd('ds');
+
 
             $request->validate([
                 // 'type'          => 'required',
@@ -1253,7 +1276,17 @@ class FrontendController extends Controller
         // OTP is correct, proceed with registration
         $otpRecord->delete();
 
-        return response()->json(['message' => __('pages.OTP verified successfully, now you can login')]);
+        $data = new Request([
+            'product_id' => $request->product_id,
+            'varient' => $request->varient,
+            'username' => $request->phone_number,
+            'quantity' => $request->quantity,
+            'password' => $request->password,
+        ]);
+
+        $this->user_login($data);
+
+        return response()->json(['message' => __('OTP verified successfully')]);
 
     }
 

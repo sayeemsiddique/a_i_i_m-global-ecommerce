@@ -308,27 +308,9 @@
                                 <!-- End Quantity -->
                             </div>
                             <div class="ml-md-3">
-                                @if (auth()->check())
-                                    @if ($in_stock > 0)
+                                @if ($in_stock > 0)
                                     <div style="cursor:pointer" class="btn px-5 btn-primary-dark transition-3d-hover add-to-cart-button"><i class="ec ec-add-to-cart mr-2 font-size-20"></i> Add to Cart</div>
-                                    @endif
-                                @else
-                                    {{-- guest add to cart --}}
-                                    <div style="cursor:pointer" class="btn px-5 btn-primary-dark transition-3d-hover guest-add-to-cart-button"><i class="ec ec-add-to-cart mr-2 font-size-20"></i> Add to Cart</div>
-                                    {{-- <div role="button" class="btn px-5 btn-primary-dark transition-3d-hover login_js"
-                                                aria-controls="sidebarContent"
-                                                aria-haspopup="true"
-                                                aria-expanded="false"
-                                                data-unfold-event="click"
-                                                data-unfold-hide-on-scroll="false"
-                                                data-unfold-target="#sidebarContent"
-                                                data-unfold-type="css-animation"
-                                                data-unfold-animation-in="fadeInRight"
-                                                data-unfold-animation-out="fadeOutRight"
-                                                data-unfold-duration="500">
-                                                <i class="ec ec-user mr-1"></i> Login before add to cart
-                                    </div> --}}
-
+                                    <div style="cursor:pointer" class="btn px-5 btn-success transition-3d-hover add-to-cart-button"><i class="ec ec-newsletter mr-2 font-size-20"></i> Buy Now</div>
                                 @endif
                             </div>
                         </div>
@@ -726,126 +708,81 @@
 
         });
 
-        $('.add-to-cart-button').click(function() {
-
-            // var cart_category = {{-- {{$cart_category}} --}};
-            // var product_category = {{-- {{$product_category}} --}};
-            // if (Number(cart_category) > 0 ) {
-            //     if (cart_category != product_category) {
-
-            //             alertify.error("Different category product not allowed to add to cart");
-            //             return false;
-
-            //     }
-
-            // }
-            var has_varient = $('.has_varient').val();
-            var quantity = $('.js-result').val();
-            var varient_id = 0;
-            if (has_varient == 'on') {
-                varient_id = $('.varient_id option:selected').val();
-                var varient_stock_quantity = $('.varient_id option:selected').attr('data-quantity');
-                if (!varient_stock_quantity) {
-                    alertify.error("Please select variant");
-                    return false;
+        function check_auth(callback) {
+            $.ajax({
+                url: "{{ route('check_auth') }}",
+                type: "GET",
+                success: function(response){
+                    callback(response.code);
+                },
+                error: function() {
+                    callback(401);
                 }
+            });
+        }
 
-                // if (Number(varient_stock_quantity) < 1) {
-                //     alertify.error("Stock Out");
-                //     return false;
-                // }
-
-                var data_token = $('.token').val();
-                // alert();
-                $.ajax({
-                    url: "{{route('add_to_cart')}}",
-                    type:"GET",
-                    data:{
-                        product_id: {{$product->id}},
-                        varient: varient_id,
-                        _token: data_token,
-                        quantity: quantity,
-                    },
-                    success:function(response){
-                        if(response) {
-                            var data = JSON.stringify(response.message);
-                            alertify.success(data.replace(/"/g, ''));
-                            setTimeout(function(){
-                                window.location.reload(1);
-                            }, 2000);
-
-                        }
-                    },
-                    error: function(error) {
-                        alertify.error(JSON.parse(error.responseText).message);
-                    //   $('#nameError').text(response.responseJSON.errors.name);
-                    //   $('#emailError').text(response.responseJSON.errors.email);
-                    //   $('#mobileError').text(response.responseJSON.errors.mobile);
-                    //   $('#messageError').text(response.responseJSON.errors.message);
-                    }
-                });
-
-            } else {
-
-                var quantity = $('.js-result').val();
-                var productSingleStock = $('.productSingleStock').val();
-
-                // if (Number(quantity) < 1) {
-                //     alertify.error("Quantity can't be bellow 1");
-                //     return false;
-                // }
-
-                // if (Number(productSingleStock) < Number(quantity)) {
-                //     alertify.error("Stock exit!");
-                //     return false;
-                // }
-
-
-                var data_token = $('.token').val();
-
-                $.ajax({
-                    url: "{{route('add_to_cart')}}",
-                    type:"GET",
-                    data:{
-                        product_id: {{$product->id}},
-                        varient: 0,
-                        _token: data_token,
-                        quantity: quantity,
-                    },
-                    success:function(response){
-                      if(response) {
+        function addToCart(product_id,varient,_token,quantity) {
+            $.ajax({
+                url: "{{route('add_to_cart')}}",
+                type:"GET",
+                data:{
+                    product_id: product_id,
+                    varient: varient,
+                    _token: _token,
+                    quantity: quantity,
+                },
+                success:function(response){
+                    if(response) {
                         var data = JSON.stringify(response.message);
                         alertify.success(data.replace(/"/g, ''));
                         setTimeout(function(){
                             window.location.reload(1);
                         }, 2000);
 
-                      }
-                    },
-                    error: function(error) {
-                        alertify.error(JSON.parse(error.responseText).message);
-                    //  console.log(error);
-                    //   $('#nameError').text(response.responseJSON.errors.name);
-                    //   $('#emailError').text(response.responseJSON.errors.email);
-                    //   $('#mobileError').text(response.responseJSON.errors.mobile);
-                    //   $('#messageError').text(response.responseJSON.errors.message);
                     }
-                });
+                },
+                error: function(error) {
+                    alertify.error(JSON.parse(error.responseText).message);
+                }
+            });
+        }
 
+        $('.add-to-cart-button').click(function() {
 
+            let varient_id = 0;
+            let data_token = $('.token').val();
+            let product_id = {{$product->id}};
+            let quantity = $('.js-result').val();
+            let has_varient = $('.has_varient').val();
 
+            if (has_varient == 'on') {
+                varient_id = $('.varient_id option:selected').val();
+                let varient_stock_quantity = $('.varient_id option:selected').attr('data-quantity');
+                if (!varient_stock_quantity) {
+                    alertify.error("Please select variant");
+                    return false;
+                }
             }
 
-            // var price = $('.varient_id option:selected').attr('data-price');
-            // var stock_quantity = $('.varient_id option:selected').attr('data-quantity');
+            check_auth(function(check_auth_user) {
+                if (check_auth_user === 200) {
+                    console.log(check_auth_user);
+                    addToCart(product_id,varient_id,data_token,quantity);
+                } else {
+                    var html_content = `
+                        <input type="hidden" name="product_id" value="${product_id}">
+                        <input type="hidden" name="varient" value="${varient_id}">
+                        <input type="hidden" name="quantity" value="${quantity}">
+                    `;
 
-            // if (price) {
-            //     $('.price_append_area').text(price);
-            // }
-            // if (stock_quantity) {
-            //     $('.stock_quantity').text(Number(stock_quantity));
-            // }
+                    $('.hidden_form_section').empty();
+                    $('.hidden_form_section').append(html_content);
 
+                    $('#myModal').modal('toggle');
+
+                    return false;
+                }
+            });
 
         });
 
@@ -858,33 +795,37 @@
 
         $('.guest-add-to-cart-button').click(function() {
             //  checking auth
-            $.ajax({
-                url: "{{route('check_auth')}}",
-                type:"GET",
-                // data:{
-                //     product_id: {{$product->id}},
-                //     varient: 0,
-                //     _token: data_token,
-                //     quantity: quantity,
-                // },
-                success:function(response){
-                    if (response.code == 200) {
+            // u-unfold--hidden
+            $('#sidebarContent').addClass('fadeInRight');
+            $('#sidebarContent').removeClass('u-unfold--hidden');
 
-                    } else {
-                        // sidebarContent
-                        // u-sidebar u-sidebar__lg u-unfold--css-animation fadeInRight
-                        // u-sidebar u-sidebar__lg u-unfold--css-animation u-unfold--hidden
-                    }
-                },
-                error: function(error) {
+            // $.ajax({
+            //     url: "{{route('check_auth')}}",
+            //     type:"GET",
+            //     // data:{
+            //     //     product_id: {{$product->id}},
+            //     //     varient: 0,
+            //     //     _token: data_token,
+            //     //     quantity: quantity,
+            //     // },
+            //     success:function(response){
+            //         if (response.code == 200) {
 
-                //  console.log(error);
-                //   $('#nameError').text(response.responseJSON.errors.name);
-                //   $('#emailError').text(response.responseJSON.errors.email);
-                //   $('#mobileError').text(response.responseJSON.errors.mobile);
-                //   $('#messageError').text(response.responseJSON.errors.message);
-                }
-            });
+            //         } else {
+            //             // sidebarContent
+            //             // u-sidebar u-sidebar__lg u-unfold--css-animation fadeInRight
+            //             // u-sidebar u-sidebar__lg u-unfold--css-animation u-unfold--hidden
+            //         }
+            //     },
+            //     error: function(error) {
+
+            //     //  console.log(error);
+            //     //   $('#nameError').text(response.responseJSON.errors.name);
+            //     //   $('#emailError').text(response.responseJSON.errors.email);
+            //     //   $('#mobileError').text(response.responseJSON.errors.mobile);
+            //     //   $('#messageError').text(response.responseJSON.errors.message);
+            //     }
+            // });
 
             // var has_varient = $('.has_varient').val();
             // var quantity = $('.js-result').val();
@@ -973,13 +914,13 @@
     </script>
 
     <!-- JavaScript -->
-<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+{{-- <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script> --}}
 
 <!-- CSS -->
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
+{{-- <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/> --}}
 
 <!-- Bootstrap theme -->
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/bootstrap.min.css"/>
+{{-- <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/bootstrap.min.css"/> --}}
 <script>
     // alertify.warning('Warning message');
 </script>

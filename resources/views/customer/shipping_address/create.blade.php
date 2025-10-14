@@ -14,13 +14,13 @@
                         <div class="card-body">
                             <form action="{{ route('shipping_address.store') }}" method="POST">
                                 @csrf
-                                
+
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="recipient_name">Recipient Name</label>
-                                            <input type="text" class="form-control" name="recipient_name" 
-                                                value="{{ old('recipient_name') }}" 
+                                            <input type="text" class="form-control" name="recipient_name"
+                                                value="{{ old('recipient_name') }}"
                                                 placeholder="Recipient Name" required>
                                         </div>
                                     </div>
@@ -28,8 +28,8 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="phone_no">Phone Number</label>
-                                            <input type="text" class="form-control" name="phone_no" 
-                                                value="{{ old('phone_no') }}" 
+                                            <input type="text" class="form-control" name="phone_no"
+                                                value="{{ old('phone_no') }}"
                                                 placeholder="Phone Number" required>
                                         </div>
                                     </div>
@@ -88,12 +88,12 @@
                                     </div>
                                     <div class="col-md-6">
                                     </div>
-                                    <div class="col-md-6 mt-3">
+                                    {{-- <div class="col-md-6 mt-3">
                                         <div class="form-check">
                                             <input type="checkbox" name="default_billing" value="1" class="form-check-input" {{ old('default_billing') ? 'checked' : '' }}>
                                             <label class="form-check-label">Set as Default Billing</label>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <div class="col-md-12 mt-3">
                                         <div class="mt-4">
                                             <button type="submit" class="btn btn-primary">Save Address</button>
@@ -152,5 +152,5 @@
             });
         });
     </script>
-	
+
 @endpush

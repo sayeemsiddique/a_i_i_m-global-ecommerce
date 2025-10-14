@@ -21,7 +21,7 @@
         <!-- CSS Implementing Plugins -->
         <link rel="stylesheet" href="{{asset('frontend/assets/vendor/font-awesome/css/fontawesome-all.min.css')}}">
         <link rel="stylesheet" href="{{asset('frontend/assets/css/font-electro.css')}}">
-        <link rel="stylesheet" href="{{asset('frontend/assets/css/jquery.jqZoom.css')}}">
+        {{-- <link rel="stylesheet" href="{{asset('frontend/assets/css/jquery.jqZoom.css')}}"> --}}
 
         <link rel="stylesheet" href="{{asset('frontend/assets/vendor/animate.css/animate.min.css')}}">
         <link rel="stylesheet" href="{{asset('frontend/assets/vendor/hs-megamenu/src/hs.megamenu.css')}}">
@@ -33,7 +33,7 @@
         <!-- CSS Template -->
         <link rel="stylesheet" href="{{asset('frontend/assets/css/theme.css')}}">
 
-        <style> 
+        <style>
          .avatar-upload {
             position: relative;
             max-width: 130px;
@@ -65,7 +65,7 @@
             background: #f1f1f1;
             border-color: #d6d6d6;
             }
-    
+
             .avatar-upload .avatar-preview {
             width: 192px;
             height: 192px;
@@ -156,13 +156,13 @@
                     display: none;
                 }
 		    }
-        </style>    
+        </style>
 
         @stack('css')
 
     </head>
 
     <body>
-      
-         
+
+
    @include('frontend.partials.navbar_alt')

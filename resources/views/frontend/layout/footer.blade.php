@@ -159,7 +159,7 @@
             <div class="flex-center-between d-block d-md-flex">
                 <div class="mb-3 mb-md-0">{{ date('Y') }} © <a href="#" class="font-weight-bold text-gray-90">{{ $global_setting->title }}</a> - {{ $global_setting->copyright }}</div>
 
-                <div class="mb-3 mb-md-0">Design and Developed by - <a href="https://sebpo.com/" class="font-weight-bold text-gray-90">ServicEngine Ltd.</a></div>
+                <div class="mb-3 mb-md-0">Design and Developed by - <a href="#" class="font-weight-bold text-gray-90">ServicEngine Ltd.</a></div>
 
                 {{-- <div class="text-md-right">
                     <span class="d-inline-block bg-white border rounded p-1">
@@ -229,7 +229,7 @@ data-hide-effect="slideOutDown">
 
 <!-- JS -->
 <script src="{{asset('frontend/assets/js/hs.core.js')}}"></script>
-<script src="{{asset('frontend/assets/js/jquery.jqZoom.js')}}"></script>
+{{-- <script src="{{asset('frontend/assets/js/jquery.jqZoom.js')}}"></script> --}}
 <script src="{{asset('frontend/assets/js/components/hs.countdown.js')}}"></script>
 <script src="{{asset('frontend/assets/js/components/hs.header.js')}}"></script>
 <script src="{{asset('frontend/assets/js/components/hs.hamburgers.js')}}"></script>
@@ -424,30 +424,30 @@ $('#log-pass-eye').on('click', function() {
         }
     }
 
-    $(document).on('ready', function () {
-        let guest_id = localStorage.getItem("guest_id");
-        if(guest_id) {
-            $.ajax({
-                url: "{{route('guest_cart_view')}}",
-                type:"GET",
-                data:{
-                    guest_id: guest_id,
-                },
-                success:function(response){
-                    if(response) {
-                        $('.guest_user_cart_section').html(response);
-                        caluculateGuestCartPrice();
-                    }
-                },
-                error: function(error) {
-                    // alertify.error(JSON.parse(error.responseText).message);
-                }, finally: function() {
-                    // caluculateGuestCartPrice();
-                }
-            });
-        }
+    // $(document).on('ready', function () {
+    //     let guest_id = localStorage.getItem("guest_id");
+    //     if(guest_id) {
+    //         $.ajax({
+    //             url: "{{route('guest_cart_view')}}",
+    //             type:"GET",
+    //             data:{
+    //                 guest_id: guest_id,
+    //             },
+    //             success:function(response){
+    //                 if(response) {
+    //                     $('.guest_user_cart_section').html(response);
+    //                     caluculateGuestCartPrice();
+    //                 }
+    //             },
+    //             error: function(error) {
+    //                 // alertify.error(JSON.parse(error.responseText).message);
+    //             }, finally: function() {
+    //                 // caluculateGuestCartPrice();
+    //             }
+    //         });
+    //     }
 
-    });
+    // });
 
 </script>
 

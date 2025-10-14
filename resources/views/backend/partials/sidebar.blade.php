@@ -4,8 +4,8 @@
     <div class="brand flex-column-auto" id="kt_brand" style="padding: 10px">
         <!--begin::Logo-->
         <a href="{{route('index')}}" class="brand-logo">
-            
-            <img alt="Logo" src="{{ asset('storage/setting/' . $global_setting->logo) }}" style="max-height: 45px;"/> 
+
+            <img alt="Logo" src="{{ asset('storage/setting/' . $global_setting->logo) }}" style="max-height: 45px;"/>
             <h6 class="mt-1 ml-5" style="color: #f1f1f1; font-size:12px;"> {{ $global_setting->sub_title ?? ''}}</h6>
         </a>
         <!--end::Logo-->
@@ -51,7 +51,7 @@
                                         <span class="menu-text">Order Management</span>
                                     </span>
                                 </li>
-                                
+
                                 @can('order_list')
                                     <li class="menu-item {{ session('lsbsm') == 'order_list' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
                                         <a href="{{route('admin.order.index')}}" class="menu-link">
@@ -62,7 +62,7 @@
                                         </a>
                                     </li>
                                 @endcan
-                                
+
                                 @can('pending_order_list')
                                     <li class="menu-item {{ session('lsbsm') == 'pending_order_list' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
                                         <a href="{{route('admin.order.pending_list')}}" class="menu-link">
@@ -95,7 +95,7 @@
                                         </a>
                                     </li>
                                 @endcan
-                                
+
                                 {{-- @can('order_return')
                                     <li class="menu-item {{ session('lsbsm') == 'order_return' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
                                         <a href="{{route('admin.order.order_return')}}" class="menu-link">
@@ -106,7 +106,7 @@
                                         </a>
                                     </li>
                                 @endcan --}}
-                                
+
                                 {{-- @can('order_return_list')
                                     <li class="menu-item {{ session('lsbsm') == 'order_return_list' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
                                         <a href="{{route('admin.order.order_return_list')}}" class="menu-link">
@@ -140,7 +140,7 @@
                         <a href="javascript:;" class="menu-link menu-toggle">
                             <span class="svg-icon menu-icon">
                                 <i style="color: #6e3cbc;" class="fab fa-uncharted"></i>
-                                
+
                             </span>
                             <span class="menu-text">Inventory Management</span>
                             <i class="menu-arrow"></i>
@@ -224,7 +224,7 @@
                                 </span>
                             </li>
 
-                            @can('point_of_sale') 
+                            @can('point_of_sale')
                                 <li class="menu-item {{ session('lsbsm') == 'point_of_sale' ? ' menu-item-active ' : '' }}"
                                     aria-haspopup="true">
                                     <a href="{{ route('admin.pos.create') }}" class="menu-link">
@@ -283,7 +283,7 @@
                                         </a>
                                     </li>
                                 @endcan
-                                
+
                                 @can('all_banks')
                                     <li class="menu-item {{ session('lsbsm') == 'all_banks' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
                                         <a href="{{route('admin.bank.index')}}" class="menu-link">
@@ -320,18 +320,18 @@
                                     </span>
                                 </li>
 
-                                {{-- @can('edit_page')
-                                    <li class="menu-item {{ session('lsbsm') == 'about_us' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
-                                        <a href="{{route('admin.page.aboutus')}}" class="menu-link">
+                                @can('manage_page')
+                                    <li class="menu-item {{ session('lsbsm') == 'manage_page' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
+                                        <a href="{{route('admin.page.index')}}" class="menu-link">
                                             <i class="menu-bullet menu-bullet-dot">
                                                 <span></span>
                                             </i>
-                                            <span class="menu-text">About Us</span>
+                                            <span class="menu-text">Pages Management</span>
                                         </a>
                                     </li>
-                                @endcan --}}
-                                
-                                @can('edit_page')
+                                @endcan
+
+                                {{-- @can('edit_page')
                                     <li class="menu-item {{ session('lsbsm') == 'pageDetail' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
                                         <a href="{{ route('admin.page.pageDetail', 1) }}" class="menu-link">
                                             <i class="menu-bullet menu-bullet-dot">
@@ -381,13 +381,13 @@
                                             <span class="menu-text">Terms and Conditions</span>
                                         </a>
                                     </li>
-                                @endcan
+                                @endcan --}}
 
                             </ul>
                         </div>
                     </li>
                 @endcan
-                
+
                 @can('user_management')
                     <!-- user management -->
                     <li class="menu-item menu-item-submenu {{ session('lsbm') == 'roles' ? ' menu-item-open ' : '' }}" aria-haspopup="true" data-menu-toggle="hover">
@@ -417,7 +417,7 @@
                                         </a>
                                     </li>
                                 @endcan
-                                
+
                                 @can('all_users')
                                     <li class="menu-item {{ session('lsbsm') == 'allUsers' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
                                         <a href="{{route('admin.user.index')}}" class="menu-link">
@@ -450,7 +450,7 @@
                                         </a>
                                     </li>
                                 @endcan
-                                
+
                                 @can('assign_permission')
                                     <li class="menu-item {{ session('lsbsm') == 'assignPerm' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
                                         <a href="{{route('admin.rolePermission.index')}}" class="menu-link">
@@ -462,7 +462,7 @@
                                     </li>
                                 @endcan
 
-                                
+
                             </ul>
                         </div>
                     </li>
@@ -497,7 +497,7 @@
                                         </a>
                                     </li>
                                 @endcan
-                                
+
                                 @can('stock_in_report_by_product')
                                     <li class="menu-item {{ session('lsbsm') == 'stock_in_report_by_product' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
                                         <a href="{{route('admin.stockReport.stock_in_report_by_product')}}" class="menu-link">
@@ -508,7 +508,7 @@
                                         </a>
                                     </li>
                                 @endcan
-                                
+
                                 @can('store_product_report_by_product')
                                     <li class="menu-item {{ session('lsbsm') == 'store_product_report_by_product' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
                                         <a href="{{route('admin.stockReport.store_product_report_by_product')}}" class="menu-link">
@@ -541,7 +541,7 @@
                                         </a>
                                     </li>
                                 @endcan
-                                
+
                                 @can('daily_sales_report')
                                     <li class="menu-item {{ session('lsbsm') == 'daily_sales_report' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
                                         <a href="{{route('admin.salesReport.daily')}}" class="menu-link">
@@ -574,7 +574,7 @@
                                         </a>
                                     </li>
                                 @endcan
-                                
+
                                 @can('inventory_report_product_wise')
                                     <li class="menu-item {{ session('lsbsm') == 'inventory_report_product_wise' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
                                         <a href="{{route('admin.salesReport.inventory_report_product_wise')}}" class="menu-link">
@@ -596,7 +596,7 @@
                                         </a>
                                     </li>
                                 @endcan
-                                
+
                                 @can('dealer_commission_report')
                                     <li class="menu-item {{ session('lsbsm') == 'dealer_commission_report' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
                                         <a href="{{route('admin.salesReport.commission_report.dealer')}}" class="menu-link">
@@ -607,7 +607,7 @@
                                         </a>
                                     </li>
                                 @endcan
-                                
+
                                 @can('vat_sd_commission_report')
                                     <li class="menu-item {{ session('lsbsm') == 'vat_sd_commission_report' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
                                         <a href="{{route('admin.salesReport.vat_sd_cmmmission')}}" class="menu-link">
@@ -618,7 +618,7 @@
                                         </a>
                                     </li>
                                 @endcan
-                                
+
                             </ul>
                         </div>
                     </li>
@@ -751,7 +751,7 @@
                                         </a>
                                     </li>
                                 @endcan --}}
-                                
+
                                 {{-- @can('all_packing_types')
                                     <li class="menu-item {{ session('lsbsm') == 'all_packing_types' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
                                         <a href="{{route('admin.packing_type.index')}}" class="menu-link">
@@ -762,12 +762,12 @@
                                         </a>
                                     </li>
                                 @endcan --}}
-                                
+
                             </ul>
                         </div>
                     </li>
                 @endcan
-                
+
                 @can('settings')
                     <li class="menu-item menu-item-submenu {{ session('lsbm') == 'settings' ? ' menu-item-open ' : '' }}"  aria-haspopup="true" data-menu-toggle="hover">
                         <a href="javascript:;" class="menu-link menu-toggle">
@@ -793,7 +793,7 @@
                                             <span></span>
                                         </i>
                                         <span class="menu-text">Customer Setting</span>
-                                        
+
                                         <i class="menu-arrow"></i>
                                     </a>
 
@@ -809,7 +809,7 @@
                                                     <span class="menu-text">Add Customer</span>
                                                 </a>
                                             </li>
-                                            
+
                                         </ul>
                                     </div>
                                     @endcan
@@ -856,7 +856,7 @@
                                             <span></span>
                                         </i>
                                         <span class="menu-text">Corporate Consumer Setting</span>
-                                        
+
                                         <i class="menu-arrow"></i>
                                     </a>
 
@@ -872,7 +872,7 @@
                                                     <span class="menu-text">Add Corporate Consumer</span>
                                                 </a>
                                             </li>
-                                            
+
                                         </ul>
                                     </div>
                                     @endcan
@@ -889,7 +889,7 @@
                                                     <span class="menu-text">All Corporate Consumer List</span>
                                                 </a>
                                             </li>
-                                            
+
                                         </ul>
                                     </div>
                                     @endcan
@@ -906,7 +906,7 @@
                                                     <span class="menu-text">Pending Corporate Consumer List</span>
                                                 </a>
                                             </li>
-                                            
+
                                         </ul>
                                     </div>
                                     @endcan
@@ -923,7 +923,7 @@
                                                     <span class="menu-text">Approved Corporate Consumer List</span>
                                                 </a>
                                             </li>
-                                            
+
                                         </ul>
                                     </div>
                                     @endcan
@@ -1017,7 +1017,7 @@
                                                     <span class="menu-text">Pending Dealer List</span>
                                                 </a>
                                             </li>
-                                            
+
                                         </ul>
                                     </div>
                                     @endcan
@@ -1072,7 +1072,7 @@
 
                                 </li>
                                 @endcan
-                                
+
                                 <li class="menu-item menu-item-submenu  {{ session('lsbsm') == 'org_setting' ? ' menu-item-open ' : '' }}" aria-haspopup="true" data-menu-toggle="hover">
                                     <a href="javascript:;" class="menu-link menu-toggle">
                                         <i class="menu-bullet menu-bullet-line">
@@ -1095,7 +1095,7 @@
                                                     </a>
                                                 </li>
                                             @endcan
-                                            
+
                                             @can('all_designation')
                                                 <li class="menu-item {{ session('lsbssm') == 'all_designation' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
                                                     <a href="{{route('admin.designation.index')}}" class="menu-link">
@@ -1140,7 +1140,7 @@
                                             </i>
                                             <span class="menu-text">Order Setting</span>
                                         </a>
-                                        
+
                                     </li>
                                 @endcan
                             </ul>
@@ -1180,7 +1180,7 @@
                     </button>
                 </li>
                 @endcan --}}
-                
+
                 {{-- logout --}}
                 <li class="menu-item" aria-haspopup="true">
                     <a target="_blank" href="{{ route('logout') }}" class="menu-link" onclick="event.preventDefault();

@@ -15,7 +15,7 @@
                             <form action="{{ route('shipping_address.update', Crypt::encryptString($shippingAddress->id)) }}" method="POST">
                                 @csrf
                                 @method('PUT')
-                                
+
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
@@ -89,7 +89,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-check">
-                                            <input type="checkbox" name="default_shipping" value="1" class="form-check-input" 
+                                            <input type="checkbox" name="default_shipping" value="1" class="form-check-input"
                                                 {{ $shippingAddress->default_shipping == 1 ? 'checked' : '' }}>
                                             <label class="form-check-label">Set as Default Shipping</label>
                                         </div>
@@ -97,13 +97,13 @@
 
                                     <div class="col-md-6">
                                     </div>
-                                    <div class="col-md-6">
+                                    {{-- <div class="col-md-6">
                                         <div class="form-check">
-                                            <input type="checkbox" name="default_billing" value="1" class="form-check-input" 
+                                            <input type="checkbox" name="default_billing" value="1" class="form-check-input"
                                                 {{ $shippingAddress->default_billing == 1 ? 'checked' : '' }}>
                                             <label class="form-check-label">Set as Default Billing</label>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <div class="col-md-12">
                                         <div class="mt-4">
                                             <button type="submit" class="btn btn-primary">Update Address</button>

@@ -3,7 +3,7 @@
 @push('css')
     <!-- CSS -->
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
-    
+
     <!-- Bootstrap theme -->
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/bootstrap.min.css"/>
 
@@ -114,20 +114,20 @@
                                                                     $product_total_price +=  ($cart->productInfo->discount_price ?? 0)  * $cart->quantity;
                                                                 @endphp
                                                                 {{number_format((($cart->productInfo->discount_price ?? 0)  * $cart->quantity),2,".","")}}
-                                                                
+
                                                             @else
                                                                 @php
                                                                     $product_total_price +=  ($cart->varientInfo->discount_price ?? 0)  * $cart->quantity;
                                                                 @endphp
                                                                 {{number_format((($cart->varientInfo->discount_price ?? 0) * $cart->quantity),2,".","")}}
-                                                                
+
                                                             @endif
-                                                        
+
                                                     </td>
                                                 </tr>
                                                 <input type="hidden" name="cart_id[]" value="{{Crypt::encryptString($cart->id)}}">
                                             @endforeach
-                                            
+
                                         </tbody>
                                         <tfoot class="mt-3">
                                             <tr>
@@ -142,18 +142,18 @@
                                                     ৳ <span class="shipping_cost" >0</span>
                                                 </td>
                                             </tr>
-                                            
-                                            
+
+
 
                                             <tr>
                                                 <th>Total</th>
                                                 <td>
-                                                    
+
 
                                                     ৳ <span class="in_total" >0</span>
                                                 </td>
                                             </tr>
-                                            
+
                                         </tfoot>
                                     </table>
                                     <!-- End Product Content -->
@@ -175,7 +175,7 @@
                                             <!-- End Card -->
 
 
-                                            
+
                                         </div>
                                         <!-- End Basics Accordion -->
                                     </div>
@@ -234,7 +234,7 @@
                                 </div>
 
                             </div>
-                            
+
                             <!-- End Billing Form -->
                         </div>
                     </div>
@@ -247,7 +247,7 @@
 
 @push('script')
     <!-- JavaScript -->
-    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+    {{-- <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script> --}}
 
     <script>
         $(document).ready(function(){
@@ -274,8 +274,8 @@
                     alertify.error('Please select a shipping address.');
                     return;
                 }
-                
-                
+
+
                 let delivery_option = $('input[name="delivery_option"]:checked').length;
                 if(delivery_option == 0){
                     alertify.error('Cash On Delivery option is required');

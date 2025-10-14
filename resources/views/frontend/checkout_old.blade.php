@@ -3,7 +3,7 @@
 @push('css')
     <!-- CSS -->
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
-    
+
     <!-- Bootstrap theme -->
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/bootstrap.min.css"/>
 
@@ -37,13 +37,13 @@
         $get_discount_after_amount = $setting->discount_amount ?? 1500000;
         $get_discount_percentage = $setting->discount_percentage ?? 2;
 
-        
+
         $packing_normal = $setting->packing_normal ?? 0;
         $packing_standard = $setting->packing_standard ?? 0;
         $dealer_15plus_discount_amount = $setting->dealer_15plus_discount_amount ?? 0;
         $tds_percent = $setting->tds ?? 0;
         $vds_percent = $setting->vds ?? 0;
-        
+
 
         $packing_category_array = array();
         $has_packing_types = 0;
@@ -61,15 +61,15 @@
             }
         }
 
-        
+
         $inside_vds_amount = ($setting->courier_inside_dhaka * $vds_percent)/100;
         $outside_vds_amount = ($setting->courier_outside_dhaka * $vds_percent)/100;
-                                            
+
 
         if(count($packing_types)) {
-            
+
             foreach ($packing_types as  $packingtype) {
-                
+
                 if ($packingtype->category_id != '') {
                     array_push($category_array,explode(",",$packingtype->category_id));
                     $amount_for_packing = 0;
@@ -87,11 +87,11 @@
                         }
                     }
                     $packingtype->packing_amount = ($amount_for_packing * $packingtype->charge)/100;
-                    
+
                 }
             }
         }
-        
+
         $category_array = call_user_func_array('array_merge', $category_array);
     @endphp
 
@@ -182,7 +182,7 @@
                                                             {{number_format(($cart->varientInfo->price ?? 0)  * $cart->quantity,2,".","")}}
                                                         @endif
 
-                                                        
+
                                                         {{-- {{dd($category_array)}} --}}
                                                         {{-- @if (in_array(($cart->productInfo->category_id ?? 0),$category_array))
                                                             <select id="packing_type" name="packing_type[{{$cart->product_id}}]" class="form-control packing_price" autocomplete="off" required>
@@ -201,19 +201,19 @@
                                                                             </option>
                                                                         @endif
                                                                     @endif
-                                                                    
+
                                                                 @endforeach
                                                             </select>
                                                         @endif --}}
-                                                        
+
                                                     </td>
                                                 </tr>
                                                 <input type="hidden" name="cart_id[]" value="{{$cart->id}}">
                                             @endforeach
-                                            
+
                                         </tbody>
                                         <tfoot class="mt-3">
-                                            
+
                                             <tr>
                                                 <th>SD</th>
                                                 <td>
@@ -243,15 +243,15 @@
                                                             } else {
                                                                 $user_discount_percent = $setting->dealer_15plus_discount ?? 0;
                                                             }
-                                                            
-                                                            
+
+
                                                         } else if(auth()->user()->type == 2) {
                                                             $user_discount_percent = $setting->consumer_discount_percent ?? 0;
                                                         } else {
                                                             $user_discount_percent = 0;
                                                         }
 
-                                                        
+
                                                         // $discount_amount = ($product_total_price * $user_discount_percent)/100;
                                                         $discount_amount = ($product_factory_total_price * $user_discount_percent)/100;
                                                         if ($tds_percent > 0) {
@@ -264,7 +264,7 @@
                                             <tr @if(!in_array(auth()->user()->type,[2,3])) class="d-none" @endif>
                                                 <th>After deducting TDS ({{$tds_percent}}%) on commission ({{$user_discount_percent}}%) </th>
                                                 <td>
-                                                    
+
                                                     ৳ {{number_format($discount_amount - $tds_amount,2,".","")}}
                                                 </td>
                                             </tr>
@@ -276,12 +276,12 @@
                                                     </td>
                                                 </tr>
                                             @endif
-                                            
+
                                             {{-- @endif --}}
                                             @php
                                                 $in_total = $product_total_price;
                                             @endphp
-                                            
+
                                             <tr>
                                                 {{-- <th>Transportation Charge/Carrying Cost</th> --}}
                                                 <th>After imposing VDS ({{$vds_percent}}%) on carrying cost</th>
@@ -309,13 +309,13 @@
                                                             {{-- @if ($packing_type->packing_amount) --}}
                                                             <option data-packing_amount="{{number_format($packing_type->packing_amount,2,".","")}}" value="{{$packing_type->id}}">{{$packing_type->name}} (৳ {{number_format($packing_type->packing_amount,2,".","")}})</option>
                                                             {{-- @endif --}}
-                                                                
+
                                                             @endforeach
                                                         </select>
                                                     </td>
                                                 </tr>
                                             @endif
-                                            
+
 
                                             <tr>
                                                 <th>Total</th>
@@ -338,7 +338,7 @@
                                                         <input type="hidden" class="paid_from_walet" name="paid_from_walet" value="0">
                                                     @else
                                                     <input type="hidden" class="paid_from_walet" name="paid_from_walet" value="{{number_format((($in_total + $other_categories_amount) - ($discount_amount - $tds_amount)) - $still_have_walet_amount,2,'.','')}}">
-                                                        
+
                                                     @endif
 
                                                     ৳ <span class="in_total @if ($still_have_walet_amount <= 0) font-weight-bold @endif" >{{number_format((($in_total + $other_categories_amount) - ($discount_amount - $tds_amount)),2,".","")}}</span>
@@ -358,19 +358,19 @@
                                                         You have to pay
                                                     </th>
                                                     <td>
-                                                        
+
                                                         ৳ <strong class="have_to_pay_text">
                                                             @if ($still_have_walet_amount >= (($in_total + $other_categories_amount) - ($discount_amount - $tds_amount)))
                                                                 0.00
                                                             @else
                                                             {{number_format((($in_total + $other_categories_amount) - ($discount_amount - $tds_amount)) - $still_have_walet_amount,2,'.','')}}
                                                             @endif
-                                                            
+
                                                         </strong>
                                                     </td>
                                                 </tr>
                                             @endif
-                                            
+
                                         </tfoot>
                                     </table>
                                     <!-- End Product Content -->
@@ -405,7 +405,7 @@
                                                             <label for="">Document: <small class="text-danger">*</small></label>
                                                             <input type="file" class="form-control" name="document" accept=".png, .jpg, .jpeg, .doc, .docx, .xlsx, .pdf" autocomplete="off">
                                                         </div>
-                                                        
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -437,7 +437,7 @@
                                                             <label for="">Document: <small class="text-danger">*</small></label>
                                                             <input type="file" class="form-control" name="cash_payment_document" autocomplete="off" accept=".png, .jpg, .jpeg, .doc, .docx, .xlsx, .pdf">
                                                         </div>
-                                                        
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -475,7 +475,7 @@
                                                             <label for="">Document: <small class="text-danger">*</small></label>
                                                             <input type="file" class="form-control" name="mb_document">
                                                         </div>
-                                                        
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -508,8 +508,8 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            
-                                            
+
+
                                         </div>
                                         <!-- End Basics Accordion -->
                                     </div>
@@ -543,7 +543,7 @@
                             <!-- End Title -->
 
                             <!-- Billing Form -->
-                            
+
                                 <div class="row">
                                     <div class="col-md-6">
                                         <!-- Input -->
@@ -556,19 +556,19 @@
                                         </div>
                                         <!-- End Input -->
                                     </div>
-        
+
                                     <div class="col-md-6">
                                         <!-- Input -->
                                         <div class="js-form-message mb-6">
                                             <label class="form-label">
                                                 Last name
-                                                
+
                                             </label>
                                             <input type="text" class="form-control" name="lastName" placeholder="Last name" aria-label="Last name" required="" data-msg="Please enter your last name." data-error-class="u-has-error" data-success-class="u-has-success" required value="{{auth()->user()->last_name}}" readonly>
                                         </div>
                                         <!-- End Input -->
                                     </div>
-        
+
                                     <div class="w-100"></div>
 
                                     <div class="col-md-12">
@@ -582,7 +582,7 @@
                                         </div>
                                         <!-- End Input -->
                                     </div>
-        
+
                                     <div class="w-100"></div>
 
                                     <div class="col-md-6">
@@ -596,7 +596,7 @@
                                         </div>
                                         <!-- End Input -->
                                     </div>
-        
+
                                     <div class="col-md-6">
                                         <!-- Input -->
                                         <div class="js-form-message mb-6">
@@ -607,13 +607,13 @@
                                         </div>
                                         <!-- End Input -->
                                     </div>
-        
+
                                     <div class="w-100"></div>
                                 </div>
-                                
+
 
                                 <div class="row">
-                                    
+
                                     <div class="col-12">
                                         <div class="form-check">
                                             <label class="form-check-label">
@@ -633,21 +633,21 @@
                                                 <br>
                                             </div>
 
-                                            
+
 
                                             <div class="form-check">
                                                 <label class="form-check-label">
                                                     <input autocomplete="off" type="checkbox" class="form-check-input" data-cost="{{number_format($setting->courier_inside_dhaka + $inside_vds_amount,2,'.','')}}" name="shipping_area" value="1"><strong>Inside Dhaka</strong>
                                                 </label>
                                             </div>
-                                            
+
                                             <div class="form-check">
                                                 <label class="form-check-label">
                                                     <input autocomplete="off" type="checkbox" class="form-check-input" data-cost="{{number_format($setting->courier_outside_dhaka + $outside_vds_amount,2,'.','')}}" name="shipping_area" value="2"><strong>Outside Dhaka</strong>
                                                 </label>
                                             </div>
                                         </div>
-                                        
+
                                     </div>
 
                                     @if ($get_discount_after_amount <= $in_total)
@@ -657,11 +657,11 @@
                                             <div class="border-bottom border-color-1 mb-5">
                                                 <h3 class="section-title mb-0 pb-2 font-size-25">Choose Your Discount Option <span class="text-danger">*</span></h3>
                                             </div>
-                                            
+
                                             <div class="input-group mb-3 border border-success p-3 rounded">
                                                 <div class="input-group-prepend">
                                                 <div class="input-group-text border-0">
-                                                    <input style="display: block !important" class="discount_on_amount" autocomplete="off" name="discount_on_amount" value="1" type="checkbox" id="free_shipment"> 
+                                                    <input style="display: block !important" class="discount_on_amount" autocomplete="off" name="discount_on_amount" value="1" type="checkbox" id="free_shipment">
                                                 </div>
                                                 </div>
                                                 <div>
@@ -675,7 +675,7 @@
                                                 <div class="input-group mb-3 border border-success p-3 rounded">
                                                     <div class="input-group-prepend">
                                                     <div class="input-group-text border-0">
-                                                        <input style="display: block !important" class="discount_on_amount" autocomplete="off" data-discount_percent={{$get_discount_percentage}} name="discount_on_amount" value="2" type="checkbox" id="percentage_shipment"> 
+                                                        <input style="display: block !important" class="discount_on_amount" autocomplete="off" data-discount_percent={{$get_discount_percentage}} name="discount_on_amount" value="2" type="checkbox" id="percentage_shipment">
                                                     </div>
                                                     </div>
                                                     <div>
@@ -686,12 +686,12 @@
                                                     </div>
                                                 </div>
                                             @endif
-                                            
+
                                         </div>
                                     @else
                                         @if ($allow_2_percent_discount == 1)
                                             <div class="input-group mb-3 border border-danger p-3 rounded mt-5">
-                                                
+
                                                 <div>
                                                     <label for="free_shipment">
                                                         <h5>Get Discount</h5>
@@ -703,7 +703,7 @@
                                     @endif
 
                                     <div class="input-group mb-3 border border-success p-3 rounded mt-2">
-                                            
+
                                         <div>
                                             <label for="">
                                                 <h5>Delivery Time</h5>
@@ -711,9 +711,9 @@
                                             </label>
                                         </div>
                                     </div>
-                                    
+
                                 </div>
-                            
+
                             <!-- End Billing Form -->
                         </div>
                     </div>
@@ -726,7 +726,7 @@
 
 @push('script')
     <!-- JavaScript -->
-    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+    {{-- <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script> --}}
 
     <script>
         $('input[name="personal_vehicle"]').click(function() {
@@ -751,7 +751,7 @@
                         var discount_percent = $('input[name="discount_on_amount"]:checked').attr('data-discount_percent');
                         discounted_amount = ((Number(factory_product_total_value) - Number(discount_amount) + Number(tds_amount)) * Number(discount_percent))/100;
                     }
-                    
+
                 }
 
                 if (packing_type_length > 0) {
@@ -761,10 +761,10 @@
                 $('.inside_outside_cost').text(Number(inside_outside_cost).toFixed(2));
                 $('.discount_on_amount_number').text(Number(discounted_amount).toFixed(2));
                 var in_total_text = Number($(".total_price").val()) - Number(discounted_amount) - Number(discount_amount) + Number(packing_amount) + Number(tds_amount) + Number(other_categories_amount);
-                
+
                 $(".in_total").text(Number(in_total_text).toFixed(2));
                 $(".grand_total_price").val(Number(in_total_text).toFixed(2));
-                
+
                 if (Number(in_total_text) > Number(still_have_walet_amount)) {
                     $('.have_to_pay_text').text(Number( Number(in_total_text) - Number(still_have_walet_amount) ).toFixed(2));
                     $('.paid_from_walet').val(Number(still_have_walet_amount).toFixed(2));
@@ -810,21 +810,21 @@
                         var total_value = $(".total_price").val();
                         var product_factory_total_price = $(".product_factory_total_price").val();
                         var discount_percent = $('input[name="discount_on_amount"]:checked').attr('data-discount_percent');
-                        
-                        
+
+
                         var discounted_amount = ((Number(product_factory_total_price) - Number(hidden_discount_amount) + Number(tds_amount)) * Number(discount_percent))/100;
                         $('.discount_on_amount_number').text(Number(discounted_amount).toFixed(2));
                         discount_amount = Number(discounted_amount);
-                    
+
                     }
-                    
+
                     if ($('input[name="discount_on_amount"]:checked').val() == 1) {
                         cost = 0;
                     }
                 }
-                
+
                 if($(this).is(":checked")) {
-                    
+
                     $(".inside_outside_cost").text(Number(cost).toFixed(2));
                     var in_total_text = Number(cost) + Number($(".total_price").val()) - Number(hidden_discount_amount) - Number(discount_amount) + Number(packing_amount) + Number(tds_amount) + Number(other_categories_amount);
                     $(".in_total").text(Number(in_total_text).toFixed(2));
@@ -858,10 +858,10 @@
         });
 
         $('#packing_type').on('change', function() {
-            
+
             var packing_type = $(this).find(':selected').val();
             if (packing_type) {
-                
+
                 var discount_on_amount_length = $('input[name="discount_on_amount"]:checked').length;
                 var shipping_area = $('input[name="shipping_area"]:checked').length;
                 var shipping_area_cost = 0;
@@ -874,18 +874,18 @@
 
                 if (shipping_area > 0) {
                     shipping_area_cost = $('input[name="shipping_area"]:checked').attr("data-cost");
-                    
+
                 }
 
                 packing_amount = $('#packing_type').find(':selected').attr("data-packing_amount");
 
                 if (discount_on_amount_length > 0) {
-                    
+
                     if ($('input[name="discount_on_amount"]:checked').val() == 2) {
                         discount_on_amount_number = $('.discount_on_amount_number').text();
-                        
+
                     }
-                    
+
                 }
                 var in_total_text = (Number($(".total_price").val()) + Number(shipping_area_cost) + Number(other_categories_amount) + Number(packing_amount)) - (Number(discount_on_amount_number) + (Number(discount_amount) - Number(tds_amount)));
                 $(".in_total").text(Number(in_total_text).toFixed(2));
@@ -898,7 +898,7 @@
                     $('.have_to_pay_text').text("0.00");
                     $('.paid_from_walet').val(Number(in_total_text).toFixed(2));
                 }
-                
+
             } else {
                 var discount_on_amount_length = $('input[name="discount_on_amount"]:checked').length;
                 var shipping_area = $('input[name="shipping_area"]:checked').length;
@@ -907,15 +907,15 @@
 
                 if (shipping_area > 0) {
                     shipping_area_cost = $('input[name="shipping_area"]:checked').attr("data-cost");
-                    
+
                 }
 
                 if (discount_on_amount_length > 0) {
                     if ($('input[name="discount_on_amount"]:checked').val() == 2) {
                         discount_on_amount_number = $('.discount_on_amount_number').text();
-                        
+
                     }
-                    
+
                 }
                 var discount_amount = $('input[name="discount_amount"]').val();
 
@@ -923,7 +923,7 @@
                 var tds_amount = $('input[name="tds_amount"]').val();
 
                 var in_total_text = (Number($(".total_price").val()) + Number(shipping_area_cost) + Number(other_categories_amount)) - (Number(discount_on_amount_number) + (Number(discount_amount) - Number(tds_amount)));
-                
+
                 $(".in_total").text(Number(in_total_text).toFixed(2));
                 $(".grand_total_price").val(Number(in_total_text).toFixed(2));
 
@@ -934,14 +934,14 @@
                     $('.have_to_pay_text').text("0.00");
                     $('.paid_from_walet').val(Number(in_total_text).toFixed(2));
                 }
-                
+
             }
         });
 
-        
+
         @if ($get_discount_after_amount <= $in_total)
             $('input[name="discount_on_amount"]').on('change', function() {
-                
+
                 var discount_on_amount_length = $('input[name="discount_on_amount"]:checked').length;
                 var shipping_area_length = $('input[name="shipping_area"]:checked').length;
                 var packing_type_length = $("#packing_type>option:not([value='']):selected").length;
@@ -966,22 +966,22 @@
 
                 if (discount_on_amount_length > 0) {
                     if ($('input[name="discount_on_amount"]:checked').val() == 2) {
-                        
-                        
+
+
                         $('.discount_on_amount').removeClass("d-none");
-                        
+
                         var discount_percent= $('input[name="discount_on_amount"]:checked').attr("data-discount_percent");
-                        
+
                         // var t_discount_amoun = ((Number($(".total_price").val()) - Number(discount_amount)) * discount_percent)/100;
                         var t_discount_amoun = ((Number($(".product_factory_total_price").val()) - Number(discount_amount) + Number(tds_amount)) * discount_percent)/100;
 
                         $('.discount_on_amount_number').text(Number(t_discount_amoun).toFixed(2));
                         discount_on_amount_number = t_discount_amoun;
 
-                        
+
                         $('.discount_on_amount_text').text("Get "+discount_percent+" % discount in total price");
 
-                        
+
 
                         var in_total_text = Number($(".total_price").val()) - Number(discount_on_amount_number) + Number(shipping_area_cost) + Number(packing_amount) - Number(discount_amount) + Number(tds_amount) + Number(other_categories_amount);
                         $(".in_total").text(Number(in_total_text).toFixed(2));
@@ -995,9 +995,9 @@
                             $('.paid_from_walet').val(Number(in_total_text).toFixed(2));
                         }
 
-                    } 
+                    }
                     if($('input[name="discount_on_amount"]:checked').val() == 1) {
-                        
+
                         shipping_area_cost = 0;
                         $('.discount_on_amount').addClass("d-none");
                         var in_total_text = Number($(".total_price").val()) + Number(packing_amount) - Number(discount_amount) + Number(shipping_area_cost) + Number(tds_amount) + Number(other_categories_amount);
@@ -1028,14 +1028,14 @@
                         $('.have_to_pay_text').text("0.00");
                         $('.paid_from_walet').val(Number(in_total_text).toFixed(2));
                     }
-                    
+
                 }
 
-                
+
 
                 $(".inside_outside_cost").text(Number(shipping_area_cost).toFixed(2));
 
-                
+
             });
         @endif
         // $('input[name="shipping_area"]').on('click', function() {
@@ -1048,7 +1048,7 @@
 
         $('#save_checkout').on('submit',function(e){
             // e.preventDefault();
-            
+
             // var formData = new FormData(this);
 
             if ($('input#shippingdiffrentAddress').is(':checked')) {
@@ -1060,11 +1060,11 @@
             }
 
             if (!$('input#defaultCheck10').is(':checked')) {
-                
+
                 alertify.error("Please click website terms and conditions to agree");
                 e.preventDefault();
                 return false;
-            
+
             }
 
             var still_have_walet_amount = $("input[name='still_have_walet_amount']").val();
@@ -1078,7 +1078,7 @@
                         e.preventDefault();
                         return false;
                 }
-                
+
                 if (discount_on_amount_length == 1) {
                     if ($('input[name="discount_on_amount"]:checked').val() == 1) {
                         if (personal_vehicle_length == 1) {
@@ -1087,16 +1087,16 @@
                             return false;
                         }
                     }
-                    
+
                 }
-                
+
             @endif
-            
+
             if ($('input[name="personal_vehicle"]').is(':checked')) {
-                
+
             } else {
                 if($("input[name='shipping_area']").is(':checked')) {
-                    
+
                 } else {
                     alertify.error("Please choose your delivery area");
                     e.preventDefault();
@@ -1139,18 +1139,18 @@
                 } else {
                     have_to_pay_text = $('.in_total').text();
                 }
-                
+
             }
 
             if (Number(have_to_pay_text) > 0) {
                 if (payment_method == 1) {
-                
+
                     if ($("#bank_id>option:selected").val() == "") {
                         alertify.error("Please choose bank account");
                         e.preventDefault();
                         return false;
                     }
-                    
+
                     if ($("input[name='document']").val() == "") {
                         alertify.error("Bank info document is required");
                         e.preventDefault();
@@ -1159,28 +1159,28 @@
                 }
 
                 if (payment_method == 2) {
-                
+
                     if ($("input[name='factory_showroom']").val() == "") {
                         alertify.error("Sender mobile no is required");
                         e.preventDefault();
                         return false;
                     }
-                    
+
                     if ($("input[name='cash_payment_document']").val() == "") {
                         alertify.error("Receiver mobile no is required");
                         e.preventDefault();
                         return false;
                     }
                 }
-                
+
                 if (payment_method == 5) {
-                
+
                     if ($("input[name='factory_showroom']").val() == "") {
                         alertify.error("Factory Side/Showroom name is required");
                         e.preventDefault();
                         return false;
                     }
-                    
+
                     if ($("input[name='cash_payment_document']").val() == "") {
                         alertify.error("Document is required");
                         e.preventDefault();
@@ -1194,10 +1194,10 @@
                 //     return false;
                 // }
             }
-            
-            
-            
-            
+
+
+
+
 
             @if ($has_packing_types == 1)
             var packing_type_length = $("#packing_type>option:not([value='']):selected").length;
@@ -1217,7 +1217,7 @@
             }
         });
 
-        
+
         // $('input[name="stylishRadio"]').click(function(){
         //     var formData = new FormData($('#save_checkout')[0]),
         //     let = online_payment_checked = $('input[name="stylishRadio"]:checked').val();
@@ -1232,11 +1232,11 @@
         //         }
 
         //         if (!$('input#defaultCheck10').is(':checked')) {
-                    
+
         //             alertify.error("Please click website terms and conditions to agree");
         //             $('#basicsCollapseFour').addClass("d-none");
         //             return false;
-                
+
         //         }
 
         //         var still_have_walet_amount = $("input[name='still_have_walet_amount']").val();
@@ -1250,7 +1250,7 @@
         //                 $('#basicsCollapseFour').addClass("d-none");
         //                 return false;
         //             }
-                    
+
         //             if (discount_on_amount_length == 1) {
         //                 if ($('input[name="discount_on_amount"]:checked').val() == 1) {
         //                     if (personal_vehicle_length == 1) {
@@ -1259,15 +1259,15 @@
         //                         return false;
         //                     }
         //                 }
-                        
+
         //             }
         //         @endif
-            
+
         //         if ($('input[name="personal_vehicle"]').is(':checked')) {
-                    
+
         //         } else {
         //             if($("input[name='shipping_area']").is(':checked')) {
-                        
+
         //             } else {
         //                 $('#basicsCollapseFour').addClass("d-none");
         //                 alertify.error("Please choose your delivery area");
@@ -1319,7 +1319,7 @@
         //         });
         //     }
         // });
-        
+
     </script>
 
     {{-- <script>

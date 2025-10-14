@@ -10,12 +10,12 @@
                     </div>
                     <div class="topbar-right ml-auto">
                         <ul class="list-inline mb-0">
-                            
+
                             <li class="list-inline-item mr-0 u-header-topbar__nav-item u-header-topbar__nav-item-border">
                                 <a href="{{route('order_track')}}" class="u-header-topbar__nav-link"><i class="ec ec-transport mr-1"></i> Track Your Order</a>
                             </li>
-                            
-                            
+
+
                                 @if (Auth::check())
                                     <li class="list-inline-item mr-0 u-header-topbar__nav-item u-header-topbar__nav-item-border">
                                         <a href="{{ route('account') }}" class="u-header-topbar__nav-link text-success"><i class="ec ec-user mr-1"></i> {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</a>
@@ -33,7 +33,7 @@
                                             data-unfold-animation-in="fadeInRight"
                                             data-unfold-animation-out="fadeOutRight"
                                             data-unfold-duration="500">
-                                            <i class="ec ec-user mr-1"></i> Register 
+                                            <i class="ec ec-user mr-1"></i> Register
                                         </a>
                                     </li>
                                     <li class="list-inline-item mr-0 u-header-topbar__nav-item u-header-topbar__nav-item-border">
@@ -48,13 +48,13 @@
                                             data-unfold-animation-in="fadeInRight"
                                             data-unfold-animation-out="fadeOutRight"
                                             data-unfold-duration="500">
-                                            <i class="ec ec-newsletter mr-1"></i> Sign in 
+                                            <i class="ec ec-newsletter mr-1"></i> Sign in
                                         </a>
                                     </li>
                                 @endif
-                            
-                                
-                            
+
+
+
                         </ul>
                     </div>
                 </div>
@@ -162,7 +162,7 @@
                                                         </li>
                                                         @endif
                                                     @endforeach
-                                                    
+
 
                                                 </ul>
                                                 <!-- End List -->
@@ -202,7 +202,7 @@
                                     </li>
                                     <!-- End FAQs -->
 
-                                    
+
 
                                     <!-- Contact Us -->
                                     <li class="nav-item u-header__nav-item">
@@ -266,17 +266,17 @@
                                     <!-- End Input -->
                                 </li>
                                 <!-- End Search -->
-                                
-                                
+
+
                                 <li class="col d-xl-none px-2 px-sm-3"><a href="{{route('account')}}" class="text-gray-90" data-toggle="tooltip" data-placement="top" title="My Account"><i class="font-size-22 ec ec-user"></i></a></li>
                                 <li class="col pr-xl-0 px-2 px-sm-3">
                                     <a href="{{route('cart')}}" class="text-gray-90 position-relative d-flex " data-toggle="tooltip" data-placement="top" title="Cart">
                                         <i class="font-size-22 ec ec-shopping-bag"></i>
                                         <span class="width-22 height-22 bg-dark position-absolute d-flex align-items-center justify-content-center rounded-circle left-12 top-8 font-weight-bold font-size-12 text-white custom_cart_quantity">{{count($carts)}}</span>
                                         <span class="d-none d-xl-block font-weight-bold font-size-16 text-gray-90 ml-3">
-                                            
 
-                                            
+
+
                                             @php
                                             $cart_amount  = 0;
                                             if (count($carts) > 0){
@@ -289,7 +289,7 @@
                                                 }
                                             }
                                             @endphp
-                                                
+
                                             ৳ <span class="cart_price_span custom_cart_price_span">{{number_format($cart_amount,2,".","")}}</span>
                                         </span>
                                     </a>
@@ -333,8 +333,8 @@
                                             <nav class="js-mega-menu navbar navbar-expand-xl u-header__navbar u-header__navbar--no-space hs-menu-initialized">
                                                 <div id="navBar" class="collapse navbar-collapse u-header__navbar-collapse">
                                                     <ul class="navbar-nav u-header__navbar-nav border-primary border-top-0">
-                                                        
-                                                        
+
+
                                                         @foreach ($categories as $category)
                                                         @if (count($category->childTreeInfo) > 0)
                                                             <!-- Nav Item MegaMenu -->
@@ -349,7 +349,9 @@
                                                             <div class="hs-mega-menu vmm-tfw u-header__sub-menu" aria-labelledby="basicMegaMenu">
                                                                 <div class="row u-header__mega-menu-wrapper" style="background: white;">
                                                                     <div class="col mb-3 mb-sm-0">
-                                                                        <span class="u-header__sub-menu-title">{{$category->name}}</span>
+                                                                        <span class="u-header__sub-menu-title">
+                                                                            <a  href="{{route('store.grid')}}?c[]={{$category->id}}">{{$category->name}}</a>
+                                                                        </span>
                                                                         <ul class="u-header__sub-menu-nav-group mb-3">
                                                                             @foreach ($category->childTreeInfo as $childTreeInfo)
 
@@ -358,16 +360,16 @@
                                                                                     @foreach ($childTreeInfo->childTreeInfo as $childrenTreeInfo)
                                                                                         <li><a class="nav-link u-header__sub-menu-nav-link" href="{{route('store.grid')}}?c[]={{$childrenTreeInfo->id}}">--{{$childrenTreeInfo->name}}</a></li>
                                                                                     @endforeach
-                                                                                    
+
                                                                                 @endif
                                                                             @endforeach
-                                                                            
-                                                                            
-                                                                            
+
+
+
                                                                         </ul>
                                                                     </div>
 
-                                                                    
+
                                                                 </div>
                                                             </div>
                                                             <!-- End Nav Item - Mega Menu -->
@@ -383,7 +385,7 @@
                                                             </li>
                                                         @endif
                                                         @endforeach
-                                                        
+
 
                                                     </ul>
                                                 </div>
@@ -427,8 +429,8 @@
                     <div class="col-md-auto align-self-center">
                         <div class="d-flex">
                             <ul class="d-flex list-unstyled mb-0">
-                                
-                                
+
+
                                 <li class="col d-xl-none px-2 px-sm-3"><a href="{{route('account')}}" class="text-gray-90" data-toggle="tooltip" data-placement="top" title="My Account"><i class="font-size-22 ec ec-user"></i></a></li>
                                 <li class="col pr-xl-0 px-2 px-sm-3 d-xl-none">
                                     <a href="{{ route('cart') }}" class="text-gray-90 position-relative d-flex " data-toggle="tooltip" data-placement="top" title="Cart">
@@ -453,8 +455,8 @@
                                         <i class="font-size-22 ec ec-shopping-bag"></i>
                                         <span class="bg-lg-down-black width-22 height-22 bg-primary position-absolute d-flex align-items-center justify-content-center rounded-circle left-12 top-8 font-weight-bold font-size-12 cart_quantity custom_cart_quantity" style="border: 1px solid #333e48;">{{count($carts)}}</span>
                                         <span class="d-none d-xl-block font-weight-bold font-size-16 text-gray-90 ml-3">
-                                            
-                                                
+
+
                                             ৳ <span class="custom_cart_price_span">{{number_format($cart_amount,2,".","")}}</span>
                                         </span>
                                     </div>
@@ -493,7 +495,7 @@
                                             @endforeach
                                         </ul>
                                         <div class="guest_user_cart_section">
-                                            
+
                                         </div>
                                         <div class="flex-center-between px-4 pt-2">
                                             <a href="{{ route('cart') }}" class="btn btn-soft-secondary mb-3 mb-md-0 font-weight-normal px-5 px-md-4 px-lg-5">View cart</a>
