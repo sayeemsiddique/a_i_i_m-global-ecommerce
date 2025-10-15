@@ -3,7 +3,7 @@
 @section('content')
 <!--begin::Content-->
 <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
-    
+
     <!--end::Subheader-->
         <!--begin::Entry-->
         <div class="d-flex flex-column-fluid">
@@ -17,13 +17,13 @@
                         <div class="card card-custom example example-compact">
                             <div class="card-header">
                                 <h3 class="card-title">Website Settings</h3>
-                                
+
                             </div>
                             <div class="card-body">
                                 <form action="{{ route('admin.setting.update', $setting->id ?? 1)}}" method="post" enctype="multipart/form-data">
                                     <div class="card-body">
                                         @csrf
-                                            
+
                                         <div class="form-group row">
                                             <label class="col-form-label col-lg-2 col-sm-12 text-right">Title: <span style="color: red;">*</span></label>
                                             <div class="col-lg-4 col-sm-12">
@@ -111,9 +111,9 @@
                                         </div>
 
                                         <div class="form-group row">
-                                            <label class="col-form-label col-lg-2 col-sm-12 text-right">Copyright Text: <span style="color: red;">*</span></label>
+                                            <label class="col-form-label col-lg-2 col-sm-12 text-right">Developed By: <span style="color: red;">*</span></label>
                                             <div class="col-lg-4 col-sm-12">
-                                                <input type="text" name="copyright" class="form-control" value="{{$setting->copyright ?? ''}}" placeholder="Enter Copyright Text" required>
+                                                <input type="text" name="copyright" class="form-control" value="{{$setting->copyright ?? ''}}" placeholder="Developed By" required>
                                             </div>
                                         </div>
                                     </div>

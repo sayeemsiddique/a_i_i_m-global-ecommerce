@@ -1,7 +1,7 @@
 @extends('backend.layout.master')
 
 @push('css')
-	<style> 
+	<style>
 		@media only screen and (max-width: 768px) {
 			.card-footer.printHide .col-lg-12 {
 				text-align: center !important;
@@ -46,7 +46,7 @@
 
 								<div class="card-body">
 									<!--begin::Order details header section-->
-									
+
 										<div class="card card-custom card-shadowless">
 											<div class="card-body p-0">
 												<div class="row justify-content-center py-8 px-2 px-md-0">
@@ -58,7 +58,7 @@
 													</div>
 
 													<div class="col-md-7">
-														
+
 													</div>
 
 													<div class="col-md-3">
@@ -69,10 +69,10 @@
 												</div>
 											</div>
 										</div>
-									
-									
+
+
 									<!--begin::Order details, User details-->
-									
+
 										<div class="row">
 											<div class="col-md-4">
 												<span class="font-weight-bold"><b>Invoice Number:</b> {{ sprintf('%08d', $order->salePaymentInfo->id ?? 0) }}</span> <br>
@@ -102,34 +102,34 @@
 												{{-- @if (($order->status == 4) || ($order->stage == 5))
 													<span class="font-weight-bold"><b>Order Cancel Reason:</b> {{$order->remark}}</span>
 												@endif --}}
-												
-						  
+
+
 													<label class="">Order Status:</label>
 													@foreach (orderStatus() as $key => $order_status)
 														@if($order->status == $key) {{$order_status}} @endif
 													@endforeach
-													
-												
+
+
 												<br/>
-												
-											
-												
+
+
+
 													<label class="">Delivery Status:</label>
 													@foreach(deliveryStatus() as $key => $delivery_status)
 														@if($order->delivery_status == $key) {{$delivery_status}} @endif
 													@endforeach
-													
-												
+
+
 												<br/>
-												
-											
-												
+
+
+
 													<label class="">Payment Status:</label>
 													@foreach(paymentStatus() as $key => $payment_status)
 														@if(($order->paymentInfo->status ?? 0) == $key) {{$payment_status}} @endif
 													@endforeach
-													
-												
+
+
 											</div>
 
 											<div class="col-md-5"></div>
@@ -146,11 +146,11 @@
 												Recipient name: {{ $order->shippingAddressInfo->recipient_name ?? '' }} <br/>
 												Recipient Mobile: {{ $order->shippingAddressInfo->phone_no ?? '' }} <br/>
 												Recipient Address: {{ $order->shippingAddressInfo->address ?? '' }}, {{ $order->shippingAddressInfo->upazilaInfo->name ?? '' }}, {{ $order->shippingAddressInfo->districtInfo->name ?? '' }}, {{ $order->shippingAddressInfo->divisionInfo->name ?? '' }}
-												
+
 											</div>
 										</div>
-									
-									
+
+
 										<!--begin:Table-->
 										<div class="top-0 left-0 right-0">
 											<div class="row justify-content-center">
@@ -180,13 +180,13 @@
 																			@if ($order_detail->varient_id > 0)
 																				<span class="text-success">
 																					<small>
-																						
+
 																							{{ $order_detail->varientDataInfo->varientTypeInfo->name ?? '' }}: {{ $order_detail->varientDataInfo->data_value ?? '' }}
 																					</small>
 																				</span>
 																			@endif
 																		</td>
-																		
+
 																		<td class="text-right pt-7 align-middle">
 																			{{ number_format($order_detail->quantity) }}
 																		</td>
@@ -215,20 +215,20 @@
 																	<th class="text-right" colspan="2">Shipping Cost</th>
 																	<th class="text-right">৳ {{ number_format($order->shipping_cost, 2, ".", "") }}</th>
 																</tr>
-		
+
 																<!--Show total price-->
 																<tr style="border-top: 1px solid #000;">
 																	<th class="text-right" colspan="2">Total</th>
 																	<th class="text-right">৳ {{ number_format($order->grand_total_price, 2, ".", "") }}</th>
 																</tr>
-																
+
 															</tbody>
 														</table>
 													</div>
 												</div>
 											</div>
 										</div>
-										
+
 										<!--begin::Buttons-->
 										<div class="card-footer printHide">
 											<div class="row">
@@ -246,10 +246,10 @@
 											</div>
 										</div>
 
-									
+
 
 									<!--end::Invoice Body-->
-									
+
 								</div> {{-- Details tab end --}}
 							</div>
 							<!--end::Card-->
@@ -261,11 +261,11 @@
 			</div>
 			<!--end::Entry-->
 		</div>
-		
+
 		<div id="printChalanOne" class="container" style="display: none;">
 			<div class="card card-custom m-9">
 				<div class="card-header mt-5" style="border-bottom: 1px solid #fff">
-					
+
 					<div class="col-md-6 offset-md-3 text-center mt-4" style="line-height: 100%">
 						<h3>চালান পত্র</h3>
 						<p class="font-weight-bold">[বিধি ৪০ এর উপ-বিধি (১) এর দফা (গ) ও দফা (চ) দ্রষ্টব্য]</p>
@@ -358,7 +358,7 @@
 									$allProductPrice = 0;
 									$productSdValue = 0;
 									$productVatValue = 0;
-									
+
 								@endphp
 
 								@foreach ($order->orderDetails as $od)
@@ -374,11 +374,11 @@
 											@elseif($od->productInfo->unit == 2)
 												MT
 											@endif
-											
-											
+
+
 										</td>
 
-										
+
 										@php
 											$qty = $od->quantity;
 										@endphp
@@ -440,7 +440,7 @@
 											@else
 												{{$productVatValue = ($productWithSdPrice * $od->productInfo->vat)/100}}
 											@endif
-											
+
 											@php
 											// store product price include sd value include vat value
 												$productWithSdPriceVatPrice = ($productWithSdPrice + $productVatValue) * $qty;
@@ -480,7 +480,7 @@
 									@if ($order->discount_on_amount == 2)
 										<tr>
 											<th class="text-right" colspan="9">ক্রয় কমিশন ({{ $order->discount_percent_in_total ?? 0 }} %)</th>
-											<th class="text-right">{{ number_format($order->discount_amount_in_total ?? 0, 2, '.', '')}}</th>	
+											<th class="text-right">{{ number_format($order->discount_amount_in_total ?? 0, 2, '.', '')}}</th>
 										</tr>
 									@endif
 
@@ -512,7 +512,7 @@
 							<p>{{ number_format($allProductPrice, 2, ".", "").' TK' ?? 'Undefined Product Price, SD or VAT' }}</p>
 							<p><span style="border-top: 1px solid #000"><b>সকল প্রকার কর ব্যতীত মূল্য</b></span></p>
 						</div>
-						
+
 						<div class="col-md-4 text-right mt-40">
 							<p>প্রস্তুতকারক</p>
 						</div>
@@ -526,7 +526,7 @@
 		<div id="printChalanTwo" class="container" style="display: none;">
 			<div class="card card-custom m-9">
 				<div class="card-header mt-5" style="border-bottom: 1px solid #fff">
-					
+
 					<div class="col-md-6 offset-md-3 text-center mt-4" style="line-height: 100%">
 						<h3>চালান পত্র</h3>
 						<p class="font-weight-bold">[বিধি ৪০ এর উপ-বিধি (১) এর দফা (গ) ও দফা (চ) দ্রষ্টব্য]</p>
@@ -619,7 +619,7 @@
 									$allProductPrice = 0;
 									$productSdValue = 0;
 									$productVatValue = 0;
-									
+
 								@endphp
 								@foreach ($order->orderDetails as $od)
 								<tr>
@@ -627,7 +627,7 @@
 									<td style="border: 1px solid #000" align="middle">{{$od->productInfo ? $od->productInfo->name : 'N/A'}}</td>
 
 									<td style="border: 1px solid #000" align="middle">
-										
+
 										@if($od->unit == 1)
 											KG
 										@elseif($od->unit == 2)
@@ -694,7 +694,7 @@
 										@else
 											{{$productVatValue = ($productWithSdPrice * $od->productInfo->vat)/100}}
 										@endif
-										
+
 										@php
 										// store product price include sd value include vat value
 											$productWithSdPriceVatPrice = ($productWithSdPrice + $productVatValue) * $qty;
@@ -734,7 +734,7 @@
 									@if ($order->discount_on_amount == 2)
 										<tr>
 											<th class="text-right" colspan="9">ক্রয় কমিশন ({{ $order->discount_percent_in_total ?? 0 }} %)</th>
-											<th class="text-right">{{ number_format($order->discount_amount_in_total ?? 0, 2, '.', '')}}</th>	
+											<th class="text-right">{{ number_format($order->discount_amount_in_total ?? 0, 2, '.', '')}}</th>
 										</tr>
 									@endif
 
@@ -766,7 +766,7 @@
 							<p>{{ number_format($allProductPrice, 2, ".", "").' TK' ?? 'Undefined Product Price, SD or VAT' }}</p>
 							<p><span style="border-top: 1px solid #000"><b>সকল প্রকার কর ব্যতীত মূল্য</b></span></p>
 						</div>
-						
+
 						<div class="col-md-4 text-right mt-40">
 							<p>প্রস্তুতকারক</p>
 						</div>
@@ -793,7 +793,7 @@
 						<input type="hidden" name="orderId" value="{{$order->id}}" required>
 
 						<div class="form-group row">
-						  
+
 							<label for="stage" class="col-sm-4 col-form-label">Order Status</label>
 							<div class="col-sm-8">
 								<select class="form-control" id="stage" name="stage" required>
@@ -803,45 +803,45 @@
 									@endforeach
 								</select>
 							</div>
-							
+
 						</div>
-						
+
 						<div class="form-group row">
-						  
+
 							<label for="delivery_status" class="col-sm-4 col-form-label">Delivery Status</label>
 							<div class="col-sm-8">
 								<select class="form-control" id="delivery_status" name="delivery_status" required>
 									<option value="">Select</option>
 									@foreach(deliveryStatus() as $key => $delivery_status)
-										<option @if($order->delivery_status == $key) selected @endif value="{{$key}}">{{$delivery_status}}</option>	
+										<option @if($order->delivery_status == $key) selected @endif value="{{$key}}">{{$delivery_status}}</option>
 									@endforeach
 								</select>
 							</div>
-							
+
 						</div>
-						
+
 						<div class="form-group row">
-						  
+
 							<label for="payment_status" class="col-sm-4 col-form-label">Payment Status</label>
 							<div class="col-sm-8">
 								<select class="form-control" id="payment_status" name="payment_status" required>
 									<option value="">Select</option>
 									@foreach(paymentStatus() as $key => $payment_status)
-										<option @if(($order->paymentInfo->status ?? 0) == $key) selected @endif value="{{$key}}">{{$payment_status}}</option>	
+										<option @if(($order->paymentInfo->status ?? 0) == $key) selected @endif value="{{$key}}">{{$payment_status}}</option>
 									@endforeach
 								</select>
 							</div>
-							
+
 						</div>
 
-						<div class="form-group row delivery_date_div" style="display: none;"> 
+						<div class="form-group row delivery_date_div" style="display: none;">
 							<label for="stage" class="col-sm-4 col-form-label">Delivery Date:<span class="text-danger">*</span></label>
 
 							<div class="col-sm-8">
 								<input type="date" class="form-control" name="delivery_date" id="delivery_date">
 							</div>
 						</div>
-						
+
 						<div class="row">
 							<div class="col-8">
 								<button type="submit" class="btn btn-success">Update</button>
@@ -878,7 +878,7 @@
 			}
 		</script>
 
-		<script> 
+		<script>
 			$('#stage').on('change', function() {
 				let stage = $('#stage').val();
 

@@ -139,7 +139,16 @@
                                             <tr>
                                                 <th>Shipping Cost</th>
                                                 <td>
-                                                    ৳ <span class="shipping_cost" >0</span>
+                                                    ৳
+                                                    @if (count($shipping_addresses) == 1)
+                                                        @php
+                                                            $first_shipping = $shipping_addresses->first();
+                                                        @endphp
+                                                        <span class="shipping_cost" >{{$first_shipping->divisionInfo->shipping_cost ?? 0}}</span>
+                                                    @else
+                                                    <span class="shipping_cost" >0</span>
+                                                    @endif
+
                                                 </td>
                                             </tr>
 
@@ -217,6 +226,14 @@
 
                             <div class="w-100">
                                 <div class="row">
+                                    @if (count($shipping_addresses) == 0)
+                                        <div class="col-12">
+
+                                            <p class="text-danger">No shipping address found. Please add a shipping address first. <a href="{{ route('shipping_address.create') }}@if(isset($_GET['cart_id']))?cart_id={{$_GET['cart_id']}} @endif">Add</a></p>
+                                        </div>
+                                    </div>
+
+                                    @endif
                                     @foreach ($shipping_addresses as $address)
                                         <div class=col-md-6>
                                             <label class="address-option d-block">

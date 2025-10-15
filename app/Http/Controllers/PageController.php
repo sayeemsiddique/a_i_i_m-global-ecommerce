@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Auth;
 use Gate;
 
@@ -27,6 +28,133 @@ class PageController extends Controller
             $pages = $query->paginate(20);
 
             return view('backend.admin.page.index', compact('pages'));
+
+        }
+        else
+        {
+            abort(403);
+        }
+    }
+
+    public function create()
+    {
+        $user = Auth::user();
+
+        if(Gate::allows('add_page', $user))
+        {
+            menuSubmenu('manage_page', 'add_page');
+
+
+            return view('backend.admin.page.create');
+
+        }
+        else
+        {
+            abort(403);
+        }
+    }
+
+    public function store(Request $request)
+    {
+        $user = Auth::user();
+
+        if(Gate::allows('add_page', $user))
+        {
+            $request->validate([
+                'title' => 'required|string',
+                'description_en' => 'required|string',
+                // 'meta_title' => 'nullable|string|max:255',
+                // 'meta_description' => 'nullable|string',
+                // 'type' => 'required|integer|in:1,2',
+                // 'status' => 'required|integer|in:0,1',
+            ]);
+
+            $slug = $this->generateUniqueSlug($request->title);
+
+            $page = new Page();
+            $page->title = $request->title;
+            $page->meta_title = $request->meta_title;
+            $page->sl = $request->sl;
+            $page->content = $request->description_en;
+            $page->type = $request->type;
+            $page->status = $request->status;
+            $page->slug = $slug;
+            $page->save();
+
+            return redirect()->route('admin.page.index')->with('success', 'Page created successfully...!');
+
+        }
+        else
+        {
+            abort(403);
+        }
+    }
+
+    public function show($id)
+    {
+        $user = Auth::user();
+
+        if(Gate::allows('view_page', $user))
+        {
+            menuSubmenu('manage_page', 'manage_page');
+
+            $page = Page::findOrFail($id);
+
+            return view('backend.admin.page.show', compact('page'));
+
+        }
+        else
+        {
+            abort(403);
+        }
+    }
+
+    public function edit($id)
+    {
+        $user = Auth::user();
+
+        if(Gate::allows('edit_page', $user))
+        {
+            menuSubmenu('manage_page', 'manage_page');
+
+            $page = Page::findOrFail($id);
+
+            return view('backend.admin.page.edit', compact('page'));
+
+        }
+        else
+        {
+            abort(403);
+        }
+    }
+
+    public function update(Request $request, $id)
+    {
+        $user = Auth::user();
+
+        if(Gate::allows('edit_page', $user))
+        {
+            $request->validate([
+                'title' => 'required|string',
+                'description_en' => 'required|string',
+                // 'meta_title' => 'nullable|string|max:255',
+                // 'meta_description' => 'nullable|string',
+                // 'status' => 'required|integer|in:0,1',
+            ]);
+
+            $slug = $this->generateUniqueSlug($request->title);
+
+            $page = Page::findOrFail($id);
+            $page->title = $request->title;
+            $page->sl = $request->sl;
+            $page->meta_title = $request->meta_title;
+            $page->content = $request->description_en;
+            $page->status = $request->status;
+            $page->type = $request->type;
+            $page->slug = $slug;
+            $page->save();
+
+            return redirect()->route('admin.page.index')->with('success', 'Page updated successfully...!');
 
         }
         else
@@ -176,5 +304,23 @@ class PageController extends Controller
         {
             abort(403);
         }
+    }
+
+    private function generateUniqueSlug($title, $ignoreId = null)
+    {
+        $slug = Str::slug($title);
+        $originalSlug = $slug;
+
+        $count = 1;
+        while (
+            Page::where('slug', $slug)
+                ->when($ignoreId, fn($q) => $q->where('id', '!=', $ignoreId))
+                ->exists()
+        ) {
+            $slug = "{$originalSlug}-{$count}";
+            $count++;
+        }
+
+        return $slug;
     }
 }

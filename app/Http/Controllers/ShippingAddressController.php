@@ -76,6 +76,7 @@ class ShippingAddressController extends Controller
                 ]);
 
                 $data = $request->all();
+                unset($data['cart_id']);
                 $data['user_id'] = $user->id;
 
                 // If default shipping is checked, reset others
@@ -91,6 +92,10 @@ class ShippingAddressController extends Controller
                 }
 
                 ShippingAddress::create($data);
+
+                if ($request->cart_id and $request->cart_id != '') {
+                    return redirect()->route('checkout', ['transition' => 1, 'buy_now' => 1, 'cart_id' => $request->cart_id]);
+                }
 
                 return redirect()->route('shipping_address.index')
                                  ->with('success', 'Shipping Address Added');
@@ -161,7 +166,7 @@ class ShippingAddressController extends Controller
         // } else {
         //     abort(403);
         // }
-        
+
     }
 
     public function show($id)

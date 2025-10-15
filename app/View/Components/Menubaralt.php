@@ -6,6 +6,7 @@ use Illuminate\View\Component;
 
 use App\Models\Category;
 use App\Models\Cart;
+use App\Models\Page;
 
 class Menubaralt extends Component
 {
@@ -30,7 +31,7 @@ class Menubaralt extends Component
         $categories = Category::where([
             'parent_id' =>  0,
             'status' =>  1,
-        ])->with('childTreeInfo')->get();
+        ])->with('childTreeInfo')->orderBy('sl','asc')->get();
 
         if (auth()->check()) {
             $carts = Cart::where('user_id', auth()->user()->id)->with('productInfo','varientInfo')->latest()->get();
@@ -38,6 +39,11 @@ class Menubaralt extends Component
             $carts = [];
         }
 
-        return view('components.menubaralt', compact('categories','carts'));
+        $pages = Page::where([
+            'status' => 1,
+            'type' => 1,
+        ])->orderBy('sl', 'asc')->select('id','slug','title')->get();
+
+        return view('components.menubaralt', compact('categories','carts','pages'));
     }
 }

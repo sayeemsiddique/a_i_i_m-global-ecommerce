@@ -14,8 +14,8 @@
                     <div class="card card-custom example example-compact">
                         <div class="card-header">
                             <h3 class="card-title">Order Details</h3>
-                            <div class="d-flex align-items-center">                                    
-                                
+                            <div class="d-flex align-items-center">
+
                             </div>
                         </div>
                         <div class="card-body">
@@ -24,24 +24,21 @@
                             <div class="">
                                 <p>Name: {{ $user->first_name }} {{ $user->last_name }}</p>
                                 <p>Order Date: {{ date('d M Y', strtotime($orderDetails->created_at)) }}</p>
-                                <p>Order ID: {{ $orderDetails->tracking_code ?? '' }}</p>
-                                <p>Delivery Address: {{ $orderDetails->shipping_address ?? '' }}</p>
+                                <p>Invoice Number: {{ sprintf('%08d', $orderDetails->salePaymentInfo->id ?? 0) }}</p>
+                                <p>Order ID: {{ $orderDetails->tracking_code }}</p>
+                                <p>Order Status: @foreach (orderStatus() as $key => $order_status)
+														@if($orderDetails->status == $key) {{$order_status}} @endif
+													@endforeach
+                                </p>
                                 <p>
-                                    Order Status: @if ($orderDetails->stage == 0)
-                                            <span class="badge" style="background:#144ceb; color:white;">Pending</span>
-                                        @elseif($orderDetails->stage == 1)
-                                            <span class="badge badge-primary">Order Accepted</span>
-                                        @elseif($orderDetails->stage == 2)
-                                            <span class="badge badge-danger">Order Declined</span>
-                                        @elseif($orderDetails->stage == 3)
-                                            <span class="badge badge-primary">On Delivery</span>
-                                        @elseif($orderDetails->stage == 4)
-                                            <span class="badge badge-success">Order Complete</span>
-                                        @elseif($orderDetails->stage == 5)
-                                            <span class="badge badge-danger">Order Canceled</span>
-                                        {{-- @else
-                                            <span class="badge badge-danger">Unknown Status</span> --}}
-                                        @endif
+                                    Delivery Status: @foreach(deliveryStatus() as $key => $delivery_status)
+														@if($orderDetails->delivery_status == $key) {{$delivery_status}} @endif
+													@endforeach
+                                </p>
+                                <p>
+                                    Payment Status: @foreach(paymentStatus() as $key => $payment_status)
+														@if(($orderDetails->paymentInfo->status ?? 0) == $key) {{$payment_status}} @endif
+													@endforeach
                                 </p>
                             </div>
                         </div>
@@ -83,7 +80,7 @@
                                     <td colspan="3" class="order-date text-right">Subtotal</td>
                                     <td class="order-date font-weight-bold">৳ {{ number_format($orderDetails->total_price, 2, '.', '') }}</td>
                                 </tr>
-                                
+
                                 <tr class="font-weight-bold text-right">
                                     <td colspan="3" class="order-date text-right">Shipping Cost</td>
                                     <td class="order-date font-weight-bold">৳ {{ number_format($orderDetails->shipping_cost, 2, '.', '') }}</td>

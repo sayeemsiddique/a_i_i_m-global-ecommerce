@@ -435,11 +435,6 @@
                                 <li class="nav-item u-header__nav-item">
                                     <a class="nav-link u-header__nav-link" href="{{route('index')}}" aria-haspopup="true" aria-expanded="false" aria-labelledby="pagesSubMenu">Home</a>
                                 </li>
-                                <!-- End Home -->
-
-                                <li class="nav-item u-header__nav-item">
-                                    <a class="nav-link u-header__nav-link" href="{{route('aboutus')}}" aria-haspopup="true" aria-expanded="false" aria-labelledby="pagesSubMenu">About Us</a>
-                                </li>
 
                                 <!-- Trending Styles -->
                                 <li class="nav-item u-header__nav-item">
@@ -447,11 +442,11 @@
                                 </li>
                                 <!-- End Trending Styles -->
 
-
-
-                                <li class="nav-item u-header__nav-item">
-                                    <a class="nav-link u-header__nav-link" href="{{route('contactus')}}" aria-haspopup="true" aria-expanded="false">Contact</a>
-                                </li>
+                                @foreach ($pages as $page)
+                                    <li class="nav-item u-header__nav-item">
+                                        <a class="nav-link u-header__nav-link" href="{{ route('front.page_info', $page->slug) }}?page-id={{Crypt::encryptString($page->id)}}" aria-haspopup="true" aria-expanded="false">{{$page->title}}</a>
+                                    </li>
+                                @endforeach
 
 
                             </ul>

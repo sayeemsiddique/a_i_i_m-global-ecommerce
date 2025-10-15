@@ -22,7 +22,7 @@
                                     </li>
                                 @else
                                     <li class="list-inline-item mr-0 u-header-topbar__nav-item u-header-topbar__nav-item-border">
-                                        <a id="sidebarNavToggler" href="javascript:;" role="button" class="u-header-topbar__nav-link signup_js"
+                                        <a id="sidebarNavTogglerRegister" href="javascript:;" role="button" class="u-header-topbar__nav-link signup_js"
                                             aria-controls="sidebarContent"
                                             aria-haspopup="true"
                                             aria-expanded="false"
@@ -37,7 +37,7 @@
                                         </a>
                                     </li>
                                     <li class="list-inline-item mr-0 u-header-topbar__nav-item u-header-topbar__nav-item-border">
-                                        <a id="sidebarNavToggler" href="javascript:;" role="button" class="u-header-topbar__nav-link login_js"
+                                        <a id="sidebarNavTogglerSignin" href="javascript:;" role="button" class="u-header-topbar__nav-link login_js"
                                             aria-controls="sidebarContent"
                                             aria-haspopup="true"
                                             aria-expanded="false"
@@ -190,24 +190,17 @@
                                     </li>
                                     <!-- End Home -->
 
-                                    <!-- About us -->
-                                    <li class="nav-item u-header__nav-item">
-                                        <a class="nav-link u-header__nav-link" href="{{route('aboutus')}}">About us</a>
-                                    </li>
-                                    <!-- End About us -->
-
                                     <!-- FAQs -->
                                     <li class="nav-item u-header__nav-item">
                                         <a class="nav-link u-header__nav-link" href="{{route('store.grid')}}">Shop</a>
                                     </li>
                                     <!-- End FAQs -->
 
-
-
-                                    <!-- Contact Us -->
-                                    <li class="nav-item u-header__nav-item">
-                                        <a class="nav-link u-header__nav-link" href="{{route('contactus')}}">Contact Us</a>
-                                    </li>
+                                    @foreach ($pages as $page)
+                                        <li class="nav-item u-header__nav-item">
+                                            <a class="nav-link u-header__nav-link" href="{{ route('front.page_info', $page->slug) }}?page-id={{Crypt::encryptString($page->id)}}" aria-haspopup="true" aria-expanded="false">{{$page->title}}</a>
+                                        </li>
+                                    @endforeach
                                     <!-- End Contact Us -->
                                 </ul>
                             </div>
@@ -525,6 +518,33 @@
             var url = "{{route('remove_cart_item')}}?id="+cart_id;
             window.location.replace(url);
         }
+    });
+
+    $("#sidebarNavTogglerRegister").click(function () {
+        $('#myModal').modal('toggle');
+        $('#signup').css('display','block');
+        $('#signup').css('opacity','1');
+        $('#login').css('display','block');
+        $('#login').css('opacity','1');
+        $('#myModal .nav-link').removeClass('active').eq(1).addClass('active');
+        $('#tab_section_1').removeClass('active');
+        $('#tab_section_1').addClass('fade');
+        $('#tab_section_2').removeClass('fade');
+        $('#tab_section_2').addClass('active');
+    });
+    $("#sidebarNavTogglerSignin").click(function () {
+        $('#myModal').modal('toggle');
+        $('#signup').css('display','block');
+        $('#signup').css('opacity','1');
+        $('#login').css('display','block');
+        $('#login').css('opacity','1');
+        $('#myModal .nav-link').removeClass('active').eq(0).addClass('active');
+        $('#tab_section_2').removeClass('active');
+        $('#tab_section_2').addClass('fade');
+        $('#tab_section_1').removeClass('fade');
+        $('#tab_section_1').addClass('active');
+
+
     });
 </script>
 @endpush

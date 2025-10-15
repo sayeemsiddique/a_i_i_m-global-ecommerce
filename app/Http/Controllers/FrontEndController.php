@@ -99,9 +99,17 @@ class FrontendController extends Controller
                     'product_id' => $request->product_id,
                     'varient' => $request->varient,
                     'quantity' => $request->quantity,
+                    'buy_now' => $request->buy_now ?? 0,
                 ]);
 
-                $this->add_to_cart($data);
+                $get_info = $this->add_to_cart($data);
+                if (($get_info->getData(true)['cart_id'] ?? '') != '') {
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => 'Login successfully',
+                        'cart_id' => $get_info->getData(true)['cart_id'],
+                    ], 200);
+                }
             }
 
             return response()->json([
@@ -117,9 +125,10 @@ class FrontendController extends Controller
         }
 
         // Login failed, redirect back with error
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->withInput();
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Login unsuccessfully'
+        ], 401);
     }
 
     // frontend about us page
@@ -389,7 +398,8 @@ class FrontendController extends Controller
     {
 
         $carts = Cart::where('user_id', auth()->user()->id ?? 0)->with('productInfo','varientInfo')->latest()->get();
-        $guest_carts = GuestCart::where('user_id', ($request->guest_id ?? 0))->with('productInfo','varientInfo')->latest()->get();
+        // $guest_carts = GuestCart::where('user_id', ($request->guest_id ?? 0))->with('productInfo','varientInfo')->latest()->get();
+        $guest_carts = [];
 
         // $setting = Setting::oldest()->first();
         return view('frontend.view_cart_section', compact('carts','guest_carts'));
@@ -465,9 +475,18 @@ class FrontendController extends Controller
         return view('frontend.product_detail', compact('product', 'related_products', 'reviews', 'review_count', 'review_avg', 'review_count1', 'review_count2', 'review_count3', 'review_count4', 'review_count5','latest_cart_item','user_review','user_already_purchased'));
     }
 
-    public function checkout()
+    public function checkout(Request $request)
     {
-        $carts = Cart::where('user_id', auth()->user()->id)->with('productInfo.productCategory','varientInfo')->latest()->get();
+        if ($request->cart_id and $request->cart_id != '') {
+            $cart_id = Crypt::decryptString($request->cart_id);
+            $carts = Cart::where([
+                'user_id' => auth()->user()->id,
+                'id' => $cart_id,
+            ])->with('productInfo.productCategory','varientInfo')->latest()->get();
+        } else {
+            $carts = Cart::where('user_id', auth()->user()->id)->with('productInfo.productCategory','varientInfo')->latest()->get();
+        }
+
         if (count($carts) == 0) {
             return back()->with('error','Your cart is empty, please add item first for checkout');
         }
@@ -732,7 +751,7 @@ class FrontendController extends Controller
         $quantity = $check_stock->quantity ?? 0;
 
 
-        if ($check_cart) {
+        if ($check_cart and ($request->buy_now ?? 0) == 0) {
             if ($quantity < ($check_cart->quantity + $request->quantity)) {
                 if($request->ajax()){
                     return response()->json([
@@ -763,12 +782,30 @@ class FrontendController extends Controller
                     ], 404);
                 }
             }
-            $data['product_id'] = $request->product_id;
-            $data['variation_id'] = $request->varient;
-            $data['quantity'] = $request->quantity;
-            $data['created_by'] = auth()->user()->id;
-            $data['user_id'] = auth()->user()->id;
-            Cart::create($data);
+
+            $cart_items = new Cart;
+            $cart_items->product_id = $request->product_id;
+            $cart_items->variation_id = $request->varient;
+            $cart_items->quantity = $request->quantity;
+            $cart_items->created_by = auth()->user()->id;
+            $cart_items->user_id = auth()->user()->id;
+            $cart_items->save();
+        }
+
+        if (($request->buy_now ?? 0) == 1) {
+            if($request->ajax()){
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Added to your cart successfully',
+                    'cart_id' => Crypt::encryptString($cart_items->id),
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Added to your cart successfully',
+                    'cart_id' => Crypt::encryptString($cart_items->id),
+                ], 200);
+            }
         }
 
 
@@ -777,6 +814,58 @@ class FrontendController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'Added to your cart successfully'
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Added to your cart successfully'
+            ], 200);
+        }
+    }
+
+    public function buy_add_to_cart(Request $request)
+    {
+        if($request->quantity <= 0){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Quantity must be at least 1'
+            ], 404);
+        }
+
+        $check_stock = Stock::where([
+            'product_id' => $request->product_id,
+            'varient_id' => $request->varient,
+        ])->latest()->first();
+
+        $quantity = $check_stock->quantity ?? 0;
+
+
+
+        if ($quantity < $request->quantity) {
+            if($request->ajax()){
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Quantity is out of stock'
+                ], 404);
+            }
+        }
+
+        $cart_items = new Cart;
+        $cart_items->product_id = $request->product_id;
+        $cart_items->variation_id = $request->varient;
+        $cart_items->quantity = $request->quantity;
+        $cart_items->created_by = auth()->user()->id;
+        $cart_items->user_id = auth()->user()->id;
+        $cart_items->save();
+
+
+
+
+        if($request->ajax()){
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Added to your cart successfully',
+                'cart_id' => Crypt::encryptString($cart_items->id),
             ], 200);
         }
     }
@@ -972,7 +1061,8 @@ class FrontendController extends Controller
 
             Payment::create($payment_data);
 
-            Cart::where('user_id', auth()->user()->id)->delete();
+            // Cart::where('user_id', auth()->user()->id)->delete();
+            Cart::where('user_id', auth()->user()->id)->whereIn('id',$productIds)->delete();
         });
 
 
@@ -1170,7 +1260,7 @@ class FrontendController extends Controller
             $data['number'] = $request->phone_number;
             $data['message'] = 'Your verification code for registration is: '.$otp;
 
-            // $this->sms_send($data);
+            $this->sms_send($data);
         }
 
         return response()->json(['message' =>  __('OTP sent successfully, use OTP within 15 minutes.'), 'phone_number' => $phoneNumber]);
@@ -1282,9 +1372,18 @@ class FrontendController extends Controller
             'username' => $request->phone_number,
             'quantity' => $request->quantity,
             'password' => $request->password,
+            'buy_now' => $request->buy_now ?? 0,
         ]);
 
-        $this->user_login($data);
+        $get_info = $this->user_login($data);
+
+        if (($get_info->getData(true)['cart_id'] ?? '') != '') {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'OTP verified successfully',
+                'cart_id' => $get_info->getData(true)['cart_id'],
+            ], 200);
+        }
 
         return response()->json(['message' => __('OTP verified successfully')]);
 
@@ -1303,5 +1402,11 @@ class FrontendController extends Controller
                 'code' => 401
             ], 200);
         }
+    }
+
+    public function page_info($slug)
+    {
+        $page = Page::where('slug',$slug)->latest()->first();
+        return view('frontend.page_info', compact('page'));
     }
 }

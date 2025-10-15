@@ -29,6 +29,11 @@
                                     </a>
 
                                     </form>
+                                    @can('add_page')
+                                    <a href="{{route('admin.page.create')}}" class="ml-2 btn btn-success btn-sm" title="Add new page">
+                                        Add Page
+                                    </a>
+                                    @endcan
                                 </div>
 
                             </div>

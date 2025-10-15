@@ -14,6 +14,7 @@
                         <div class="card-body">
                             <form action="{{ route('shipping_address.store') }}" method="POST">
                                 @csrf
+                                <input type="hidden" name="cart_id" value="{{ $_GET['cart_id'] ?? '' }}">
 
                                 <div class="row">
                                     <div class="col-md-6">

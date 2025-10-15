@@ -86,6 +86,9 @@
 
     $(document).on('ready', function () {
         let guest_id = localStorage.getItem("guest_id");
+        if (!guest_id) {
+            guest_id = 1;
+        }
         if(guest_id) {
             $.ajax({
                 url: "{{route('view_cart_section')}}",

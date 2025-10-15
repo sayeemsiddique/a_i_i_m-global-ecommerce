@@ -310,7 +310,7 @@
                             <div class="ml-md-3">
                                 @if ($in_stock > 0)
                                     <div style="cursor:pointer" class="btn px-5 btn-primary-dark transition-3d-hover add-to-cart-button"><i class="ec ec-add-to-cart mr-2 font-size-20"></i> Add to Cart</div>
-                                    <div style="cursor:pointer" class="btn px-5 btn-success transition-3d-hover add-to-cart-button"><i class="ec ec-newsletter mr-2 font-size-20"></i> Buy Now</div>
+                                    <div style="cursor:pointer" class="btn px-5 btn-success transition-3d-hover buy-add-to-cart-button"><i class="ec ec-newsletter mr-2 font-size-20"></i> Buy Now</div>
                                 @endif
                             </div>
                         </div>
@@ -736,7 +736,40 @@
                         var data = JSON.stringify(response.message);
                         alertify.success(data.replace(/"/g, ''));
                         setTimeout(function(){
-                            window.location.reload(1);
+                            if (response.cart_id) {
+                                window.location.href = "{{ route('checkout') }}?transition=1&buy_now=1&cart_id="+response.cart_id;
+                            } else {
+                                window.location.reload(1);
+                            }
+
+                        }, 2000);
+
+                    }
+                },
+                error: function(error) {
+                    alertify.error(JSON.parse(error.responseText).message);
+                }
+            });
+        }
+
+        function buyAddToCart(product_id,varient,_token,quantity) {
+            $.ajax({
+                url: "{{route('buy_add_to_cart')}}",
+                type:"GET",
+                data:{
+                    product_id: product_id,
+                    varient: varient,
+                    _token: _token,
+                    quantity: quantity,
+                    // buy_now: 1,
+                },
+                success:function(response){
+                    if(response) {
+                        var data = JSON.stringify(response.message);
+                        alertify.success(data.replace(/"/g, ''));
+                        setTimeout(function(){
+                            window.location.href = "{{ route('checkout') }}?transition=1&buy_now=1&cart_id="+response.cart_id;
+                            // window.location.reload(1);
                         }, 2000);
 
                     }
@@ -766,13 +799,52 @@
 
             check_auth(function(check_auth_user) {
                 if (check_auth_user === 200) {
-                    console.log(check_auth_user);
                     addToCart(product_id,varient_id,data_token,quantity);
                 } else {
                     var html_content = `
                         <input type="hidden" name="product_id" value="${product_id}">
                         <input type="hidden" name="varient" value="${varient_id}">
                         <input type="hidden" name="quantity" value="${quantity}">
+                        <input type="hidden" name="buy_now" value="0">
+                    `;
+
+                    $('.hidden_form_section').empty();
+                    $('.hidden_form_section').append(html_content);
+
+                    $('#myModal').modal('toggle');
+
+                    return false;
+                }
+            });
+
+        });
+
+        $('.buy-add-to-cart-button').click(function() {
+
+            let varient_id = 0;
+            let data_token = $('.token').val();
+            let product_id = {{$product->id}};
+            let quantity = $('.js-result').val();
+            let has_varient = $('.has_varient').val();
+
+            if (has_varient == 'on') {
+                varient_id = $('.varient_id option:selected').val();
+                let varient_stock_quantity = $('.varient_id option:selected').attr('data-quantity');
+                if (!varient_stock_quantity) {
+                    alertify.error("Please select variant");
+                    return false;
+                }
+            }
+
+            check_auth(function(check_auth_user) {
+                if (check_auth_user === 200) {
+                    buyAddToCart(product_id,varient_id,data_token,quantity);
+                } else {
+                    var html_content = `
+                        <input type="hidden" name="product_id" value="${product_id}">
+                        <input type="hidden" name="varient" value="${varient_id}">
+                        <input type="hidden" name="quantity" value="${quantity}">
+                        <input type="hidden" name="buy_now" value="1">
                     `;
 
                     $('.hidden_form_section').empty();

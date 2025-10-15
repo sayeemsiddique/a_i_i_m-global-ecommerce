@@ -69,6 +69,7 @@ Route::middleware([SetLocale::class])->group(function () {
     Route::get('/order-track', [FrontendController::class, 'order_track'])->name('order_track');
 
     Route::get('/page/{type}', [FrontendController::class, 'page'])->name('front.page');
+    Route::get('/page-info/{slug}', [FrontendController::class, 'page_info'])->name('front.page_info');
 
     Route::get('/cart', [FrontendController::class, 'cart'])->name('cart');
     // About us page
@@ -104,6 +105,7 @@ Route::middleware([SetLocale::class])->group(function () {
         Route::post('/edit-info/{user}', [FrontendController::class, 'edit_info'])->name('edit_info');
         Route::post('/edit-password/{user}', [FrontendController::class, 'edit_password'])->name('edit_password');
         Route::get('/add-to-cart', [FrontendController::class, 'add_to_cart'])->name('add_to_cart');
+        Route::get('/buy-add-to-cart', [FrontendController::class, 'buy_add_to_cart'])->name('buy_add_to_cart');
         Route::post('/cart-update', [FrontendController::class, 'update_cart'])->name('update_cart');
 
         Route::prefix('shipping-address')->as('shipping_address.')->group(function () {
@@ -200,8 +202,10 @@ Route::middleware([SetLocale::class])->group(function () {
 
             Route::prefix('page')->as('page.')->group(function () {
                 Route::get('/', [PageController::class, 'index'])->name('index');
-                Route::patch('/update/{id}', [PageController::class, 'update'])->name('update');
-                Route::get('/update/{id}', [PageController::class, 'show'])->name('show');
+                Route::get('create', [PageController::class, 'create'])->name('create');
+                Route::post('store', [PageController::class, 'store'])->name('store');
+                Route::PATCH('/update/{id}', [PageController::class, 'update'])->name('update');
+                Route::get('/show/{id}', [PageController::class, 'show'])->name('show');
                 Route::get('/edit/{id}', [PageController::class, 'edit'])->name('edit');
                 Route::get('/delete/{id}', [PageController::class, 'delete'])->name('delete');
 

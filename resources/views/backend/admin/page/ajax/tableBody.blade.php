@@ -3,6 +3,7 @@
         <tr>
             <th>#</th>
             <th class="text-left">Name</th>
+            <th>type</th>
             <th>Status</th>
             <th>Actions</th>
         </tr>
@@ -20,6 +21,13 @@
 
                         {{$page->title}}
 
+                </td>
+                <td>
+                    @if ($page->type == 1)
+                        Header
+                    @elseif ($page->type == 2)
+                        Footer
+                    @endif
                 </td>
                 <td>
                     @if ($page->status == 1)

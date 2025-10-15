@@ -503,6 +503,7 @@
             const product_id = $('.hidden_form_section').find('[name="product_id"]').val() || 0;
             const varient = $('.hidden_form_section').find('[name="varient"]').val() || 0;
             const quantity = $('.hidden_form_section').find('[name="quantity"]').val() || 0;
+            const buy_now = $('.hidden_form_section').find('[name="buy_now"]').val() || 0;
 
             $.ajax({
                 url: "{{route('verifyOtp')}}",
@@ -517,10 +518,17 @@
                     product_id: product_id,
                     varient: varient,
                     quantity: quantity,
+                    buy_now: buy_now,
                 },
                 success: function(response) {
                     alertify.success(response.message);
-                    location.reload();
+                    setTimeout(function(){
+                        if (response.cart_id) {
+                                window.location.href = "{{ route('checkout') }}?transition=1&buy_now=1&cart_id="+response.cart_id;
+                        } else {
+                                location.reload();
+                        }
+                    }, 1500);
 
                 },
                 error: function(error) {
@@ -535,6 +543,7 @@
             const product_id = $('.hidden_form_section').find('[name="product_id"]').val() || 0;
             const varient = $('.hidden_form_section').find('[name="varient"]').val() || 0;
             const quantity = $('.hidden_form_section').find('[name="quantity"]').val() || 0;
+            const buy_now = $('.hidden_form_section').find('[name="buy_now"]').val() || 0;
 
             $.ajax({
                 url: "{{ route('login') }}",
@@ -546,10 +555,19 @@
                     product_id: product_id,
                     varient: varient,
                     quantity: quantity,
+                    buy_now: buy_now,
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(response) {
                     alertify.success(response.message);
-                    location.reload();
+                    if (response.cart_id) {
+                        window.location.href = "{{ route('checkout') }}?transition=1&buy_now=1&cart_id="+response.cart_id;
+                    } else {
+                        location.reload();
+                    }
+
 
                 },
                 error: function(error) {
