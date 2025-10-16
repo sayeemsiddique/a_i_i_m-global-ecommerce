@@ -96,10 +96,10 @@
         background-color: #fff;
     }
     .brand {
-        background-color: #0A50A0;
+        /* background-color: #0A50A0; */
     }
     .aside-menu {
-        background-color: #EBF9CF;
+        background-color: #0A50A024;
         border-right: 1px solid #E9EAF4;
     }
     .aside-menu .menu-nav {
@@ -117,10 +117,10 @@
         font-size: 15px
     }
     .aside-menu .menu-nav>.menu-item.menu-item-open>.menu-heading, .aside-menu .menu-nav>.menu-item.menu-item-open>.menu-link {
-        background-color: #EBF9CF;
+        background-color: #0A50A024;
     }
     .aside-menu .menu-nav>.menu-item .menu-submenu .menu-item.menu-item-active>.menu-heading, .aside-menu .menu-nav>.menu-item .menu-submenu .menu-item.menu-item-active>.menu-link {
-        background-color: #EBF9CF;
+        background-color: #0A50A024;
     }
     .aside-menu .menu-nav>.menu-item .menu-submenu .menu-item.menu-item-active>.menu-heading .menu-text, .aside-menu .menu-nav>.menu-item .menu-submenu .menu-item.menu-item-active>.menu-link .menu-text {
         color: #000;
@@ -130,14 +130,14 @@
         color: #000;
     }
     .aside-menu .menu-nav>.menu-item:not(.menu-item-parent):not(.menu-item-open):not(.menu-item-here):not(.menu-item-active):hover>.menu-heading, .aside-menu .menu-nav>.menu-item:not(.menu-item-parent):not(.menu-item-open):not(.menu-item-here):not(.menu-item-active):hover>.menu-link {
-        background-color: #EBF9CF;
+        background-color: #0A50A024;
     }
     .aside-menu .menu-nav>.menu-item:not(.menu-item-parent):not(.menu-item-open):not(.menu-item-here):not(.menu-item-active):hover>.menu-heading .menu-text, .aside-menu .menu-nav>.menu-item:not(.menu-item-parent):not(.menu-item-open):not(.menu-item-here):not(.menu-item-active):hover>.menu-link .menu-text {
         color: #000;
         font-weight: 800;
     }
     .aside-menu .menu-nav>.menu-item .menu-submenu .menu-item:not(.menu-item-parent):not(.menu-item-open):not(.menu-item-here):not(.menu-item-active):hover>.menu-heading, .aside-menu .menu-nav>.menu-item .menu-submenu .menu-item:not(.menu-item-parent):not(.menu-item-open):not(.menu-item-here):not(.menu-item-active):hover>.menu-link {
-        background-color: #EBF9CF;
+        background-color: #0A50A024;
     }
     .aside-menu .menu-nav>.menu-item .menu-submenu .menu-item:not(.menu-item-parent):not(.menu-item-open):not(.menu-item-here):not(.menu-item-active):hover>.menu-heading .menu-text, .aside-menu .menu-nav>.menu-item .menu-submenu .menu-item:not(.menu-item-parent):not(.menu-item-open):not(.menu-item-here):not(.menu-item-active):hover>.menu-link .menu-text {
         color: #000;
@@ -167,7 +167,7 @@
         fill: #6E3CBC;
     }
     .aside-menu .menu-nav>.menu-item.menu-item-active>.menu-heading, .aside-menu .menu-nav>.menu-item.menu-item-active>.menu-link {
-        background-color: #EBF9CF;
+        background-color: #0A50A024;
     }
     .aside-menu .menu-nav>.menu-item.menu-item-active>.menu-heading .menu-text, .aside-menu .menu-nav>.menu-item.menu-item-active>.menu-link .menu-text {
         color: #000;
@@ -189,7 +189,7 @@
     }
     .header-fixed.subheader-fixed .subheader {
         height: 45px;
-        background-color: #EBF9CF;
+        background-color: #0A50A024;
     }
     .btn.btn-clean.focus:not(.btn-text), .btn.btn-clean:focus:not(.btn-text), .btn.btn-clean:hover:not(.btn-text):not(:disabled):not(.disabled) {
         background-color: #6E3CBC;

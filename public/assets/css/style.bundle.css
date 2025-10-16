@@ -58631,7 +58631,7 @@ button {
 }
 
 .btn.btn-light i {
-    color: #7e8299
+    color: #7e8299 !important;
 }
 
 .btn.btn-light .svg-icon svg g [fill] {
@@ -89876,12 +89876,14 @@ body {
 }
 
 .brand .brand-logo {
-    display: -webkit-box;
+    display: block;
+    margin: auto;
+    /* display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
     -webkit-box-pack: flex-begin;
     -ms-flex-pack: flex-begin;
-    justify-content: flex-begin
+    justify-content: flex-begin */
 }
 
 .aside-minimize:not(.aside-minimize-hover) .brand .brand-logo img {

@@ -160,6 +160,11 @@ class ProductDamageController extends Controller
         {
             $stock = Stock::where('product_id',$request->product)->where('varient_id',$request->product_varient)->first();
 
+            if($stock->quantity < $request->damange_quantity)
+            {
+                return back()->with('error','Damage Quantity is invalid.Try with valid quantity.');
+            }
+
             $product = Varient::where('id',$request->product_varient)->first();
         }
         else
@@ -168,6 +173,12 @@ class ProductDamageController extends Controller
                 'product_id'=>$request->product,
                 'varient_id'=>0,
             ])->first();
+
+            if($stock->quantity < $request->damange_quantity)
+            {
+                return back()->with('error','Damage Quantity is invalid.Try with valid quantity.');
+            }
+
             $product = Product::where('id',$stock->product_id)->first();
         }
 
