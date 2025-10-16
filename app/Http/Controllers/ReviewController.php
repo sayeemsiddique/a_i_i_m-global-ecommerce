@@ -17,11 +17,11 @@ class ReviewController extends Controller
     {
         menuSubmenu('manage_order', 'manage_review');
 
-        $reviews = Review::latest()->paginate(15);
+        $reviews = Review::latest()->paginate(20);
 
         return view('backend.admin.order.review', compact('reviews'));
     }
-    
+
     public function store(Request $request, $product_id, $user_id)
     {
 
@@ -44,7 +44,7 @@ class ReviewController extends Controller
             $review->rating     = $request->rating;
             $review->comment    = $request->comment;
             $review->created_by = Auth::id();
-            
+
             $review->save();
 
         }
@@ -57,7 +57,7 @@ class ReviewController extends Controller
         $user = Auth::user();
 
         if(Gate::allows('publish_review', $user))
-        {            
+        {
             if ($review->status == 0 || $review->status == 2) {
                 $review->status       = 1;
                 $review->updated_by   = Auth::id();
@@ -66,10 +66,10 @@ class ReviewController extends Controller
                 $review->status       = 2;
                 $review->updated_by   = Auth::id();
             }
-    
+
             $review->save();
-    
-            return redirect()->route('admin.review.index')->with('success', 'Review Status Changed Successfully.'); 
+
+            return redirect()->route('admin.review.index')->with('success', 'Review Status Changed Successfully.');
         }
         else
         {
@@ -80,9 +80,9 @@ class ReviewController extends Controller
     public function destroy($id)
     {
         $user = Auth::user();
-        
+
         if(Gate::allows('delete_review', $user))
-        {  
+        {
             Review::find($id)->delete();
 
             return redirect()->back()->with('success', 'Review Deleted Successfully');

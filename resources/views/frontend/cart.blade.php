@@ -48,6 +48,15 @@
         }
     });
 
+
+
+    function deleteFromCart(that){
+        if (confirm('Are you sure to remove this item from your cart')) {
+            var cart_id = $(that).attr('data-cart_id');
+            var url = "{{route('remove_cart_item')}}?id="+cart_id;
+            window.location.replace(url);
+        }
+    }
     function js_minus_action(that){
         var quantity = $(that).closest(".js-quantity").find('.js-result').val();
 

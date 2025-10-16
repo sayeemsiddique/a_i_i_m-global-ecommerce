@@ -342,7 +342,7 @@ class FrontendController extends Controller
         }
 
         if (isset($request->searchProduct) and ($request->searchProduct != '')) {
-            $query->where('slug', 'like', '%'.$request->searchProduct.'%');
+            $query->where('name', 'like', '%'.$request->searchProduct.'%');
         }
 
 
@@ -464,7 +464,9 @@ class FrontendController extends Controller
             $user_already_purchased = OrderDetail::where('product_id', $id)->whereHas('orderInfo', function ($q) {
                 $q->where([
                     'user_id' => auth()->user()->id,
-                    'stage' => 4
+                    'status' => 1,
+                    'delivery_status' => 3,
+                    'payment_status' => 2
                 ]);
             })->latest()->first();
         } else {
@@ -1100,7 +1102,8 @@ class FrontendController extends Controller
     public function accountDetails(Request $request)
     {
         $user = Auth::user();
-        return view('frontend.userDashboard.accountDetails', compact('user', 'request'));
+        return view('customer.accountDetails', compact('user'));
+        // return view('frontend.userDashboard.accountDetails', compact('user', 'request'));
     }
 
     // User account password
@@ -1204,9 +1207,13 @@ class FrontendController extends Controller
     {
         $order = Order::where('id', $order_id)->first();
 
+        if ($order->status == 0) {
+            return redirect()->back()->with('success', 'Order Cancelation not possible at this stage!');
+        }
+
         $order->remark  = $request->remark;
-        $order->status  = 4;
-        $order->stage   = 5;
+        $order->status  = 2;
+        // $order->stage   = 5;
 
         $order->save();
 

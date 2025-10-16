@@ -35,7 +35,7 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        
+
     }
 
     public function all_customer()
@@ -43,13 +43,13 @@ class CustomerController extends Controller
         $user = Auth::user();
 
         if(Gate::allows('all_customers', $user))
-        {            
+        {
             menuSubmenuSubsubmeny('settings', 'customer_setting', 'all_customers');
 
-            $users = User::where('type', 1)->where('status', '!=', 2)->latest()->paginate(15);
-            
+            $users = User::where('type', 1)->where('status', '!=', 2)->latest()->paginate(20);
+
             return view('backend.admin.customer.index', compact('users'));
-            
+
         }
         else
         {
@@ -61,13 +61,13 @@ class CustomerController extends Controller
         $user = Auth::user();
 
         if(Gate::allows('all_corporates', $user))
-        {            
+        {
             menuSubmenuSubsubmeny('settings', 'corporate_setting', 'all_corporates');
 
-            $users = User::where('type', 2)->where('status', '!=', 2)->latest()->paginate(15);
-            
+            $users = User::where('type', 2)->where('status', '!=', 2)->latest()->paginate(20);
+
             return view('backend.admin.customer.index', compact('users'));
-            
+
         }
         else
         {
@@ -79,13 +79,13 @@ class CustomerController extends Controller
         $user = Auth::user();
 
         if(Gate::allows('all_dealers', $user))
-        {            
+        {
             menuSubmenuSubsubmeny('settings', 'dealer_setting', 'all_dealers');
 
-            $users = User::where('type', 3)->where('status', '!=', 2)->latest()->paginate(15);
-            
+            $users = User::where('type', 3)->where('status', '!=', 2)->latest()->paginate(20);
+
             return view('backend.admin.customer.index', compact('users'));
-            
+
         }
         else
         {
@@ -98,7 +98,7 @@ class CustomerController extends Controller
         $user = Auth::user();
 
         if(Gate::allows('pending_corporate', $user))
-        {            
+        {
             menuSubmenuSubsubmeny('settings', 'corporate_setting', 'pending_corporate');
 
             $users = User::where('status', 3)
@@ -106,8 +106,8 @@ class CustomerController extends Controller
                                 $query->where('type', 2);
                             })
                             ->latest()
-                            ->paginate(15);
-            
+                            ->paginate(20);
+
             return view('backend.admin.customer.pending', compact('users'));
         }
         else
@@ -120,7 +120,7 @@ class CustomerController extends Controller
         $user = Auth::user();
 
         if(Gate::allows('pending_dealer', $user))
-        {            
+        {
             menuSubmenuSubsubmeny('settings', 'dealer_setting', 'pending_dealer');
 
             $users = User::where('status', 3)
@@ -128,8 +128,8 @@ class CustomerController extends Controller
                                 $query->where('type', 3);
                             })
                             ->latest()
-                            ->paginate(15);
-            
+                            ->paginate(20);
+
             return view('backend.admin.customer.pending', compact('users'));
         }
         else
@@ -143,7 +143,7 @@ class CustomerController extends Controller
         $user = Auth::user();
 
         if(Gate::allows('approved_corporate', $user))
-        {            
+        {
             menuSubmenuSubsubmeny('settings', 'corporate_setting', 'approved_corporate');
 
             $users = User::where('status', 1)
@@ -151,8 +151,8 @@ class CustomerController extends Controller
                                 $query->where('type', 2);
                             })
                             ->latest()
-                            ->paginate(15);
-            
+                            ->paginate(20);
+
             return view('backend.admin.customer.pending', compact('users'));
         }
         else
@@ -165,7 +165,7 @@ class CustomerController extends Controller
         $user = Auth::user();
 
         if(Gate::allows('approved_dealer', $user))
-        {            
+        {
             menuSubmenuSubsubmeny('settings', 'dealer_setting', 'approved_dealer');
 
             $users = User::where('status', 1)
@@ -173,8 +173,8 @@ class CustomerController extends Controller
                                 $query->where('type', 3);
                             })
                             ->latest()
-                            ->paginate(15);
-            
+                            ->paginate(20);
+
             return view('backend.admin.customer.pending', compact('users'));
         }
         else
@@ -188,7 +188,7 @@ class CustomerController extends Controller
         $user = Auth::user();
 
         if(Gate::allows('blocked_customer', $user))
-        {            
+        {
             menuSubmenuSubsubmeny('settings', 'customer_setting', 'blocked_customer');
 
             $users = User::where('status', 0)
@@ -196,8 +196,8 @@ class CustomerController extends Controller
                                 $query->where('type', 1);
                             })
                             ->latest()
-                            ->paginate(15);
-            
+                            ->paginate(20);
+
             return view('backend.admin.customer.blocked', compact('users'));
         }
         else
@@ -210,7 +210,7 @@ class CustomerController extends Controller
         $user = Auth::user();
 
         if(Gate::allows('blocked_corporate', $user))
-        {            
+        {
             menuSubmenuSubsubmeny('settings', 'corporate_setting', 'blocked_corporate');
 
             $users = User::where('status', 0)
@@ -218,8 +218,8 @@ class CustomerController extends Controller
                                 $query->where('type', 2);
                             })
                             ->latest()
-                            ->paginate(15);
-            
+                            ->paginate(20);
+
             return view('backend.admin.customer.blocked', compact('users'));
         }
         else
@@ -232,7 +232,7 @@ class CustomerController extends Controller
         $user = Auth::user();
 
         if(Gate::allows('blocked_dealer', $user))
-        {            
+        {
             menuSubmenuSubsubmeny('settings', 'dealer_setting', 'blocked_dealer');
 
             $users = User::where('status', 0)
@@ -240,8 +240,8 @@ class CustomerController extends Controller
                                 $query->where('type', 3);
                             })
                             ->latest()
-                            ->paginate(15);
-            
+                            ->paginate(20);
+
             return view('backend.admin.customer.blocked', compact('users'));
         }
         else
@@ -255,7 +255,7 @@ class CustomerController extends Controller
         $user = Auth::user();
 
         if(Gate::allows('declined_corporate', $user))
-        {            
+        {
             menuSubmenuSubsubmeny('settings', 'corporate_setting', 'declined_corporate');
 
             $users = User::where('status', 2)
@@ -263,8 +263,8 @@ class CustomerController extends Controller
                                 $query->where('type', 2);
                             })
                             ->latest()
-                            ->paginate(15);
-            
+                            ->paginate(20);
+
             return view('backend.admin.customer.declined', compact('users'));
         }
         else
@@ -277,7 +277,7 @@ class CustomerController extends Controller
         $user = Auth::user();
 
         if(Gate::allows('declined_dealer', $user))
-        {            
+        {
             menuSubmenuSubsubmeny('settings', 'dealer_setting', 'declined_dealer');
 
             $users = User::where('status', 2)
@@ -285,8 +285,8 @@ class CustomerController extends Controller
                                 $query->where('type', 3);
                             })
                             ->latest()
-                            ->paginate(15);
-            
+                            ->paginate(20);
+
             return view('backend.admin.customer.declined', compact('users'));
         }
         else
@@ -305,7 +305,7 @@ class CustomerController extends Controller
         $user = Auth::user();
 
         if(Gate::allows('add_customer', $user))
-        {                
+        {
             menuSubmenuSubsubmeny('settings', 'customer_setting', 'add_customer');
 
             return view('backend.admin.customer.createCustomer');
@@ -321,7 +321,7 @@ class CustomerController extends Controller
         $user = Auth::user();
 
         if(Gate::allows('add_corporate', $user))
-        {                
+        {
             menuSubmenuSubsubmeny('settings', 'corporate_setting', 'add_corporate');
 
             return view('backend.admin.customer.createCorporate');
@@ -337,7 +337,7 @@ class CustomerController extends Controller
         $user = Auth::user();
 
         if(Gate::allows('add_dealer', $user))
-        {                
+        {
             menuSubmenuSubsubmeny('settings', 'dealer_setting', 'add_dealer');
 
             return view('backend.admin.customer.createDealer');
@@ -355,7 +355,7 @@ class CustomerController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {   
+    {
         if ($request->type == 1) {
             $request->validate([
                 'password'          => 'required|confirmed|min:8',
@@ -378,7 +378,7 @@ class CustomerController extends Controller
                 'tin_no'            => 'required',
                 'tin'               => 'mimes:jpg,jpeg,png',
             ]);
-        }  
+        }
 
         $user = new User;
 
@@ -396,9 +396,9 @@ class CustomerController extends Controller
         $user->status               = 1;
         $user->type                 = $request->type;
         $user->created_by           = Auth::id();
-        
+
         $user->save();
-        
+
         $user->username             = Str::lower($request->first_name.$request->last_name.$user->id);
         $user->save();
 
@@ -412,7 +412,7 @@ class CustomerController extends Controller
 
             $user->image = $randomFileName;
             $user->save();
-      	} 
+      	}
         if($request->hasFile('nid'))
         {
             $cp = $request->file('nid');
@@ -423,7 +423,7 @@ class CustomerController extends Controller
 
             $user->nid = $randomFileName;
             $user->save();
-        } 
+        }
         if($request->hasFile('bin'))
         {
             $cp = $request->file('bin');
@@ -434,7 +434,7 @@ class CustomerController extends Controller
 
             $user->bin = $randomFileName;
             $user->save();
-        } 
+        }
         if($request->hasFile('tin'))
         {
             $cp = $request->file('tin');
@@ -461,7 +461,7 @@ class CustomerController extends Controller
         $userr = Auth::user();
 
         if(Gate::allows('view_user', $userr))
-        {                
+        {
             $user = User::with('user_create', 'user_update')
                         ->where('id', $id)
                         ->first();
@@ -484,16 +484,16 @@ class CustomerController extends Controller
     {
         $userr = Auth::user();
 
-        if (Gate::allows('user_management', $userr)) 
+        if (Gate::allows('user_management', $userr))
         {
             if(Gate::allows('edit_user',$userr))
-            { 
+            {
                 $query = Role::where('status', 1);
 
                 if(Auth::user()->role_id != 1){
                     $query = $query->where('id', '!=', 1);
                 }
-                
+
                 $roles = $query->get();
                 $designations = Designation::where('status', 1)->get();
                 $departments = Department::where('status', 1)->get();
@@ -501,7 +501,7 @@ class CustomerController extends Controller
                 $user = User::where('id', $id)->first();
 
                 return view('backend.admin.customer.edit', compact('roles', 'designations', 'user', 'departments'));
-                
+
             }
             else
             {
@@ -512,7 +512,7 @@ class CustomerController extends Controller
         {
             abort(403);
         }
-        
+
     }
 
     /**
@@ -659,8 +659,8 @@ class CustomerController extends Controller
         $userr = Auth::user();
 
         if(Gate::allows('block_user',$userr))
-        { 
-            
+        {
+
             if ($user->status == 0) {
                 $user->status       = 1;
                 $user->updated_by   = Auth::id();
@@ -673,13 +673,13 @@ class CustomerController extends Controller
             $user->save();
 
             return redirect()->back()->with('success', 'User Blocked Successfully.');
-            
+
         }
         else
         {
             abort(403);
         }
-        
+
     }
 
     /**
@@ -693,8 +693,8 @@ class CustomerController extends Controller
         $userr = Auth::user();
 
         if(Gate::allows('delete_user',$userr))
-        {                
-            
+        {
+
             if ($user->status == 2) {
                 $user->status       = 1;
                 $user->updated_by   = Auth::id();
@@ -703,11 +703,11 @@ class CustomerController extends Controller
                 $user->status       = 2;
                 $user->updated_by   = Auth::id();
             }
-    
+
             $user->save();
-    
+
             return redirect()->back()->with('success', 'User Deleted Successfully.');
-            
+
         }
         else
         {
@@ -720,18 +720,18 @@ class CustomerController extends Controller
         $userr = Auth::user();
 
         if(Gate::allows('approve_user', $userr))
-        {                
-            
+        {
+
             if ($user->status == 3) {
                 $user->status       = 1;
                 $user->updated_by   = Auth::id();
             }
-    
+
             $user->save();
 
             // Send email notification
             Mail::to($user->email)->send(new ApproveUserMail($user));
-    
+
             return redirect()->back()->with('success', 'User Approved Successfully.');
         }
         else

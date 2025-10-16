@@ -40,20 +40,20 @@ class UserController extends Controller
 
         $user = Auth::user();
 
-        if (Gate::allows('user_management', $user)) 
+        if (Gate::allows('user_management', $user))
         {
             if(Gate::allows('all_users',$user))
-            {            
+            {
                 menuSubmenu('roles', 'allUsers');
 
                 $roles = Role::where('status', 1)->get();
                 $departments = Department::where('status', 1)->get();
                 $designations = Designation::where('status', 1)->get();
 
-                $users = User::where('type', 0)->with('role', 'designation', 'department')->latest()->paginate(15);
-                
+                $users = User::where('type', 0)->with('role', 'designation', 'department')->latest()->paginate(20);
+
                 return view('backend.admin.user.index', compact('users', 'roles', 'designations', 'departments'));
-                
+
             }
             else
             {
@@ -64,17 +64,17 @@ class UserController extends Controller
         {
             abort(403);
         }
-        
+
     }
 
     public function pending()
     {
         $user = Auth::user();
 
-        if (Gate::allows('user_management', $user)) 
+        if (Gate::allows('user_management', $user))
         {
             if(Gate::allows('all_pending_users', $user))
-            {            
+            {
                 menuSubmenu('roles', 'allPendingUsers');
 
                 $users = User::where('status', 3)
@@ -82,8 +82,8 @@ class UserController extends Controller
                                     $query->where('type', 2)->orWhere('type', 3);
                                 })
                                 ->latest()
-                                ->paginate(15);
-                
+                                ->paginate(20);
+
                 return view('backend.admin.user.pending', compact('users'));
             }
             else
@@ -95,17 +95,17 @@ class UserController extends Controller
         {
             abort(403);
         }
-        
+
     }
 
     public function approved()
     {
         $user = Auth::user();
 
-        if (Gate::allows('user_management', $user)) 
+        if (Gate::allows('user_management', $user))
         {
             if(Gate::allows('all_approved_users', $user))
-            {            
+            {
                 menuSubmenu('roles', 'allApprovedUsers');
 
                 $users = User::where('status', 1)
@@ -113,8 +113,8 @@ class UserController extends Controller
                                     $query->where('type', 2)->orWhere('type', 3);
                                 })
                                 ->latest()
-                                ->paginate(15);
-                
+                                ->paginate(20);
+
                 return view('backend.admin.user.approved', compact('users'));
             }
             else
@@ -137,10 +137,10 @@ class UserController extends Controller
     {
         $user = Auth::user();
 
-        if (Gate::allows('user_management', $user)) 
+        if (Gate::allows('user_management', $user))
         {
             if(Gate::allows('add_user',$user))
-            {                
+            {
                 menuSubmenu('roles', 'addUser');
 
                 $query = Role::where('status', 1);
@@ -154,7 +154,7 @@ class UserController extends Controller
                 $departments = Department::where('status', 1)->get();
 
                 return view('backend.admin.user.create', compact('roles', 'designations', 'departments'));
-                
+
             }
             else
             {
@@ -165,7 +165,7 @@ class UserController extends Controller
         {
             abort(403);
         }
-        
+
     }
 
     /**
@@ -175,7 +175,7 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {        
+    {
         $request->validate([
             'role_id'           => 'required',
             'department_id'     => 'required',
@@ -217,7 +217,7 @@ class UserController extends Controller
 
             $user->image = $randomFileName;
             $user->save();
-      	} 
+      	}
 
         return back()->with('success', 'User Created Successfully');
     }
@@ -232,17 +232,17 @@ class UserController extends Controller
     {
         $userr = Auth::user();
 
-        if (Gate::allows('user_management', $userr)) 
+        if (Gate::allows('user_management', $userr))
         {
             if(Gate::allows('view_user',$userr))
-            {                
-               
+            {
+
                 $user = User::with('designation', 'user_create', 'user_update', 'department', 'role')
                             ->where('id', $id)
                             ->first();
 
                 return view('backend.admin.user.show', compact('user'));
-                
+
             }
             else
             {
@@ -265,16 +265,16 @@ class UserController extends Controller
     {
         $userr = Auth::user();
 
-        if (Gate::allows('user_management', $userr)) 
+        if (Gate::allows('user_management', $userr))
         {
             if(Gate::allows('edit_user',$userr))
-            { 
+            {
                 $query = Role::where('status', 1);
 
                 if(Auth::user()->role_id != 1){
                     $query = $query->where('id', '!=', 1);
                 }
-                
+
                 $roles = $query->get();
                 $designations = Designation::where('status', 1)->get();
                 $departments = Department::where('status', 1)->get();
@@ -282,7 +282,7 @@ class UserController extends Controller
                 $user = User::where('id', $id)->first();
 
                 return view('backend.admin.user.edit', compact('roles', 'designations', 'user', 'departments'));
-                
+
             }
             else
             {
@@ -293,7 +293,7 @@ class UserController extends Controller
         {
             abort(403);
         }
-        
+
     }
 
 
@@ -431,7 +431,7 @@ class UserController extends Controller
         $current_user->permanent_address    = $request->permanent_address;
         $current_user->mobile               = $request->mobile;
         $current_user->email                = $request->email;
-        
+
         $current_user->updated_by           = Auth::id();
 
         if($request->hasFile('image'))
@@ -454,10 +454,10 @@ class UserController extends Controller
 
             $current_user->image = $randomFileName;
             $current_user->save();
-      	} 
+      	}
 
         $current_user->save();
-        
+
         return back()->with('success', 'Profile Updated Successfully');
     }
 
@@ -505,11 +505,11 @@ class UserController extends Controller
     {
         $userr = Auth::user();
 
-        if (Gate::allows('user_management', $userr)) 
+        if (Gate::allows('user_management', $userr))
         {
             if(Gate::allows('block_user',$userr))
-            { 
-                
+            {
+
                 if ($user->status == 0) {
                     $user->status       = 1;
                     $user->updated_by   = Auth::id();
@@ -522,7 +522,7 @@ class UserController extends Controller
                 $user->save();
 
                 return redirect()->route('admin.user.index')->with('success', 'User Blocked Successfully.');
-                
+
             }
             else
             {
@@ -533,7 +533,7 @@ class UserController extends Controller
         {
             abort(403);
         }
-        
+
     }
 
     /**
@@ -546,11 +546,11 @@ class UserController extends Controller
     {
         $userr = Auth::user();
 
-        if (Gate::allows('user_management', $userr)) 
+        if (Gate::allows('user_management', $userr))
         {
             if(Gate::allows('delete_user',$userr))
-            {                
-               
+            {
+
                 if ($user->status == 2) {
                     $user->status       = 1;
                     $user->updated_by   = Auth::id();
@@ -559,11 +559,11 @@ class UserController extends Controller
                     $user->status       = 2;
                     $user->updated_by   = Auth::id();
                 }
-        
+
                 $user->save();
-        
+
                 return redirect()->route('admin.user.index')->with('success', 'User Deleted Successfully.');
-                
+
             }
             else
             {
@@ -580,23 +580,23 @@ class UserController extends Controller
     {
         $userr = Auth::user();
 
-        if (Gate::allows('user_management', $userr)) 
+        if (Gate::allows('user_management', $userr))
         {
             if(Gate::allows('approve_user', $userr))
-            {                
-               
+            {
+
                 if ($user->status == 3) {
                     $user->status       = 1;
                     $user->updated_by   = Auth::id();
                 }
-        
+
                 $user->save();
 
                 // Send email notification
                 Mail::to($user->email)->send(new ApproveUserMail($user));
-        
+
                 return redirect()->route('admin.user.approved')->with('success', 'User Approved Successfully.');
-                
+
             }
             else
             {

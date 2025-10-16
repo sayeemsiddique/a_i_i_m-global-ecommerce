@@ -25,13 +25,13 @@ class VehicleController extends Controller
         $user = Auth::user();
 
         if(Gate::allows('all_vehicles', $user))
-        {            
+        {
             menuSubmenuSubsubmeny('settings', 'org_setting', 'all_vehicles');
 
-            $vehicles = Vehicle::latest()->paginate(15);
+            $vehicles = Vehicle::latest()->paginate(20);
 
             return view('backend.admin.vehicle.index', compact('vehicles'));
-            
+
         }
         else
         {
@@ -49,11 +49,11 @@ class VehicleController extends Controller
         $user = Auth::user();
 
         if(Gate::allows('add_vehicle', $user))
-        {            
+        {
             menuSubmenuSubsubmeny('settings', 'org_setting', 'all_vehicles');
 
             return view('backend.admin.vehicle.create');
-            
+
         }
         else
         {
@@ -97,7 +97,7 @@ class VehicleController extends Controller
 
             $vehicle->license = $randomFileName;
             $vehicle->save();
-      	} 
+      	}
 
         return redirect()->route('admin.vehicle.index')->with('success','Vehicle Added Successfully.');
     }
@@ -112,16 +112,16 @@ class VehicleController extends Controller
     {
         $user = Auth::user();
 
-        if (Gate::allows('manage_vehicle', $user)) 
+        if (Gate::allows('manage_vehicle', $user))
         {
             if(Gate::allows('view_vehicle',$user))
-            {            
+            {
                 $vehicle = Vehicle::with('user', 'user_update')
                                     ->where('id', $id)
                                     ->first();
 
                 return view('backend.admin.vehicle.show', compact('vehicle'));
-                
+
             }
             else
             {
@@ -144,14 +144,14 @@ class VehicleController extends Controller
     {
         $user = Auth::user();
 
-        if (Gate::allows('manage_vehicle', $user)) 
+        if (Gate::allows('manage_vehicle', $user))
         {
             if(Gate::allows('edit_vehicle',$user))
-            {  
+            {
                 $vehicle = Vehicle::where('id', $id)->first();
 
                 return view('backend.admin.vehicle.edit', compact('vehicle'));
-                
+
             }
             else
             {
@@ -243,10 +243,10 @@ class VehicleController extends Controller
     {
         $user = Auth::user();
 
-        if (Gate::allows('manage_vehicle', $user)) 
+        if (Gate::allows('manage_vehicle', $user))
         {
             if(Gate::allows('delete_vehicle',$user))
-            {            
+            {
                 if ($vehicle->status == 0) {
                     $vehicle->status       = 1;
                     $vehicle->updated_by   = Auth::id();
@@ -255,11 +255,11 @@ class VehicleController extends Controller
                     $vehicle->status       = 0;
                     $vehicle->updated_by   = Auth::id();
                 }
-        
+
                 $vehicle->save();
-        
+
                 return redirect()->route('admin.vehicle.index')->with('success', 'Vehicle Status Changed Successfully.');
-                
+
             }
             else
             {

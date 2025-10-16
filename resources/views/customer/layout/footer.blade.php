@@ -4,13 +4,13 @@
     <div class="container-fluid d-flex flex-column flex-md-row align-items-center justify-content-between">
         <!--begin::Copyright-->
         <div class="text-dark order-2 order-md-1">
-            <span class="text-muted font-weight-bold mr-1">{{date('Y')}} © {{ $global_setting->copyright ?? ''}}</span>
+            <span class="text-muted font-weight-bold mr-1">{{date('Y')}} © {{ $global_setting->title ?? ''}}</span>
             {{-- <a class="text-dark-75 text-hover-primary"></a> --}}
-            <a href="#" target="_blank" class="text-dark-75 text-hover-primary">| {{ $global_setting->title ?? ''}}</a> 
+            {{-- <a href="#" target="_blank" class="text-dark-75 text-hover-primary">| {{ $global_setting->title ?? ''}}</a>  --}}
         </div>
-        
+
         <div class="text-dark order-2 order-md-1">
-            <a href="#" target="_blank" class="text-dark-75 text-hover-primary">Design & Developed by SEBPO</a>
+            <a href="#" target="_blank" class="text-dark-75 text-hover-primary">Design & Developed by {{ $global_setting->copyright ?? ''}}</a>
         </div>
         <!--end::Copyright-->
     </div>

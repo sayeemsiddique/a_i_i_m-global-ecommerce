@@ -53,7 +53,7 @@
 
 													<div class="col-md-2">
 														<div class="d-flex justify-content-between">
-															<img class="display-4 font-weight-boldest mb-6 mr-10" height="100%" width="100%" src="{{ asset('storage/setting/' . $global_setting->logo) }}" alt="">
+															<img class="display-4 font-weight-boldest mb-6 mr-10" height="100%" width="100%" style="max-width: 100px;" src="{{ asset('storage/setting/' . $global_setting->logo) }}" alt="">
 														</div>
 													</div>
 

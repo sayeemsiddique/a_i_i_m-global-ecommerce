@@ -16,7 +16,7 @@
 
 {{-- <link href="{{asset('assets/plugins/custom/datatables/datatables.bundle.css')}}" rel="stylesheet" type="text/css" /> --}}
 
-<style> 
+<style>
     /* custom css */
     .table thead th{
         color: #000 !important;
@@ -96,7 +96,7 @@
         background-color: #fff;
     }
     .brand {
-        background-color: #074F1F;
+        background-color: #0A50A0;
     }
     .aside-menu {
         background-color: #EBF9CF;
@@ -179,7 +179,7 @@
     }
 
     .header {
-        background-color: #074F1F;
+        background-color: #0A50A0;
     }
     li.menu-item.menu-item-open.menu-item-here.menu-item-submenu.menu-item-rel.menu-item-open.menu-item-here.menu-item-active a {
         color: #fff;
@@ -215,7 +215,7 @@
         background: #FFF !important;
     }
     #kt_aside_menu_wrapper {
-        width: 280px;
+        width: 265px;
     }
     #kt_content{
         margin-left: 15px;
@@ -238,7 +238,7 @@
     .alert-text span.font-weight-bold.text-center {
         font-weight: 700 !important;
     }
-    
+
     a.dash-click-card span {
         color: #fff;
     }
@@ -287,7 +287,7 @@
         opacity: 0.9;
     }
 
-    
+
     /*Loader 1- Spinning */
     #loader-1 #loader{
         position: relative;
@@ -295,10 +295,10 @@
         top: 50%;
         height: 20vw;
         width: 20vw;
-        margin: -10vw 0 0 -10vw; 
+        margin: -10vw 0 0 -10vw;
         border: 3px solid transparent;
         border-top-color: #3498db;
-        border-bottom-color: #3498db; 
+        border-bottom-color: #3498db;
         border-radius: 50%;
         z-index: 2;
         -webkit-animation: spin 2s linear infinite;
@@ -313,7 +313,7 @@
         top:2%;
         bottom: 2%;
         left: 2%;
-        right: 2%; 
+        right: 2%;
         border: 3px solid transparent;
         z-index: 2;
         border-top-color: #db213a;
@@ -331,7 +331,7 @@
         top:5%;
         bottom: 5%;
         left: 5%;
-        right: 5%; 
+        right: 5%;
         border: 3px solid transparent;
         border-top-color: #dec52d;
         z-index: 2;
@@ -449,7 +449,7 @@
     .aside-menu .menu-nav>.menu-item>.menu-submenu .menu-subnav>.menu-item>.menu-submenu .menu-subnav>.menu-item>.menu-link {
         padding-left: 80px;
     }
-    
+
 </style>
 
 @stack('css')

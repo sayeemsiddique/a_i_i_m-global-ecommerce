@@ -104,23 +104,23 @@
                                         $product_total_price +=  ($cart->productInfo->discount_price ?? 0)  * $cart->quantity;
                                     @endphp
                                     {{number_format((($cart->productInfo->discount_price ?? 0)  * $cart->quantity),2,".","")}}
-                                    
+
                                 @else
                                     @php
                                         $product_total_price +=  ($cart->varientInfo->discount_price ?? 0)  * $cart->quantity;
                                     @endphp
                                     {{number_format((($cart->varientInfo->discount_price ?? 0) * $cart->quantity),2,".","")}}
-                                    
+
                                 @endif
                             </span>
                         </td>
 
                         <td class="text-right">
-                            <a href="#" class="text-danger font-size-20 remove-cart-alt" title="Remove" data-cart_id="{{$cart->id}}"> <i class="fa fa-trash"></i> </a>
+                            <a href="#" onclick="deleteFromCart(this)" class="text-danger font-size-20 remove-cart-alt" title="Remove" data-cart_id="{{$cart->id}}"> <i class="fa fa-trash"></i> </a>
                         </td>
                     </tr>
                     @endforeach
-                    
+
                     @foreach ($guest_carts as $key => $guest_cart)
                     <tr class="border-bottom">
                         <td>
@@ -190,13 +190,13 @@
                                         $product_total_price +=  ($guest_cart->productInfo->discount_price ?? 0)  * $guest_cart->quantity;
                                     @endphp
                                     {{number_format((($guest_cart->productInfo->discount_price ?? 0)  * $guest_cart->quantity),2,".","")}}
-                                    
+
                                 @else
                                     @php
                                         $product_total_price +=  ($guest_cart->varientInfo->discount_price ?? 0)  * $guest_cart->quantity;
                                     @endphp
                                     {{number_format((($guest_cart->varientInfo->discount_price ?? 0) * $guest_cart->quantity),2,".","")}}
-                                    
+
                                 @endif
                             </span>
                         </td>
@@ -222,14 +222,14 @@
                             </span></strong>
                         </td>
                     </tr>
-                    
+
                     <tr>
                         <td colspan="10" class="space-top-2 justify-content-center">
                             <div class="pt-md-3">
                                 <div class="d-block d-md-flex flex-center-between">
                                     <div class="mb-3 mb-md-0 w-xl-40">
                                         <!-- Apply coupon Form -->
-                                        
+
                                             {{-- <label class="sr-only" for="subscribeSrEmailExample1">Coupon code</label>
                                             <div class="input-group">
                                                 <input type="text" class="form-control" name="text" id="subscribeSrEmailExample1" placeholder="Coupon code" aria-label="Coupon code" aria-describedby="subscribeButtonExample2" required="">
@@ -237,13 +237,13 @@
                                                     <button class="btn btn-block btn-dark px-4" type="button" id="subscribeButtonExample2"><i class="fas fa-tags d-md-none"></i><span class="d-none d-md-inline">Apply coupon</span></button>
                                                 </div>
                                             </div> --}}
-                                        
+
                                         <!-- End Apply coupon Form -->
                                     </div>
                                     <div class="d-md-flex">
                                         <button type="submit" class="btn btn-success px-5 px-md-4 px-lg-5 w-100 w-md-auto d-none d-md-inline-block text-white">Update Cart</button>
                                         <button type="submit" name="checkout" value="1" class="btn btn-primary-dark-w ml-md-2 px-5 px-md-4 px-lg-5 w-100 w-md-auto d-none d-md-inline-block text-white">Proceed to checkout</button>
-                                        
+
                                     </div>
                                 </div>
                             </div>
@@ -258,7 +258,7 @@
                 <div class="col-xl-5 col-lg-6 offset-lg-6 offset-xl-7 col-md-8 offset-md-4">
                     <button type="submit" class="btn btn-success ml-md-2 px-5 px-md-4 px-lg-5 w-100 w-md-auto d-md-none text-white">Update Cart</button>
                     <button type="submit" name="checkout" value="1" class="btn btn-primary-dark-w ml-md-2 px-5 px-md-4 px-lg-5 w-100 w-md-auto d-md-none mt-3 text-white">Proceed to Checkout</button>
-                    
+
                 </div>
             </div>
         </div>

@@ -22,7 +22,7 @@ class OrderController extends Controller
         $user = Auth::user();
 
         if(Gate::allows('order_list', $user))
-        {            
+        {
             menuSubmenu('manage_order', 'order_list');
 
             $query = Order::where('type',2);
@@ -38,25 +38,25 @@ class OrderController extends Controller
             if ($request->order_id and $request->order_id !='') {
                 $query->where('tracking_code','like','%'.$request->order_id.'%');
             }
-            
+
             $orders = $query->latest()->paginate(20);
 
             return view('backend.admin.order.index', compact('orders'));
-            
+
         }
         else
         {
             abort(403);
         }
-        
+
     }
-    
+
     public function show($id)
     {
         $user = Auth::user();
 
         if(Gate::allows('view_order', $user))
-        {            
+        {
             menuSubmenu('manage_order', 'order_list');
 
             $id = Crypt::decryptString($id);
@@ -66,13 +66,13 @@ class OrderController extends Controller
             $payment = Payment::where('order_id', $id)->first();
 
             return view('backend.admin.order.show', compact('order', 'setting', 'payment'));
-            
+
         }
         else
         {
             abort(403);
         }
-        
+
     }
 
     // Order Payment status update
@@ -128,7 +128,7 @@ class OrderController extends Controller
 
             }
         }
-        
+
 
         return redirect()->back()->with('success', 'Delivery Status Updated Successfully...!!!');
     }
@@ -138,7 +138,7 @@ class OrderController extends Controller
         $user = Auth::user();
 
         if(Gate::allows('pending_order_list', $user))
-        {            
+        {
             menuSubmenu('manage_order', 'pending_order_list');
 
             $query = Order::where('type',2)->where('status', 0);
@@ -146,15 +146,15 @@ class OrderController extends Controller
             if (isset($request->fromDate) and $request->fromDate != '') {
                 $query->whereDate('created_at','>=',$request->fromDate);
             }
-            
+
             if (isset($request->toDate) and $request->toDate != '') {
                 $query->whereDate('created_at','<=',$request->toDate);
             }
-            
+
             if (isset($request->order_id) and $request->order_id != '') {
                 $query->where('tracking_code','like','%'.$request->order_id.'%');
             }
-            
+
             $orders = $query->whereHas('orderDetails', function ($new_query) {
                 $new_query->whereHas('productInfo', function ($n_new_query) {
                     $n_new_query->where('type', 1);
@@ -162,7 +162,7 @@ class OrderController extends Controller
             })->latest()->paginate(20);
 
             return view('backend.admin.order.pending', compact('orders'));
-            
+
         }
         else
         {
@@ -240,13 +240,13 @@ class OrderController extends Controller
                     if($inventory) {
 
                         if($inventory->quantity > $order_detail->quantity) {
-                            
+
                             $will_return_in_stock = $inventory->quantity - $order_detail->quantity;
                             $stock = Stock::where('product_id', $inventory->product_id)->where('varient_id', $inventory->varient_id)->first();
                             $stock->quantity += $will_return_in_stock;
                             $stock->save();
                         } else if($inventory->quantity < $order_detail->quantity) {
-                            
+
                             $will_deduct_from_stock = $order_detail->quantity - $inventory->quantity;
                             $stock = Stock::where('product_id', $inventory->product_id)->where('varient_id', $inventory->varient_id)->first();
                             $stock->quantity -= $will_deduct_from_stock;
@@ -269,7 +269,7 @@ class OrderController extends Controller
                         $stock->quantity -= $order_detail->quantity;
                         $stock->save();
                     }
-                    
+
                 }
             } else if ($request->delivery_status == 4) {
 
@@ -288,7 +288,7 @@ class OrderController extends Controller
                     $stock->quantity += $order_detail->quantity;
                     $stock->save();
                 }
-                
+
             }
 
 
@@ -302,7 +302,7 @@ class OrderController extends Controller
                 // Mail::to($adminMail)->send(new OrderStatusMailTo($user, $adminMail, $msg));
 
             // } elseif($request->stage == 1) {
-    
+
                 // $setting = Setting::where('id', 1)->first();
 
                 // // Send Mail notification to user of order success
@@ -311,14 +311,14 @@ class OrderController extends Controller
 
                 // Mail::to($order->email)->send(new OrderFeedbackMail($user, $msg, $order, $setting));
 
-                
+
                 // $msg = 'Order no: '.$order->tracking_code.' has been accepted';
 
                 // $adminMail = 'actbisf.bcic@gmail.com';
 
                 // Mail::to($adminMail)->send(new OrderStatusMailTo($user, $adminMail, $msg));
             // } elseif($request->stage == 2) {
-    
+
                 // $inventories = Inventory::where('order_id', $request->orderId)->get();
 
                 // if(count($inventories) > 0){
@@ -331,9 +331,9 @@ class OrderController extends Controller
                 //         $inventory->delete();
                 //     }
                 // }
-    
+
                 // $setting = Setting::where('id', 1)->first();
-                
+
                 // // Send Mail notification to user of order fail
                 // $user = User::where('id', $order->user_id)->first();
                 // $msg = 'Your order no: '.$order->tracking_code.' Has been Rejected.';
@@ -356,10 +356,10 @@ class OrderController extends Controller
                 //         return redirect()->back()->with('error', 'Stock quantity is less then order quantity, Please update stock first.');
                 //     }
                 // }
-    
+
                 // $products = OrderDetail::where('order_id', $request->orderId)->get();
                 // $inventories = Inventory::where('order_id', $request->orderId)->get();
-    
+
                 // foreach($inventories as $inventory_data){
                 //     $stock = Stock::where('product_id', $inventory_data->product_id)->where('varient_id', $inventory_data->varient_id)->first();
 
@@ -376,7 +376,7 @@ class OrderController extends Controller
                 //     $stock->quantity -= $product->quantity;
 
                 //     $stock->save();
-    
+
                 //     // insert history into inventory table
                 //     $inventory = new Inventory;
 
@@ -427,7 +427,7 @@ class OrderController extends Controller
         $user = Auth::user();
 
         if(Gate::allows('product_stock', $user))
-        {            
+        {
             menuSubmenu('inventory_management', 'product_stock');
 
             $query = Order::where('type', 1);
@@ -437,7 +437,7 @@ class OrderController extends Controller
                     $n_new_query->where('type', 1);
                 });
             });
-            
+
             if (isset($request->fromDate) and $request->fromDate !='') {
                 $query->whereDate('created_at','>=',$request->fromDate);
             }
@@ -445,22 +445,22 @@ class OrderController extends Controller
             if (isset($request->toDate) and $request->toDate !='') {
                 $query->whereDate('created_at','<=',$request->toDate);
             }
-            
+
             if (isset($request->order_id) and $request->order_id !='') {
                 $query->where('tracking_code','like','%'.$request->order_id.'%');
             }
-            
+
             if (isset($request->type) and $request->type !='') {
-                
+
                 $query->whereHas('user', function ($new_query) use ($request) {
                     $new_query->where('type', $request->type);
                 });
             }
-            
-            $orders = $query->latest()->paginate(15);
+
+            $orders = $query->latest()->paginate(20);
 
             return view('backend.admin.order.stock_in_list', compact('orders'));
-            
+
         }
         else
         {
@@ -473,7 +473,7 @@ class OrderController extends Controller
         $user = Auth::user();
 
         if(Gate::allows('view_order', $user))
-        {            
+        {
             menuSubmenu('inventory_management', 'product_stock');
 
             $order = Order::where('id',$id)->first();
@@ -481,13 +481,13 @@ class OrderController extends Controller
             $payment = Payment::where('order_id', $id)->first();
 
             return view('backend.admin.order.stock_in_show', compact('order', 'setting', 'payment'));
-            
+
         }
         else
         {
             abort(403);
         }
-        
+
     }
 
     public function deduct_stock_list(Request $request)
@@ -498,7 +498,7 @@ class OrderController extends Controller
             return redirect()->route('admin.order.deduct_stock_list')->with('success', 'Product Deducted Successfull');
         }
 
-         
+
             menuSubmenu('inventory_management', 'product_stock');
 
             $query = Order::where('type', 6);
@@ -508,7 +508,7 @@ class OrderController extends Controller
                     $n_new_query->where('type', 1);
                 });
             });
-            
+
             if (isset($request->fromDate) and $request->fromDate !='') {
                 $query->whereDate('created_at','>=',$request->fromDate);
             }
@@ -516,22 +516,22 @@ class OrderController extends Controller
             if (isset($request->toDate) and $request->toDate !='') {
                 $query->whereDate('created_at','<=',$request->toDate);
             }
-            
+
             if (isset($request->order_id) and $request->order_id !='') {
                 $query->where('tracking_code','like','%'.$request->order_id.'%');
             }
-            
+
             if (isset($request->type) and $request->type !='') {
-                
+
                 $query->whereHas('user', function ($new_query) use ($request) {
                     $new_query->where('type', $request->type);
                 });
             }
-            
-            $orders = $query->latest()->paginate(15);
+
+            $orders = $query->latest()->paginate(20);
 
             return view('backend.admin.order.stock_deduct_list', compact('orders'));
-            
+
 
     }
 
@@ -540,7 +540,7 @@ class OrderController extends Controller
         $user = Auth::user();
 
         if(Gate::allows('complete_order_list', $user))
-        {            
+        {
             menuSubmenu('manage_order', 'complete_order_list');
 
             $query = Order::where('type',2)->where('stage', 4);
@@ -548,11 +548,11 @@ class OrderController extends Controller
             if (isset($request->fromDate) and $request->fromDate != '') {
                 $query->whereDate('created_at','>=',$request->fromDate);
             }
-            
+
             if (isset($request->toDate) and $request->toDate != '') {
                 $query->whereDate('created_at','<=',$request->toDate);
             }
-            
+
             if (isset($request->order_id) and $request->order_id != '') {
                 $query->where('tracking_code','like','%'.$request->order_id.'%');
             }
@@ -564,7 +564,7 @@ class OrderController extends Controller
             })->latest()->paginate(20);
 
             return view('backend.admin.order.complete', compact('orders'));
-            
+
         }
         else
         {

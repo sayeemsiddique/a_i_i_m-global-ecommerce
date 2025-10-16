@@ -74,7 +74,7 @@
                                     </li>
                                 @endcan
 
-                                @can('complete_order_list')
+                                {{-- @can('complete_order_list')
                                     <li class="menu-item {{ session('lsbsm') == 'complete_order_list' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
                                         <a href="{{route('admin.order.completed_list')}}" class="menu-link">
                                             <i class="menu-bullet menu-bullet-dot">
@@ -83,7 +83,7 @@
                                             <span class="menu-text">Completed Orders</span>
                                         </a>
                                     </li>
-                                @endcan
+                                @endcan --}}
 
                                 @can('declined_order_list')
                                     <li class="menu-item {{ session('lsbsm') == 'declined_order_list' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
@@ -509,7 +509,7 @@
                                     </li>
                                 @endcan
 
-                                @can('store_product_report_by_product')
+                                {{-- @can('store_product_report_by_product')
                                     <li class="menu-item {{ session('lsbsm') == 'store_product_report_by_product' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
                                         <a href="{{route('admin.stockReport.store_product_report_by_product')}}" class="menu-link">
                                             <i class="menu-bullet menu-bullet-dot">
@@ -518,7 +518,7 @@
                                             <span class="menu-text">Store Stock History Report</span>
                                         </a>
                                     </li>
-                                @endcan
+                                @endcan --}}
 
                                 @can('store_stock_report')
                                     <li class="menu-item {{ session('lsbsm') == 'store_stock_report' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
@@ -542,7 +542,7 @@
                                     </li>
                                 @endcan
 
-                                @can('daily_sales_report')
+                                {{-- @can('daily_sales_report')
                                     <li class="menu-item {{ session('lsbsm') == 'daily_sales_report' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
                                         <a href="{{route('admin.salesReport.daily')}}" class="menu-link">
                                             <i class="menu-bullet menu-bullet-dot">
@@ -551,9 +551,9 @@
                                             <span class="menu-text">Daily Sales Report</span>
                                         </a>
                                     </li>
-                                @endcan
+                                @endcan --}}
 
-                                @can('dealer_sales_report')
+                                {{-- @can('dealer_sales_report')
                                     <li class="menu-item {{ session('lsbsm') == 'dealer_sales_report' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
                                         <a href="{{route('admin.salesReport.dealerSales')}}" class="menu-link">
                                             <i class="menu-bullet menu-bullet-dot">
@@ -562,9 +562,9 @@
                                             <span class="menu-text">Dealer Sales Report</span>
                                         </a>
                                     </li>
-                                @endcan
+                                @endcan --}}
 
-                                @can('customer_sales_report')
+                                {{-- @can('customer_sales_report')
                                     <li class="menu-item {{ session('lsbsm') == 'customer_sales_report' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
                                         <a href="{{route('admin.salesReport.customerSales')}}" class="menu-link">
                                             <i class="menu-bullet menu-bullet-dot">
@@ -573,7 +573,7 @@
                                             <span class="menu-text">Retail Customer Sales Report</span>
                                         </a>
                                     </li>
-                                @endcan
+                                @endcan --}}
 
                                 @can('inventory_report_product_wise')
                                     <li class="menu-item {{ session('lsbsm') == 'inventory_report_product_wise' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
@@ -586,7 +586,7 @@
                                     </li>
                                 @endcan
 
-                                @can('gatepass_report')
+                                {{-- @can('gatepass_report')
                                     <li class="menu-item {{ session('lsbsm') == 'gatepass_report' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
                                         <a href="{{route('admin.gatepass.report')}}" class="menu-link">
                                             <i class="menu-bullet menu-bullet-dot">
@@ -595,9 +595,9 @@
                                             <span class="menu-text">Gatepass Report</span>
                                         </a>
                                     </li>
-                                @endcan
+                                @endcan --}}
 
-                                @can('dealer_commission_report')
+                                {{-- @can('dealer_commission_report')
                                     <li class="menu-item {{ session('lsbsm') == 'dealer_commission_report' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
                                         <a href="{{route('admin.salesReport.commission_report.dealer')}}" class="menu-link">
                                             <i class="menu-bullet menu-bullet-dot">
@@ -606,9 +606,9 @@
                                             <span class="menu-text">Dealer Commission Reoprt</span>
                                         </a>
                                     </li>
-                                @endcan
+                                @endcan --}}
 
-                                @can('vat_sd_commission_report')
+                                {{-- @can('vat_sd_commission_report')
                                     <li class="menu-item {{ session('lsbsm') == 'vat_sd_commission_report' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
                                         <a href="{{route('admin.salesReport.vat_sd_cmmmission')}}" class="menu-link">
                                             <i class="menu-bullet menu-bullet-dot">
@@ -617,7 +617,7 @@
                                             <span class="menu-text">VAT, SD, Commission and TDS Report</span>
                                         </a>
                                     </li>
-                                @endcan
+                                @endcan --}}
 
                             </ul>
                         </div>

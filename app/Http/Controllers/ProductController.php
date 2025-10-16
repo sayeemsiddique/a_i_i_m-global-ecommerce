@@ -33,7 +33,7 @@ class ProductController extends Controller
         }
         $user = Auth::user();
 
-        
+
         if(Gate::allows('all_product',$user))
         {
             menuSubmenu('product_setting', 'all_product');
@@ -44,7 +44,7 @@ class ProductController extends Controller
             if (isset($request->name) and $request->name != '') {
                 $query->where('name', 'like', '%'.$request->name.'%')->orWhere('code', 'like', '%'.$request->name.'%');
             }
-            
+
             if (isset($request->category_id) and $request->category_id != '') {
                 $query->where('category_id', $request->category_id);
             }
@@ -60,11 +60,11 @@ class ProductController extends Controller
                 'products' => $products,
                 'categories' => $categories
             ]);
-        
+
         } else {
             abort(403);
         }
-        
+
     }
 
     public function create()
@@ -78,23 +78,23 @@ class ProductController extends Controller
                 // 'parent_id' => 0,
                 'status' => 1,
             ])->get();
-            
+
             $brands = Brand::where([
                 'status' => 1,
             ])->get();
-            
+
             $varienttypes = VarientType::with('varientValues')->where([
                 'status' => 1,
             ])->get();
 
             return view('backend.admin.product.create', compact('categories','brands','varienttypes'));
-        
+
         } else {
             abort(403);
         }
-        
+
     }
-    
+
     public function store(Request $request)
     {
         // dd($request->all());
@@ -147,7 +147,7 @@ class ProductController extends Controller
                 $product['sl_price'] = $product['discount_price'];
             }
 
-            
+
 
             unset($data['files']);
             if ($request->file('image')) {
@@ -167,7 +167,7 @@ class ProductController extends Controller
                 $product['varient_type_ids'] = implode(',', $request->varient_type_ids);
             }
 
-            
+
             $get = Product::create($product);
 
             $product_info['meta_title'] = $request->name ?? '';
@@ -196,11 +196,11 @@ class ProductController extends Controller
                         $image['created_by'] = Auth::user()->id;
                         Upload::create($image);
                     }
-                    
+
                 }
             }
 
-            
+
 
             if(isset($request->has_varient) and $request->has_varient != ''){
 
@@ -213,7 +213,7 @@ class ProductController extends Controller
                 foreach ($request->sale_price as $key => $sale_price) {
 
                     if (isset($request->file('varient_image')[$key]) and $request->file('varient_image')[$key]) {
-                
+
                         $cp = $request->file('varient_image')[$key];
                         $extension = strtolower($cp->getClientOriginalExtension());
                         $randomFileName = 'varient_image'.date('Y_m_d_his').'_'.rand(10000000,99999999).'.'.$extension;
@@ -241,14 +241,14 @@ class ProductController extends Controller
                             } else {
                                 $varient['discount_price'] = ($sale_price) - ($request->varient_discount[$key]);
                             }
-                            
+
                         } else {
                             $varient['discount_price'] = $sale_price;
                         }
                     // } else {
                     //     $varient['discount_price'] = $sale_price;
                     // }
-                    
+
                     $varient_data = Varient::create($varient);
 
                     $inventory['type'] = 3;
@@ -286,7 +286,7 @@ class ProductController extends Controller
                                 if ($varientdata['value']) {
                                     $check = VarientValue::create($varientdata);
                                 }
-                                
+
                             }
 
 
@@ -331,13 +331,13 @@ class ProductController extends Controller
             }
 
             return redirect()->route('admin.product.index')->with('success', 'Product Added');
-        
+
         } else {
             abort(403);
         }
 
         });
-        
+
     }
 
     public function edit($id)
@@ -351,14 +351,14 @@ class ProductController extends Controller
             $product = Product::with('productVarient')->where('id',$id)->latest()->first();
             // return view('backend.admin.product.edit', compact('product'));
             $categories = Category::where([
-                'parent_id' => 0,
+                // 'parent_id' => 0,
                 'status' => 1,
             ])->get();
-            
+
             $brands = Brand::where([
                 'status' => 1,
             ])->get();
-            
+
             $varienttypes = VarientType::with('varientValues')->where([
                 'status' => 1,
             ])->get();
@@ -367,21 +367,21 @@ class ProductController extends Controller
         } else {
             abort(403);
         }
-        
+
     }
 
     public function update(Request $request, $id)
     {
 
         // dd($request->all());
-        
+
         $request->validate([
             'name' => 'required|unique:products,name,' . $id,
         ]);
 
         DB::transaction(function () use ($request, $id) {
         $data = $request->all();
-        
+
         $old_product = Product::where('id', $id)->latest()->first();
 
         $product['name'] = $request->name;
@@ -432,7 +432,7 @@ class ProductController extends Controller
                     } else {
                         $product['discount_price'] = ($request->price ?? 0) - ($request->discount ?? 0);
                     }
-                    
+
                 } else {
                     $product['discount_price'] = ($request->price ?? 0) - ($request->discount ?? 0);
                 }
@@ -443,7 +443,7 @@ class ProductController extends Controller
             $product['sl_price'] = $product['discount_price'];
         }
 
-                
+
         $get = Product::where('id', $id)->update($product);
 
 
@@ -473,11 +473,11 @@ class ProductController extends Controller
                     $image['created_by'] = Auth::user()->id;
                     Upload::create($image);
                 }
-                
+
             }
         }
 
-                
+
 
                 if(isset($request->has_varient) and $request->has_varient != ''){
 
@@ -511,7 +511,7 @@ class ProductController extends Controller
                                 } else {
                                     $varient['discount_price'] = ($sale_price) - ($request->varient_discount[$key]);
                                 }
-                                
+
                             } else {
                                 $varient['discount_price'] = ($sale_price) - ($request->varient_discount[$key]);
                             }
@@ -530,10 +530,10 @@ class ProductController extends Controller
 
                             if ($check_stock) {
                                 if ($get_stock->quantity > $varient['quantity']) {
-                                
+
                                     Stock::where('varient_id',$request->varient_id[$key])->decrement('quantity', ($get_stock->quantity - $varient['quantity']));
                                 } else if($get_stock->quantity < $varient['quantity']) {
-                                    
+
                                     Stock::where('varient_id',$request->varient_id[$key])->increment('quantity', ($varient['quantity'] - $get_stock->quantity));
                                 }
                             } else {
@@ -542,7 +542,7 @@ class ProductController extends Controller
                                 $stock['varient_id'] = $request->varient_id[$key];
 
                                 Stock::create($stock);
-                                
+
                             }
 
                             Varient::where([
@@ -615,7 +615,7 @@ class ProductController extends Controller
 
                             }
 
-                            
+
 
 
 
@@ -692,7 +692,7 @@ class ProductController extends Controller
                                     if ($varientdata['value']) {
                                         $check = VarientValue::create($varientdata);
                                     }
-                                    
+
                                 }
 
                                 VarientData::updateOrInsert(
@@ -700,7 +700,7 @@ class ProductController extends Controller
                                     ['data_value' => $varient_datas['data_value'], 'created_at' => date("Y-m-d h:i:s"), 'updated_at' => date("Y-m-d h:i:s"), 'varient_value_id' => $check->id ?? 0]
                                 );
                             }
-                            
+
                         }
 
                         $get_product_data = Product::find($id);
@@ -748,13 +748,13 @@ class ProductController extends Controller
                 return redirect()->route('admin.product.index')->with('success', 'Product Updated');
         });
     }
-    
+
     public function show($id)
     {
-        
+
         $user = Auth::user();
 
-        if (Gate::allows('view_product', $user)) 
+        if (Gate::allows('view_product', $user))
         {
             menuSubmenu('product_setting', 'view_product');
             $product = Product::findOrFail($id);
@@ -766,12 +766,12 @@ class ProductController extends Controller
             abort(403);
         }
     }
-    
+
     public function destroy($id)
     {
         $user = Auth::user();
 
-        if (Gate::allows('view_product', $user)) 
+        if (Gate::allows('view_product', $user))
         {
             $product = Product::findOrFail($id);
             $product->update(['status' => 2]);
@@ -779,20 +779,20 @@ class ProductController extends Controller
         } else {
             abort(403);
         }
-        
+
     }
-    
+
     public function stock(Request $request)
     {
         if (isset($request->complete) and $request->complete == 1) {
             return redirect()->route('admin.product.stock')->with('success', 'Product Stock Added Successfull');
         }
         menuSubmenu('inventory_management', 'product_stock');
-        
+
 
         $user = Auth::user();
 
-        if (Gate::allows('product_stock', $user)) 
+        if (Gate::allows('product_stock', $user))
         {
             $query = Product::latest();
 
@@ -808,30 +808,30 @@ class ProductController extends Controller
             abort(403);
         }
 
-        
+
     }
-    
+
     public function add_stock(Request $request)
     {
         menuSubmenu('inventory_management', 'product_stock');
 
         $user = Auth::user();
 
-        if (Gate::allows('product_add_stock', $user)) 
+        if (Gate::allows('product_add_stock', $user))
         {
             $categories = Category::where([
                 'parent_id' => 0,
                 'status' => 1,
             ])->get();
-            
+
             $brands = Brand::where([
                 'status' => 1,
             ])->get();
-    
-            
 
-            
-            
+
+
+
+
             if ($request->category_id and $request->category_id != '') {
                 $query = Product::withSum('productStock', 'quantity')->where([
                     'status' => 1,
@@ -848,18 +848,18 @@ class ProductController extends Controller
             if ($request->name and $request->name != '') {
                 $query->where('name','like', '%'.$request->name.'%');
             }
-            
+
             $products = $query->latest()->with('productSingleStock','productStock')->get();
-            
+
             return view('backend.admin.product.add_stock', compact('products','categories','brands'));
         } else {
             abort(403);
         }
-        
 
-        
+
+
     }
-    
+
     public function store_inventory(Request $request)
     {
         if (array_sum($request->stock) < 1) {
@@ -876,7 +876,7 @@ class ProductController extends Controller
         }
         $data = Order::create($order);
 
-        
+
         foreach ($request->product_id as $key => $value) {
             if (($request->stock[$key] ?? 0) > 0) {
 
@@ -896,18 +896,18 @@ class ProductController extends Controller
                 Inventory::create($inventory);
 
 
-    
+
                 Stock::where([
                     'product_id' => $value,
                     'varient_id' => $request->varient_id[$key]
                 ])->increment('quantity', $request->stock[$key]);
 
-                
+
             }
         }
 
     }
-    
+
     public function material_index(Request $request)
     {
         if (isset($request->complete) and $request->complete == 1) {
@@ -916,7 +916,7 @@ class ProductController extends Controller
         $user = Auth::user();
 
         if(Gate::allows('all_material_product',$user))
-        {            
+        {
             menuSubmenuSubsubmeny('settings', 'product_setting', 'all_material_product');
 
             $query = Product::whereNotIn('status', [2])->where([
@@ -930,12 +930,12 @@ class ProductController extends Controller
             $products = $query->paginate(25);
 
             return view('backend.admin.product.material_index',compact('products'));
-        
+
         } else {
             abort(403);
         }
     }
-    
+
     public function material_store(Request $request)
     {
         $user = Auth::user();
@@ -964,9 +964,9 @@ class ProductController extends Controller
 
             unset($data['files']);
             if ($request->file('image')) {
-                
+
                 $path = $request->file('image')->store('/public/product');
-                
+
                 $path = Str::replace('public/product', '', $path);
                 $product['image'] = Str::replace('/', '', $path);
             }
@@ -981,12 +981,12 @@ class ProductController extends Controller
             $product_info['description'] = $request->description ?? '';
 
             $get_info = ProductInfo::create($product_info);
-            
+
             $order['type'] = 3;
             $order['user_id'] = auth()->user()->id;
             $order['delivery_status'] = 1;
             $order_data = Order::create($order);
-            
+
             $order_detail['order_id'] = $order_data->id;
             $order_detail['product_id'] = $get->id;
             $order_detail['quantity'] = $request->quantity;
@@ -1008,18 +1008,18 @@ class ProductController extends Controller
 
             return redirect()->back()->with('success', 'Product Added');
 
-        
+
         } else {
             abort(403);
         }
     }
-    
+
     public function material_update(Request $request, $id)
     {
         $user = Auth::user();
 
         if(Gate::allows('edit_material_product',$user))
-        {            
+        {
             $request->validate([
                 'name' => 'required|unique:products,name,' . $id,
             ]);
@@ -1031,9 +1031,9 @@ class ProductController extends Controller
 
             unset($data['files']);
             if ($request->file('image')) {
-                
+
                 $path = $request->file('image')->store('/public/product');
-                
+
                 $path = Str::replace('public/product', '', $path);
                 $product['image'] = Str::replace('/', '', $path);
             }
@@ -1065,7 +1065,7 @@ class ProductController extends Controller
                     'product_id' => $id,
                 ])->update($order_detail_data);
 
-                
+
                 $inventory['quantity'] = $request->quantity;
 
                 Inventory::where([
@@ -1077,13 +1077,13 @@ class ProductController extends Controller
 
 
                 if ($get_order_detail->quantity > $request->quantity) {
-                                
+
                     Stock::where([
                         'product_id' => $id,
                         'varient_id' => 0
                     ])->decrement('quantity', ($get_order_detail->quantity - $request->quantity));
                 } else if($get_order_detail->quantity < $request->quantity) {
-                    
+
                     Stock::where([
                         'product_id' => $id,
                         'varient_id' => 0
@@ -1097,25 +1097,25 @@ class ProductController extends Controller
 
             return redirect()->back()->with('success', 'Product Updated');
 
-        
+
         } else {
             abort(403);
         }
     }
 
 
-    
+
     public function material_stock(Request $request)
     {
         if (isset($request->complete) and $request->complete == 1) {
             return redirect()->route('admin.product.stock')->with('success', 'Product Stock Added Successfull');
         }
         menuSubmenu('inventory_management', 'material_product_stock');
-        
+
 
         $user = Auth::user();
 
-        if (Gate::allows('product_stock', $user)) 
+        if (Gate::allows('product_stock', $user))
         {
             $products = Product::withSum('productStock', 'quantity')->where([
                 'status' => 1,
@@ -1133,39 +1133,39 @@ class ProductController extends Controller
 
         $user = Auth::user();
 
-        if (Gate::allows('product_add_stock', $user)) 
+        if (Gate::allows('product_add_stock', $user))
         {
             $categories = Category::where([
                 'parent_id' => 0,
                 'status' => 1,
             ])->get();
-            
+
             $brands = Brand::where([
                 'status' => 1,
             ])->get();
 
-            
+
             $query = Product::withSum('productStock', 'quantity')->where([
                 'status' => 1,
                 'type' => 2,
             ]);
-            
+
 
             if ($request->name and $request->name != '') {
                 $query->where('name','like', '%'.$request->name.'%');
             }
-            
+
             $products = $query->latest()->with('productSingleStock','productStock')->get();
-            
+
             return view('backend.admin.product.material_add_stock', compact('products','categories','brands'));
         } else {
             abort(403);
         }
     }
-    
+
     public function store_material_inventory(Request $request)
     {
-        
+
             $order['type'] = 3;
             $order['user_id'] = auth()->user()->id;
             $order['delivery_status'] = 1;
@@ -1187,7 +1187,7 @@ class ProductController extends Controller
                 Inventory::create($inventory);
 
 
-                
+
                 $check_stock = Stock::where([
                     'product_id' => $product_id,
                     'varient_id' => 0,
@@ -1211,6 +1211,6 @@ class ProductController extends Controller
             }
 
             return redirect()->route('admin.product.index')->with('success', 'Product Added');
-        
+
     }
 }

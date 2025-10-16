@@ -37,17 +37,17 @@
                         <span class="svg-icon menu-icon">
                             <i style="color: #6e3cbc;" class="fas fa-user"></i>
                         </span>
-                        <span class="menu-text">Account details</span>
+                        <span class="menu-text">Update Profile</span>
                     </a>
                 </li>
-                <li class="menu-item {{ request()->routeIs('accountPassword') ? 'menu-item-active' : '' }}" aria-haspopup="true">
+                {{-- <li class="menu-item {{ request()->routeIs('accountPassword') ? 'menu-item-active' : '' }}" aria-haspopup="true">
                     <a href="{{ route('accountPassword') }}" class="menu-link">
                         <span class="svg-icon menu-icon">
                             <i style="color: #6e3cbc;" class="fas fa-key"></i>
                         </span>
                         <span class="menu-text">Password</span>
                     </a>
-                </li>
+                </li> --}}
                 <li class="menu-item" aria-haspopup="true">
                     <a href="{{ route('user_logout') }}" class="menu-link" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                         <span class="svg-icon menu-icon">

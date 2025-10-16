@@ -1,38 +1,38 @@
 @extends('frontend.layout.master_alt')
 
 @push('css')
-    <style> 
+    <style>
         .bg-gr-purple{
             background: #8E2DE2;  /* fallback for old browsers */
             background: -webkit-linear-gradient(to right, #4A00E0, #8E2DE2);  /* Chrome 10-25, Safari 5.1-6 */
             background: linear-gradient(to right, #4A00E0, #8E2DE2); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
         }
-            
+
         .bg-gr-blue{
             background: #0052D4;  /* fallback for old browsers */
             background: -webkit-linear-gradient(to left, #6FB1FC, #4364F7, #0052D4);  /* Chrome 10-25, Safari 5.1-6 */
             background: linear-gradient(to left, #6FB1FC, #4364F7, #0052D4); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
         }
-            
+
         .bg-gr-green{
             background: #00b09b;  /* fallback for old browsers */
             background: -webkit-linear-gradient(to left, #96c93d, #00b09b);  /* Chrome 10-25, Safari 5.1-6 */
             background: linear-gradient(to left, #96c93d, #00b09b); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
         }
-        
+
         .bg-gr-red{
             background: #ED213A;  /* fallback for old browsers */
             background: -webkit-linear-gradient(to right, #93291E, #ED213A);  /* Chrome 10-25, Safari 5.1-6 */
             background: linear-gradient(to right, #93291E, #ED213A); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
         }
-        
+
         #account-dashboard .icon-box p {
             color: #fff;
         }
         #account-dashboard .icon-box:hover p {
           color: #fff;
         }
-        
+
         #account-dashboard p a:hover {
           text-decoration: none;
         }
@@ -72,7 +72,7 @@
             </div>
 
             <div class="tab tab-vertical row gutter-lg">
-                
+
                 @include('frontend.layout.accountMenu')
 
                 <div class="tab-content mb-6" style="padding: 1rem;">
@@ -107,10 +107,11 @@
                                     </a>
                                 </div>
                             </div>
-                            
+
                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 mb-4">
                                 <div class="bg-gr-blue">
-                                    <a href="{{route('account_address')}}">
+                                    {{-- <a href="{{route('account_address')}}"> --}}
+                                    <a href="#">
                                         <div class="icon-box text-center">
                                             <span class="icon-box-icon icon-address">
                                                 <i class="w-icon-map-marker"></i>
@@ -122,7 +123,7 @@
                                     </a>
                                 </div>
                             </div>
-                            
+
                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 mb-4">
                                 <div class="bg-gr-purple">
                                     <a href="{{route('accountDetails')}}">
@@ -137,7 +138,7 @@
                                     </a>
                                 </div>
                             </div>
-                            
+
                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 mb-4">
                                 <div class="bg-gr-red">
                                     <a href="#">
@@ -147,7 +148,7 @@
                                                 <i class="w-icon-user"></i>
                                             </span>
                                             <div class="icon-box-content">
-    
+
                                                 <p  class="text-uppercase mb-0">
                                                     <a class="text-white" href="{{ route('user_logout') }}">Logout</a>
                                                 </p>

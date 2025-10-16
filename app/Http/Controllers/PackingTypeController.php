@@ -26,13 +26,13 @@ class PackingTypeController extends Controller
         $user = Auth::user();
 
         if(Gate::allows('all_packing_types', $user))
-        {            
+        {
             menuSubmenu('manage_packing_type', 'all_packing_types');
 
-            $packing_types = PackingType::latest()->paginate(15);
+            $packing_types = PackingType::latest()->paginate(20);
 
             return view('backend.admin.packingType.index', compact('packing_types'));
-            
+
         }
         else
         {
@@ -50,13 +50,13 @@ class PackingTypeController extends Controller
         $user = Auth::user();
 
         if(Gate::allows('add_packing_type', $user))
-        {            
+        {
             menuSubmenu('manage_packing_type', 'add_packing_type');
 
             $categories = Category::where('status', 1)->get();
 
             return view('backend.admin.packingType.create', compact('categories'));
-            
+
         }
         else
         {
@@ -102,16 +102,16 @@ class PackingTypeController extends Controller
     {
         $user = Auth::user();
 
-        if (Gate::allows('manage_packing_type', $user)) 
+        if (Gate::allows('manage_packing_type', $user))
         {
             if(Gate::allows('view_packing_type', $user))
-            {            
+            {
                 $packing_type = PackingType::with('user', 'user_update')
                                     ->where('id', $id)
                                     ->first();
 
                 return view('backend.admin.packingType.show', compact('packing_type'));
-                
+
             }
             else
             {
@@ -134,14 +134,14 @@ class PackingTypeController extends Controller
     {
         $user = Auth::user();
 
-        if (Gate::allows('manage_packing_type', $user)) 
+        if (Gate::allows('manage_packing_type', $user))
         {
             if(Gate::allows('edit_packing_type', $user))
-            {  
+            {
                 $packing_type = PackingType::where('id', $id)->first();
 
                 return view('backend.admin.packingType.edit', compact('packing_type'));
-                
+
             }
             else
             {
@@ -204,10 +204,10 @@ class PackingTypeController extends Controller
     {
         $user = Auth::user();
 
-        if (Gate::allows('manage_packing_type', $user)) 
+        if (Gate::allows('manage_packing_type', $user))
         {
             if(Gate::allows('delete_packing_type', $user))
-            {            
+            {
                 if ($packing_type->status == 0) {
                     $packing_type->status       = 1;
                     $packing_type->updated_by   = Auth::id();
@@ -216,10 +216,10 @@ class PackingTypeController extends Controller
                     $packing_type->status       = 0;
                     $packing_type->updated_by   = Auth::id();
                 }
-        
+
                 $packing_type->save();
-        
-                return redirect()->route('admin.packing_type.index')->with('success', 'Packing Type Status Changed Successfully.'); 
+
+                return redirect()->route('admin.packing_type.index')->with('success', 'Packing Type Status Changed Successfully.');
             }
             else
             {

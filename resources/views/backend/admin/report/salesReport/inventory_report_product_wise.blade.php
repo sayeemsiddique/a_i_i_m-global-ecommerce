@@ -155,32 +155,7 @@
 @endphp
 <!--begin::Content-->
 <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
-    <!--begin::Subheader-->
-    <div class="subheader py-2 py-lg-6 subheader-solid" id="kt_subheader">
-        <div class="container-fluid d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
-            <!--begin::Info-->
-            <div class="d-flex align-items-center flex-wrap mr-1">
-                <!--begin::Page Heading-->
-                <div class="d-flex align-items-baseline flex-wrap mr-5">
-                    <!--begin::Page Title-->
-                    <h5 class="text-dark font-weight-bold my-1 mr-5">Inventory Report Product Wise</h5>
-                    <!--end::Page Title-->
-                    <!--begin::Breadcrumb-->
-                    <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-2 font-size-sm">
-                        <li class="breadcrumb-item">
-                            <a href="{{route('admin.index')}}" class="text-muted">Dashboard</a>
-                        </li>
-                        <li class="breadcrumb-item active">
-                            <a class="text-muted">Inventory Report Product Wise</a>
-                        </li>
-                    </ul>
-                    <!--end::Breadcrumb-->
-                </div>
-                <!--end::Page Heading-->
-            </div>
-            <!--end::Info-->
-        </div>
-    </div>
+
     <!--begin::Entry-->
     <div class="d-flex flex-column-fluid">
         <!--begin::Container-->
@@ -194,7 +169,7 @@
                         <div class="card-header">
                             <h3 class="card-title">Inventory Report Product Wise</h3>
                             <div class="d-flex align-items-center">
-                                
+
                             </div>
                         </div>
 
@@ -245,7 +220,7 @@
                 <div class="card-body">
 
 
-                    
+
 
                     @if (isset($_GET['product_id']) and $_GET['product_id'] != '')
 
@@ -278,8 +253,8 @@
                         <div class="w-100">
                             <div class="table-responsive ajax-data-container pt-3">
                                 @foreach ($order_data as $key => $order)
-                                
-                                
+
+
                                 <h3>Product Name: {{$order['product_data']->name ?? ""}}</h3>
                                 <p><strong>Product Code: {{$order['product_data']->code ?? ""}}</strong></p>
                                 <table class="table table-bordered table-sm" style="margin-bottom: 40px !important;"
@@ -338,17 +313,17 @@
                                                                 $initial_stock_in += $details->quantity;
                                                             // }
                                                         }
-                                                        
+
                                                         if ($details->type == 1) {
                                                             $opening_quantity += $details->quantity;
                                                             $stock_in += $details->quantity;
                                                         }
-                                                        
+
                                                         if (in_array($details->type,[2,4])) {
                                                             $opening_quantity -= $details->quantity;
                                                             $stock_out += $details->quantity;
                                                         }
-                                                        
+
                                                         if ($details->type == 5) {
                                                             $opening_quantity -= $details->quantity;
                                                             $damage_qty += $details->quantity;
@@ -365,7 +340,7 @@
                                                         {{ $date->format('d-m-Y') ?? "" }}
                                                     </td>
                                                     <td>
-                                                        
+
                                                         @foreach ($unit_types as $unit_type)
                                                             @if ($unit_type['id'] == ($order['product_data']->unit ?? 0))
                                                                 {{$unit_type['name']}}

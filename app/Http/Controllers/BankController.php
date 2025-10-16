@@ -25,13 +25,13 @@ class BankController extends Controller
         $user = Auth::user();
 
         if(Gate::allows('all_banks', $user))
-        {            
+        {
             menuSubmenu('manage_bank', 'all_banks');
 
-            $banks = Bank::latest()->paginate(15);
+            $banks = Bank::latest()->paginate(20);
 
             return view('backend.admin.bank.index', compact('banks'));
-            
+
         }
         else
         {
@@ -49,11 +49,11 @@ class BankController extends Controller
         $user = Auth::user();
 
         if(Gate::allows('add_bank', $user))
-        {            
+        {
             menuSubmenu('manage_bank', 'add_bank');
 
             return view('backend.admin.bank.create');
-            
+
         }
         else
         {
@@ -99,16 +99,16 @@ class BankController extends Controller
     {
         $user = Auth::user();
 
-        if (Gate::allows('manage_bank', $user)) 
+        if (Gate::allows('manage_bank', $user))
         {
             if(Gate::allows('view_bank', $user))
-            {            
+            {
                 $bank = Bank::with('user', 'user_update')
                                     ->where('id', $id)
                                     ->first();
 
                 return view('backend.admin.bank.show', compact('bank'));
-                
+
             }
             else
             {
@@ -131,14 +131,14 @@ class BankController extends Controller
     {
         $user = Auth::user();
 
-        if (Gate::allows('manage_bank', $user)) 
+        if (Gate::allows('manage_bank', $user))
         {
             if(Gate::allows('edit_bank', $user))
-            {  
+            {
                 $bank = Bank::where('id', $id)->first();
 
                 return view('backend.admin.bank.edit', compact('bank'));
-                
+
             }
             else
             {
@@ -202,10 +202,10 @@ class BankController extends Controller
     {
         $user = Auth::user();
 
-        if (Gate::allows('manage_bank', $user)) 
+        if (Gate::allows('manage_bank', $user))
         {
             if(Gate::allows('delete_bank', $user))
-            {            
+            {
                 if ($bank->status == 0) {
                     $bank->status       = 1;
                     $bank->updated_by   = Auth::id();
@@ -214,10 +214,10 @@ class BankController extends Controller
                     $bank->status       = 0;
                     $bank->updated_by   = Auth::id();
                 }
-        
+
                 $bank->save();
-        
-                return redirect()->route('admin.bank.index')->with('success', 'Bank Account Status Changed Successfully.'); 
+
+                return redirect()->route('admin.bank.index')->with('success', 'Bank Account Status Changed Successfully.');
             }
             else
             {

@@ -197,7 +197,7 @@
                                                 data-error-class="u-has-error"
                                                 data-success-class="u-has-success">
                                             <label class="form-check-label font-weight-bold" for="defaultCheck10">
-                                                I have read and agreed to the website <a href="#" class="text-blue">terms and conditions</a>, <a href="#" class="text-blue">refund-return policy </a> and <a href="#" class="text-blue">privacy policy </a>
+                                                I have read and agreed to the website <a href="https://snehodigital.com/page-info/terms-and-conditions" class="text-blue">terms and conditions</a>, <a href="https://snehodigital.com/page-info/return-refund-policy" class="text-blue">refund-return policy </a> and <a href="https://snehodigital.com/page-info/privacy-policy" class="text-blue">privacy policy </a>
                                             </label>
                                         </div>
                                     </div>

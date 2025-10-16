@@ -9,9 +9,9 @@
     <li class="nav-item">
         <a href="{{route('account_orders')}}" class="nav-link {{strpos($link, 'order') ? 'active' : ''}}">Orders</a>
     </li>
-    <li class="nav-item">
+    {{-- <li class="nav-item">
         <a href="{{route('account_address')}}" class="nav-link {{strpos($link, 'address') ? 'active' : ''}}">Addresses</a>
-    </li>
+    </li> --}}
     <li class="nav-item">
         <a href="{{route('accountDetails')}}" class="nav-link  {{strpos($link, 'accountDetails') ? 'active' : ''}}">Account details</a>
     </li>

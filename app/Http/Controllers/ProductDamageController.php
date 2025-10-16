@@ -14,9 +14,9 @@ use Illuminate\Support\Facades\Gate;
 use App\Models\Stock;
 use App\Models\Product;
 use App\Models\Varient;
-use App\Models\VarientData; 
-use App\Models\Order; 
-use App\Models\Inventory; 
+use App\Models\VarientData;
+use App\Models\Order;
+use App\Models\Inventory;
 use App\Models\OrderDetail;
 use App\Models\Category;
 use Illuminate\Support\Str;
@@ -40,7 +40,7 @@ class ProductDamageController extends Controller
                                 ->join('orders', 'order_details.order_id', '=', 'orders.id')
                                 ->join('products', 'order_details.product_id', '=', 'products.id')
                                 ->where('orders.type', 5);
-            
+
             if (isset($request->fromDate) && $request->fromDate != '') {
                 $query->whereDate('order_details.created_at', '>=', $request->fromDate);
             }
@@ -48,7 +48,7 @@ class ProductDamageController extends Controller
             if (isset($request->toDate) && $request->toDate != '') {
                 $query->whereDate('order_details.created_at', '<=', $request->toDate);
             }
-            
+
             if (isset($request->type) && $request->type != '') {
                 $query->where('products.type', $request->type);
             }
@@ -60,14 +60,14 @@ class ProductDamageController extends Controller
             if (isset($request->code) && $request->code != '') {
                 $query->where('products.code', 'like', '%'.$request->code.'%');
             }
-            
+
             if (isset($request->category_id) && $request->category_id != '') {
                 $query->where('products.category_id',$request->category_id);
             }
 
             $categories = Category::where('status',1)->select('name','id')->get();
-            
-            $orders = $query->orderBy('orders.created_at', 'desc')->paginate(15);
+
+            $orders = $query->orderBy('orders.created_at', 'desc')->paginate(20);
             return view('backend.admin.productDamange.index', compact('orders','categories'));
         }
         else
@@ -88,7 +88,7 @@ class ProductDamageController extends Controller
         if(Gate::allows('reconciliation_product_stock',$user))
         {
             menuSubmenu('inventory_management', 'reconciliation_product_stock');
-            
+
             return view('backend.admin.productDamange.create');
         }
         else
@@ -116,13 +116,13 @@ class ProductDamageController extends Controller
         // }
         // else
         // {
-        //     $data = []; 
+        //     $data = [];
         // }
         // return $data;
     }
 
     public function getStock($product)
-    {        
+    {
         return Stock::where('product_id',$product)->first();
     }
 
@@ -140,7 +140,7 @@ class ProductDamageController extends Controller
     public function store(Request $request)
     {
         $validation = Validator::make($request->all(),
-        [ 
+        [
             'product_type'     => 'required',
             'product'      => 'required',
             'quantity'      => 'required',
@@ -159,7 +159,7 @@ class ProductDamageController extends Controller
         if($request->product and $request->product_varient)
         {
             $stock = Stock::where('product_id',$request->product)->where('varient_id',$request->product_varient)->first();
-            
+
             $product = Varient::where('id',$request->product_varient)->first();
         }
         else
@@ -170,7 +170,7 @@ class ProductDamageController extends Controller
             ])->first();
             $product = Product::where('id',$stock->product_id)->first();
         }
-        
+
 
         if($request->product_varient) {
             $product_detail = Varient::where('id', $request->product_varient)->first();
@@ -182,16 +182,16 @@ class ProductDamageController extends Controller
 
         DB::transaction(function () use ($request, $stock, $product, $product_detail) {
             $order = new Order;
-            $order->type  = 5; // damage      
+            $order->type  = 5; // damage
             $order->status = 1; // approved
             $order->tracking_code = date('yhis');
             $order->total_price = $request->damange_quantity * $product->discount_price;
             $order->grand_total_price = $request->damange_quantity * $product->discount_price;
             $order->update_by = Auth::id();
             if ($request->file('document')) {
-                    
+
                 $path = $request->file('document')->store('/public/document');
-                
+
                 $path = Str::replace('public/document', '', $path);
                 $order->document = Str::replace('/', '', $path);
             }
@@ -217,11 +217,11 @@ class ProductDamageController extends Controller
             $inventories->quantity = $request->damange_quantity;
             $inventories->created_by = Auth::id();
             $inventories->save();
-            
+
             $stock->save();
 
         });
-        
+
         return back()->with('success','Adjust damage product submit successfully.');
     }
 
@@ -271,7 +271,7 @@ class ProductDamageController extends Controller
 
         if(Gate::allows('delete_damage',$user))
         {
-            
+
             $order = Order::where([
                 'id' => $id,
                 'type' => 5,
@@ -286,13 +286,13 @@ class ProductDamageController extends Controller
                         ])->increment('quantity', $orderDetails->quantity);
                     }
                 }
-    
+
                 $order->orderDetails()->delete();
                 $order->inventoryDetails()->delete();
                 $order->delete();
             });
 
-            
+
 
             return back()->with('success','Damage order removed successfully.');
         }

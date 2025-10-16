@@ -22,22 +22,22 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="shop-table account-orders-table mb-6 table" style="width: 100%;">
+                                <table class="table table-bordered table-striped" style="width: 100%;">
                                     <thead>
                                         <tr>
-                                            <th>Recipient</th>
+                                            <th class="text-left">Recipient</th>
                                             <th>Phone</th>
                                             <th>Address</th>
                                             <th>Category</th>
                                             <th>Default Shipping</th>
-                                            <th>Default Billing</th>
+                                            {{-- <th>Default Billing</th> --}}
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @forelse ($shippingAddresses as $address)
                                             <tr>
-                                                <td>{{ $address->recipient_name }}</td>
+                                                <td class="text-left">{{ $address->recipient_name }}</td>
                                                 <td>{{ $address->phone_no }}</td>
                                                 <td>
                                                     {{ $address->address }},
@@ -59,20 +59,20 @@
                                                         <span class="badge badge-secondary">No</span>
                                                     @endif
                                                 </td>
-                                                <td>
+                                                {{-- <td>
                                                     @if ($address->default_billing == 1)
                                                         <span class="badge badge-primary">Yes</span>
                                                     @else
                                                         <span class="badge badge-secondary">No</span>
                                                     @endif
-                                                </td>
+                                                </td> --}}
                                                 <td>
-                                                    <a href="{{ route('shipping_address.show', Crypt::encryptString($address->id)) }}" 
+                                                    <a href="{{ route('shipping_address.show', Crypt::encryptString($address->id)) }}"
                                                        class="btn btn-outline btn-success btn-sm btn-rounded p-1">
                                                        <i class="la la-eye p-0 text-white"></i>
                                                     </a>
 
-                                                    <a href="{{ route('shipping_address.edit', Crypt::encryptString($address->id)) }}" 
+                                                    <a href="{{ route('shipping_address.edit', Crypt::encryptString($address->id)) }}"
                                                        class="btn btn-outline btn-info btn-sm btn-rounded p-1">
                                                         <i class="la la-edit p-0 text-white"></i>
                                                     </a>

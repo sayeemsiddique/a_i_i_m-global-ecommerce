@@ -32,6 +32,8 @@ use App\Http\Controllers\{
     ShippingAddressController,
     ReviewController,
     ProductDamageController,
+    StockReportController,
+    SalesReportController,
 };
 
 use App\Http\Middleware\SetLocale;
