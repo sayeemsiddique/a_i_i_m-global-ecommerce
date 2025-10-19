@@ -250,6 +250,8 @@
                                     @endforeach
                                 </div>
 
+                                <p>Delivery Time: Inside Dhaka - 5 days & Outside Dhaka - 10 days</p>
+
                             </div>
 
                             <!-- End Billing Form -->

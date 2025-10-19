@@ -1273,6 +1273,48 @@ class FrontendController extends Controller
         return response()->json(['message' =>  __('OTP sent successfully, use OTP within 15 minutes.'), 'phone_number' => $phoneNumber]);
     }
 
+    public function sent_forgot_password_otp_code(Request $request)
+    {
+        $validated = $request->validate([
+            'phone_number' => 'required|regex:/^01[3-9]\d{8}$/',
+        ], [
+            'phone_number.required' => __('The phone number is required'),
+            'phone_number.regex' => __('The phone number must follow the valid pattern'),
+            // 'phone_number.unique' => __('This phone number is already taken'),
+        ]);
+
+
+        $phoneNumber = $request->phone_number;
+
+        // Generate a random 6-digit OTP
+        $otp = rand(100000, 999999);
+        $check_user_in_user_table = User::where('mobile', $request->phone_number)->first();
+
+        if (!$check_user_in_user_table) {
+            return response()->json(['message' => __('Mobile number not exists')], 400);
+        }
+
+        // Save OTP to the database
+        $user = new Otpvarification;
+        $user->mobile = $phoneNumber;
+        $user->otp_code = $otp;
+        $user->verification_expire = Carbon::now()->addMinutes(15);
+        $user->save();
+
+
+
+
+        // Send OTP via SMS using Nexmo
+        if(($request->phone_number) != ''){
+            $data['number'] = $request->phone_number;
+            $data['message'] = 'Your verification code for reset password is: '.$otp;
+
+            $this->sms_send($data);
+        }
+
+        return response()->json(['message' =>  __('OTP sent successfully, use OTP within 15 minutes.'), 'phone_number' => $phoneNumber]);
+    }
+
     public function sms_send($data)
     {
         $url = "http://bulksmsbd.net/api/smsapi";
@@ -1393,6 +1435,38 @@ class FrontendController extends Controller
         }
 
         return response()->json(['message' => __('OTP verified successfully')]);
+
+    }
+
+    public function forgot_password_otp_verify(Request $request)
+    {
+        $request->validate([
+            'phone_number' => 'required|regex:/^01[3-9]\d{8}$/',
+            'recover_otp' => 'required|numeric',
+        ]);
+
+        $phoneNumber = $request->phone_number;
+        $otp = $request->recover_otp;
+
+        // Check if OTP exists and is valid
+        $otpRecord = Otpvarification::where('mobile', $phoneNumber)->whereDate('verification_expire', '<', date('Y-m-d h:i:s'))->where('otp_code', $otp)->first();
+
+        if (!$otpRecord) {
+            return response()->json(['message' => 'Invalid OTP'], 400);
+        }
+
+        if ($request->new_password !== $request->confirm_password) {
+            return response()->json(['message' => 'New Password and Confirm Password not matched'], 400);
+        }
+
+        $user = User::where('mobile', $phoneNumber)->first();
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        // OTP is correct, proceed with registration
+        $otpRecord->delete();
+
+        return response()->json(['message' => __('Password reset successfull')], 200);
 
     }
 

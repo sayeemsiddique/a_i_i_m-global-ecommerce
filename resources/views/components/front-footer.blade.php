@@ -136,9 +136,10 @@
                             @endif
                         </ul>
                     </div>
-                    {{-- <div class="ssl-banner">
-                        <img loading="lazy" src="{{ asset('frontend/ssl.jpg') }}" alt="SSL Banner" style="max-width: 100%;">
-                    </div> --}}
+                    <div class="ssl-banner">
+                        <p class="mb-2">Payment Methods</p>
+                        <img loading="lazy" src="{{ asset('frontend/assets/img/ssl.png') }}" alt="SSL Banner" style="max-width: 100%;">
+                    </div>
                 </div>
             </div>
         </div>
