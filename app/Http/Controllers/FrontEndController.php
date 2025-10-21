@@ -433,6 +433,9 @@ class FrontendController extends Controller
     {
         $id = Crypt::decryptString($id);
         $product = Product::where('id', $id)->with('productGallery')->latest()->first();
+        if (!$product) {
+            return back()->with('danger', "Product not found");
+        }
 
         $reviews = Review::where('product_id', $id)->where('status', 1)->get();
         $review_count = Review::where('product_id', $id)->where('status', 1)->get()->count();
@@ -447,6 +450,29 @@ class FrontendController extends Controller
         if (($product->status ?? 0) == 0) {
             return back()->with('danger', "Product not found");
         }
+
+        if ($product->has_varient == 1) {
+            $pending_orders_quantity_array = array();
+            foreach ($product->productVarient->where('status',1) as $key => $productVarientInfo) {
+                $pending_orders_quantity_array[$productVarientInfo->id] = OrderDetail::where([
+                    'product_id' => $product->id,
+                    'varient_id' => $productVarientInfo->id,
+                ])->whereHas('orderInfo', function($q){
+                    $q->whereIn('status', [0,1])->where('type',2)->whereIn('delivery_status',[0,1]);
+                })->sum('quantity');
+            }
+
+        } else {
+            $pending_orders_quantity = OrderDetail::where([
+                'product_id' => $product->id,
+                'varient_id' => 0,
+            ])->whereHas('orderInfo', function($q){
+                $q->whereIn('status', [0,1])->where('type',2)->where('delivery_status',1);
+            })->sum('quantity');
+
+            $pending_orders_quantity_array[$product->id] = $pending_orders_quantity;
+        }
+
 
         $related_products = Product::inRandomOrder()->where('category_id', $product->category_id)->where('id', '!=', $id)->limit(4)->get();
         if (auth()->check()) {
@@ -473,8 +499,23 @@ class FrontendController extends Controller
             $user_review = '';
             $user_already_purchased = '';
         }
-
-        return view('frontend.product_detail', compact('product', 'related_products', 'reviews', 'review_count', 'review_avg', 'review_count1', 'review_count2', 'review_count3', 'review_count4', 'review_count5','latest_cart_item','user_review','user_already_purchased'));
+        // dd($pending_orders_quantity_array);
+        return view('frontend.product_detail', compact(
+            'product',
+            'related_products',
+            'reviews',
+            'review_count',
+            'review_avg',
+            'review_count1',
+            'review_count2',
+            'review_count3',
+            'review_count4',
+            'review_count5',
+            'latest_cart_item',
+            'user_review',
+            'user_already_purchased',
+            'pending_orders_quantity_array'
+        ));
     }
 
     public function checkout(Request $request)
@@ -674,6 +715,7 @@ class FrontendController extends Controller
     {
         $request->validate([
             'password' => 'required|confirmed|min:8',
+            'current_password' => 'required',
         ]);
 
         $old_password = User::where('id', $user->id)->first();
@@ -750,39 +792,46 @@ class FrontendController extends Controller
             'varient_id' => $request->varient,
         ])->latest()->first();
 
+        $pending_order_quantity = OrderDetail::where([
+            'product_id' => $request->product_id,
+            'varient_id' => $request->varient,
+        ])->whereHas('orderInfo', function($q){
+            $q->whereIn('status', [0,1])->where('type',2)->whereIn('delivery_status',[0,1]);
+        })->sum('quantity');
+
         $quantity = $check_stock->quantity ?? 0;
 
 
         if ($check_cart and ($request->buy_now ?? 0) == 0) {
-            if ($quantity < ($check_cart->quantity + $request->quantity)) {
-                if($request->ajax()){
+            if (($quantity - $pending_order_quantity) < ($check_cart->quantity + $request->quantity)) {
+                // if($request->ajax()){
                     return response()->json([
                         'status' => 'error',
                         'message' => 'Quantity is out of stock'
                     ], 404);
-                }
+                // }
             }
 
 
             $check_cart->quantity = $check_cart->quantity + $request->quantity;
             $check_cart->save();
 
-            if($request->ajax()){
+            // if($request->ajax()){
                 return response()->json([
                     'status' => 'success',
                     'message' => 'Update your cart successfully'
                 ], 200);
-            }
+            // }
 
 
         } else {
-            if ($quantity < $request->quantity) {
-                if($request->ajax()){
+            if (($quantity - $pending_order_quantity) < $request->quantity) {
+                // if($request->ajax()){
                     return response()->json([
                         'status' => 'error',
                         'message' => 'Quantity is out of stock'
                     ], 404);
-                }
+                // }
             }
 
             $cart_items = new Cart;
@@ -841,9 +890,15 @@ class FrontendController extends Controller
 
         $quantity = $check_stock->quantity ?? 0;
 
+        $pending_order_quantity = OrderDetail::where([
+            'product_id' => $request->product_id,
+            'varient_id' => $request->varient,
+        ])->whereHas('orderInfo', function($q){
+            $q->whereIn('status', [0,1])->where('type',2)->whereIn('delivery_status',[0,1]);
+        })->sum('quantity');
 
 
-        if ($quantity < $request->quantity) {
+        if (($quantity - $pending_order_quantity) < $request->quantity) {
             if($request->ajax()){
                 return response()->json([
                     'status' => 'error',
@@ -1110,7 +1165,7 @@ class FrontendController extends Controller
     public function accountPassword(Request $request)
     {
         $user = Auth::user();
-        return view('frontend.userDashboard.accountPassword', compact('user', 'request'));
+        return view('customer.accountPassword', compact('user', 'request'));
     }
 
     public function logout(Request $request)

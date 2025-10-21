@@ -90,15 +90,14 @@
                                             <input type="texy" class="form-control" name="email" placeholder="Enter Email Address" value="{{$user->email}}" required/>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div class="card-footer">
                                     <div class="row">
-                                        <div class="col-lg-10 text-right">
-                                            <button type="submit" class="btn btn-primary font-weight-bold" name="submitButton">Update</button>
+                                        <div class="col-lg-10 offset-lg-2">
+                                            <button type="submit" class="btn btn-dark btn-rounded btn-sm mb-4" name="submitButton">Update</button>
                                         </div>
                                     </div>
                                 </div>
+
                             </form>
                         </div>
                     </div>

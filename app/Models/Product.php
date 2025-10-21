@@ -90,5 +90,10 @@ class Product extends Model
     //     return $this->belongsTo(Stock::class, 'id', 'product_id');
     // }
 
+    public function orderDetailsInfo()
+    {
+        return $this->hasMany(OrderDetail::class, 'product_id', 'id');
+    }
+
 
 }

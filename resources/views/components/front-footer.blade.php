@@ -30,7 +30,7 @@
                                 @if (Auth::check())
                                     <li><a class="list-group-item list-group-item-action" href="{{ route('account') }}">My Account</a></li>
                                 @else
-                                    <li class="list-inline-item mr-0 u-header-topbar__nav-item u-header-topbar__nav-item-border">
+                                    {{-- <li class="list-inline-item mr-0 u-header-topbar__nav-item u-header-topbar__nav-item-border">
                                         <!-- Account Sidebar Toggle Button -->
                                         <a id="sidebarNavToggler" href="javascript:;" role="button" class="u-header-topbar__nav-link login_js" style="color: black !important"
                                             aria-controls="sidebarContent"
@@ -45,8 +45,7 @@
                                             data-unfold-duration="500">
                                             Sign in
                                         </a>
-                                        <!-- End Account Sidebar Toggle Button -->
-                                    </li>
+                                    </li> --}}
                                 @endif
 
                                 @foreach ($pages as $page)
@@ -73,6 +72,7 @@
                                 @endforeach
                             </ul>
                             <!-- End List Group -->
+                            <p class="mt-2">Trade Licence: TRAD/DSCC/001687/2022</p>
                         </div>
 
                         {{-- <div class="col-12 col-md mb-4 mb-md-0">
@@ -138,7 +138,7 @@
                     </div>
                     <div class="ssl-banner">
                         <p class="mb-2">Payment Methods</p>
-                        <img loading="lazy" src="{{ asset('frontend/assets/img/ssl.png') }}" alt="SSL Banner" style="max-width: 100%;">
+                        <img loading="lazy" src="{{ asset('frontend/assets/img/Payment Banner_May25_V2-03.png') }}" alt="SSL Banner" style="max-width: 100%;">
                     </div>
                 </div>
             </div>

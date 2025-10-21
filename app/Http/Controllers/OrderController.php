@@ -181,8 +181,21 @@ class OrderController extends Controller
         // "delivery_date" => null
 
         DB::transaction(function () use ($request) {
-
             $order = Order::where('id', $request->orderId)->first();
+
+            // check stock has enough quantity or not
+
+            foreach($order->orderDetails as $order_detail){
+                $check_stock = Stock::where('product_id', $order_detail->product_id)
+                                ->where('varient_id', $order_detail->varient_id)
+                                ->first();
+
+                if($order_detail->quantity > $check_stock->quantity){
+                    return redirect()->back()->with('error', ($check_stock->product->name ?? "").' Stock quantity is less then order quantity, Please update stock first.');
+                }
+            }
+
+
             $order->status = $request->stage ?? 0;
             $order->delivery_status = $request->delivery_status ?? 0;
             $order->payment_status = $request->payment_status ?? 0; // but its status manage from payments table
@@ -196,16 +209,7 @@ class OrderController extends Controller
             $payment->status = $request->payment_status ?? 0; // 1 => 'Pending',2 => 'Recieved',3 => 'Rejected',4 => 'Returned',
             $payment->save();
 
-            // check stock has enough quantity or not
-            foreach($order->orderDetails as $order_detail){
-                $check_stock = Stock::where('product_id', $order_detail->product_id)
-                                ->where('varient_id', $order_detail->varient_id)
-                                ->first();
 
-                if($order_detail->quantity > $check_stock->quantity){
-                    return redirect()->back()->with('error', ($check_stock->product->name ?? "").' Stock quantity is less then order quantity, Please update stock first.');
-                }
-            }
 
             // delivery status 1 => 'Pending', 2 => 'On Delivery', 3 => 'Delivered',  4 => 'Returned',
             if ($request->delivery_status == 1) {

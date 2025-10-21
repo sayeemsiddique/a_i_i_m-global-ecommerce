@@ -267,14 +267,16 @@
                                 <select style="max-width:280px;" class="form-control ml-3 varient_id"
                                     data-style="btn-sm bg-white font-weight-normal py-2 border" required autocomplete="off">
                                     <option value="">Select</option>
-                                    @foreach ($product->productVarient as $productVarient)
-
-                                        <option @if (($productVarient->productStock->quantity ?? 0) <= 0) style='color: #963e3eff' @endif data-price="{{$productVarient->discount_price}}" data-quantity="{{$productVarient->productStock->quantity ?? 0}}" value="{{$productVarient->id}}">
+                                    @foreach ($product->productVarient->where('status',1) as $productVarient)
+                                        @php
+                                            $pending_orders_quantity = $pending_orders_quantity_array[$productVarient->id] ?? 0;
+                                        @endphp
+                                        <option @if ((($productVarient->productStock->quantity ?? 0) - $pending_orders_quantity) <= 0) style='color: #963e3eff' @endif data-price="{{$productVarient->discount_price}}" data-quantity="{{($productVarient->productStock->quantity ?? 0) - $pending_orders_quantity}}" value="{{$productVarient->id}}">
                                             @foreach ($productVarient->productVarientData as $VarientData)
                                                 {{-- {{$VarientData}} --}}
                                                 {{$VarientData->varientTypeInfo->name ?? ''}}: {{$VarientData->data_value}} @if(!($loop->last)) , @endif
                                             @endforeach
-                                             @if (($productVarient->productStock->quantity ?? 0) <= 0)- Out of stock @endif
+                                             @if ((($productVarient->productStock->quantity ?? 0) - $pending_orders_quantity) <= 0)- Out of stock @endif
                                         </option>
                                     @endforeach
 
@@ -283,7 +285,10 @@
                             </div>
                         </div>
                         @else
-                            <input type="hidden" class="productSingleStock" value="{{$product->productSingleStock->quantity ?? 0}}">
+                            @php
+                                $pending_orders_quantity = $pending_orders_quantity_array[$product->id] ?? 0;
+                            @endphp
+                            <input type="hidden" class="productSingleStock" value="{{($product->productSingleStock->quantity ?? 0) - $pending_orders_quantity}}">
                         @endif
 
                         <div class="d-md-flex align-items-end mb-3">

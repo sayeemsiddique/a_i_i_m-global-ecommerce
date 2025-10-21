@@ -13,7 +13,7 @@
                 <div class="col-lg-12">
                     <div class="card card-custom example example-compact">
                         <div class="card-header">
-                            <h3 class="card-title">Product List</h3>
+                            <h3 class="card-title">Order List</h3>
                             <div class="d-flex align-items-center">
 
                             </div>

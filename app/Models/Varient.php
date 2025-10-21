@@ -25,4 +25,9 @@ class Varient extends Model
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
+
+    public function orderVarientInfo()
+    {
+        return $this->hasMany(OrderDetail::class, 'varient_id', 'id');
+    }
 }

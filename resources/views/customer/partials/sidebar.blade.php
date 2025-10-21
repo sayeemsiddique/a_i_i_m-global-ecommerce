@@ -40,14 +40,14 @@
                         <span class="menu-text">Update Profile</span>
                     </a>
                 </li>
-                {{-- <li class="menu-item {{ request()->routeIs('accountPassword') ? 'menu-item-active' : '' }}" aria-haspopup="true">
+                <li class="menu-item {{ request()->routeIs('accountPassword') ? 'menu-item-active' : '' }}" aria-haspopup="true">
                     <a href="{{ route('accountPassword') }}" class="menu-link">
                         <span class="svg-icon menu-icon">
-                            <i  class="fas fa-key"></i>
+                            <i style="text-shadow: 3px 3px #eaeaea;" class="fas fa-key"></i>
                         </span>
-                        <span class="menu-text">Password</span>
+                        <span class="menu-text">Update Password</span>
                     </a>
-                </li> --}}
+                </li>
                 <li class="menu-item" aria-haspopup="true">
                     <a href="{{ route('user_logout') }}" class="menu-link" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                         <span class="svg-icon menu-icon">
