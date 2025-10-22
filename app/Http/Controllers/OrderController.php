@@ -185,15 +185,29 @@ class OrderController extends Controller
 
             // check stock has enough quantity or not
 
-            foreach($order->orderDetails as $order_detail){
-                $check_stock = Stock::where('product_id', $order_detail->product_id)
-                                ->where('varient_id', $order_detail->varient_id)
-                                ->first();
+            if ($request->delivery_status == 2 || $request->delivery_status == 3) {
+                foreach($order->orderDetails as $order_detail){
 
-                if($order_detail->quantity > $check_stock->quantity){
-                    return redirect()->back()->with('error', ($check_stock->product->name ?? "").' Stock quantity is less then order quantity, Please update stock first.');
+                    $check_inventory = Inventory::where([
+                        'order_id' => $request->orderId,
+                        'product_id' => $order_detail->product_id,
+                        'varient_id' => $order_detail->varient_id,
+                        'type' => 2
+                    ])->first();
+
+                    if (!$check_inventory) {
+                        $check_stock = Stock::where('product_id', $order_detail->product_id)
+                                    ->where('varient_id', $order_detail->varient_id)
+                                    ->first();
+
+                        if($order_detail->quantity > $check_stock->quantity){
+                            return redirect()->back()->with('error', ($check_stock->product->name ?? "").' Stock quantity is less then order quantity, Please update stock first.');
+                        }
+                    }
                 }
             }
+
+
 
 
             $order->status = $request->stage ?? 0;
@@ -233,6 +247,7 @@ class OrderController extends Controller
                 }
 
             } elseif ($request->delivery_status == 2 || $request->delivery_status == 3) {
+
                 foreach($order->orderDetails as $order_detail){
                     $inventory = Inventory::where([
                         'order_id' => $request->orderId,
@@ -277,21 +292,21 @@ class OrderController extends Controller
                 }
             } else if ($request->delivery_status == 4) {
 
-                foreach($order->orderDetails as $order_detail){
-                    $inventory = new Inventory;
-                    $inventory->order_id = $request->orderId;
-                    $inventory->type = 6; // return
-                    $inventory->product_id = $order_detail->product_id;
-                    $inventory->varient_id = $order_detail->varient_id;
-                    $inventory->quantity = $order_detail->quantity;
-                    $inventory->created_by = Auth::user()->id;
-                    $inventory->save();
+                // foreach($order->orderDetails as $order_detail){
+                //     $inventory = new Inventory;
+                //     $inventory->order_id = $request->orderId;
+                //     $inventory->type = 6; // return
+                //     $inventory->product_id = $order_detail->product_id;
+                //     $inventory->varient_id = $order_detail->varient_id;
+                //     $inventory->quantity = $order_detail->quantity;
+                //     $inventory->created_by = Auth::user()->id;
+                //     $inventory->save();
 
-                    // Manage stock
-                    $stock = Stock::where('product_id', $order_detail->product_id)->where('varient_id', $order_detail->varient_id)->first();
-                    $stock->quantity += $order_detail->quantity;
-                    $stock->save();
-                }
+                //     // Manage stock
+                //     $stock = Stock::where('product_id', $order_detail->product_id)->where('varient_id', $order_detail->varient_id)->first();
+                //     $stock->quantity += $order_detail->quantity;
+                //     $stock->save();
+                // }
 
             }
 

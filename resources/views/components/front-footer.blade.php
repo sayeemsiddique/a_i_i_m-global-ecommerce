@@ -72,7 +72,8 @@
                                 @endforeach
                             </ul>
                             <!-- End List Group -->
-                            <p class="mt-2">Trade Licence: TRAD/DSCC/001687/2022</p>
+                            <p class="mt-2 mb-2">Trade Licence: TRAD/DSCC/001687/2022</p>
+                            <p class="mt-2 mb-2">Delivery Time: (Inside Dhaka - 5 days & Outside Dhaka - 10 days).</p>
                         </div>
 
                         {{-- <div class="col-12 col-md mb-4 mb-md-0">

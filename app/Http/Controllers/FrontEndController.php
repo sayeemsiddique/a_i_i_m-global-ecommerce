@@ -1084,9 +1084,13 @@ class FrontendController extends Controller
                 if ($cart->variation_id == 0){
                     $order_detail['f_price'] = $cart->productInfo->price ?? 0;
                     $order_detail['price'] = $cart->productInfo->discount_price ?? 0;
+                    $order_detail['discount'] = $cart->productInfo->discount ?? 0;
+                    $order_detail['discount_type'] = $cart->productInfo->discount_type ?? 0;
                 } else {
                     $order_detail['f_price'] = $cart->varientInfo->price ?? 0;
                     $order_detail['price'] = $cart->varientInfo->discount_price ?? 0;
+                    $order_detail['discount'] = $cart->varientInfo->discount ?? 0;
+                    $order_detail['discount_type'] = $cart->varientInfo->discount_type ?? 0;
                 }
 
                 OrderDetail::create($order_detail);

@@ -33,9 +33,9 @@ function custom_name($text, $limit)
 
 function custom_slug($text)
 {
-    
+
     $string = Str::slug($text);
-   
+
     $string = substr($string, 0,100);
     return $string;
 }
@@ -65,7 +65,7 @@ function deliveryStatus()
         1 => 'Pending',
         2 => 'On Delivery',
         3 => 'Delivered',
-        4 => 'Returned',
+        // 4 => 'Returned',
     );
 
     return $delivery_status;

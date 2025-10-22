@@ -96,7 +96,7 @@
                                     </li>
                                 @endcan
 
-                                {{-- @can('order_return')
+                                @can('order_return')
                                     <li class="menu-item {{ session('lsbsm') == 'order_return' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
                                         <a href="{{route('admin.order.order_return')}}" class="menu-link">
                                             <i class="menu-bullet menu-bullet-dot">
@@ -105,9 +105,9 @@
                                             <span class="menu-text">Order Return</span>
                                         </a>
                                     </li>
-                                @endcan --}}
+                                @endcan
 
-                                {{-- @can('order_return_list')
+                                @can('order_return_list')
                                     <li class="menu-item {{ session('lsbsm') == 'order_return_list' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
                                         <a href="{{route('admin.order.order_return_list')}}" class="menu-link">
                                             <i class="menu-bullet menu-bullet-dot">
@@ -116,7 +116,7 @@
                                             <span class="menu-text">Order Return List</span>
                                         </a>
                                     </li>
-                                @endcan --}}
+                                @endcan
 
                                 @can('manage_review')
                                     <li class="menu-item {{ session('lsbsm') == 'manage_review' ? ' menu-item-active ' : '' }}" aria-haspopup="true">

@@ -34,6 +34,7 @@ use App\Http\Controllers\{
     ProductDamageController,
     StockReportController,
     SalesReportController,
+    OrderReturnController,
 };
 
 use App\Http\Middleware\SetLocale;
@@ -141,6 +142,11 @@ Route::middleware([SetLocale::class])->group(function () {
                 Route::get('/stock-in/{id}', [OrderController::class, 'stock_in_show'])->name('stock_in_show');
                 Route::get('/approved/{id}', [OrderController::class, 'approved'])->name('approved');
                 Route::get('/completed-list', [OrderController::class, 'completed_list'])->name('completed_list');
+
+                Route::get('/order-return', [OrderReturnController::class, 'order_return'])->name('order_return');
+                Route::post('/order-return-confirm', [OrderReturnController::class, 'order_return_confirm'])->name('order_return_confirm');
+                Route::get('/order-return-list', [OrderReturnController::class, 'order_return_list'])->name('order_return_list');
+                Route::get('/order-return/show/{id}', [OrderReturnController::class, 'order_return_show'])->name('order_return_show');
 
             });
 
