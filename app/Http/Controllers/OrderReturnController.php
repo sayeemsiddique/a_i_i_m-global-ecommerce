@@ -105,12 +105,7 @@ class OrderReturnController extends Controller
                         }
                     }
 
-
                 }
-
-
-
-
 
                 $order_return_data_detail = [];
                 $order_total_price = 0;

@@ -168,15 +168,50 @@
                                     <!-- End Product Content -->
                                     <div class="border-top border-width-3 border-color-1 pt-3 mb-3">
                                         <!-- Basics Accordion -->
+                                        <small>
+                                            Delivery Option <span class="text-danger">*</span>
+                                        </small>
                                         <div id="basicsAccordion1">
                                             <!-- Manual payment Card -->
-                                            <div class="border-bottom border-color-1 border-dotted-bottom">
+                                            {{-- <div class="border-bottom border-color-1 border-dotted-bottom">
                                                 <div class="p-3" id="basicsHeadingOne">
                                                     <div class="custom-control custom-radio">
-                                                        <input type="checkbox" class="custom-control-input" id="stylishRadio1" name="delivery_option" value="1" autocomplete="off" checked>
+                                                        <input type="checkbox" class="custom-control-input" id="stylishRadio1" name="delivery_option" value="1" autocomplete="off">
 
                                                         <label class="custom-control-label form-label" for="stylishRadio1" data-toggle="collapse" data-target="#basicsCollapseOnee" aria-expanded="true" aria-controls="basicsCollapseOnee">
                                                             Cash On Delivery
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="border-bottom border-color-1 border-dotted-bottom">
+                                                <div class="p-3" id="basicsHeadingTwo">
+                                                    <div class="custom-control custom-radio">
+                                                        <input type="checkbox" class="custom-control-input" id="stylishRadioSSL" name="delivery_option" value="2" autocomplete="off">
+
+                                                        <label class="custom-control-label form-label" for="stylishRadioSSL" data-toggle="collapse" data-target="#basicsCollapseSLL" aria-expanded="true" aria-controls="basicsCollapseSLL">
+                                                            Pay With SSLCOMMEZ
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div> --}}
+                                            <div class="border-bottom border-color-1 border-dotted-bottom">
+                                                <div class="p-3" id="basicsHeadingOne">
+                                                    <div class="custom-control custom-radio">
+                                                        <input type="radio" class="custom-control-input" id="stylishRadio1" name="delivery_option" value="1" autocomplete="off">
+                                                        <label class="custom-control-label form-label" for="stylishRadio1" data-toggle="collapse" data-target="#basicsCollapseOnee" aria-expanded="true" aria-controls="basicsCollapseOnee">
+                                                            Cash On Delivery
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="border-bottom border-color-1 border-dotted-bottom">
+                                                <div class="p-3" id="basicsHeadingTwo">
+                                                    <div class="custom-control custom-radio">
+                                                        <input type="radio" class="custom-control-input" id="stylishRadioSSL" name="delivery_option" value="2" autocomplete="off">
+                                                        <label class="custom-control-label form-label" for="stylishRadioSSL" data-toggle="collapse" data-target="#basicsCollapseSLL" aria-expanded="true" aria-controls="basicsCollapseSLL">
+                                                            Pay With SSLCOMMERZ
                                                         </label>
                                                     </div>
                                                 </div>
@@ -297,7 +332,7 @@
 
                 let delivery_option = $('input[name="delivery_option"]:checked').length;
                 if(delivery_option == 0){
-                    alertify.error('Cash On Delivery option is required');
+                    alertify.error('Delivery option is required');
                     return;
                 }
                 // let name = $("#name").val().trim();

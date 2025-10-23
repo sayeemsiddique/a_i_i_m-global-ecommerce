@@ -41,6 +41,7 @@ use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Validator;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\SslCommerzPaymentController;
 
 class FrontendController extends Controller
 {
@@ -1015,119 +1016,129 @@ class FrontendController extends Controller
 
     public function checkout_complete(Request $request)
     {
-        DB::transaction(function () use ($request) {
-            $data = $request->all();
-            // dd($data);
-            if (count($request->cart_id) == 0) {
-                return back()->with('error', "Your cart is empty");
-            }
+        // dd($request->all());
 
-            $productIds = [];
-            foreach ($request->cart_id as $key => $cartId) {
-                $productIds[$key] = Crypt::decryptString($cartId);
-            }
-            // shipping_area  = 1 = inside dhaka
-            // shipping_area  = 2 = outside dhaka
-            $carts = Cart::where('user_id', auth()->user()->id)->whereIn('id',$productIds)->with('productInfo','varientInfo')->latest()->get();
+        if ($request->delivery_option == 2) {
 
-            $shipping_address = ShippingAddress::where('id', $request->shipping_address)->where('user_id', auth()->user()->id)->latest()->first();
-            if (!$shipping_address) {
-                return back()->with('error', "Shipping address not found");
-            }
+            $sslCommerz = new SslCommerzPaymentController();
+            return $sslCommerz->index($request);
 
-            if (count($carts) == 0) {
-                return back()->with('error', "Your cart is empty");
-            }
+        } else if ($request->delivery_option == 1) {
 
-            $product_total_price = 0; // total sale price
-            $product_before_discount = 0;
-            foreach ($carts as $key => $cart) {
-                if ($cart->variation_id == 0) {
-                    $product_total_price +=  ($cart->productInfo->discount_price ?? 0)  * $cart->quantity;
-                    $product_before_discount +=  ($cart->productInfo->price ?? 0)  * $cart->quantity;
-                } else {
-                    $product_total_price +=  ($cart->varientInfo->discount_price ?? 0)  * $cart->quantity;
-                    $product_before_discount +=  ($cart->varientInfo->price ?? 0)  * $cart->quantity;
+            DB::transaction(function () use ($request) {
+                $data = $request->all();
+                // dd($data);
+
+
+                $productIds = [];
+                foreach ($request->cart_id as $key => $cartId) {
+                    $productIds[$key] = Crypt::decryptString($cartId);
                 }
-            }
+                // shipping_area  = 1 = inside dhaka
+                // shipping_area  = 2 = outside dhaka
+                $carts = Cart::where('user_id', auth()->user()->id)->whereIn('id',$productIds)->with('productInfo','varientInfo')->latest()->get();
 
-
-            $order_data['tracking_code'] = date("yhis");
-            $order_data['user_id'] = auth()->user()->id;
-            $order_data['status'] = 0;
-            $order_data['payment_status'] = 0; // 1 approved
-            $order_data['total_price'] = $product_total_price; // product * quantity
-            $order_data['grand_total_price'] = $product_total_price + ($shipping_address->divisionInfo->shipping_cost ?? 0); // (product * quantity) + shipping cost $address->divisionInfo->shipping_cost ?? 0
-            $order_data['discount_amount'] = 0;
-            $order_data['coupon_discount'] = 0;
-            $order_data['shipping_cost'] = $shipping_address->divisionInfo->shipping_cost ?? 0;
-            $order_data['type'] = 2;
-            $order_data['vat'] = $request->vat ?? 0;
-            $order_data['tax'] = $request->tax ?? 0;
-            $order_data['shipping_address'] = $request->shipping_address ?? "";
-            $order_data['ship_different_address'] = 0;
-            $order_data['delivery_status'] = 0;
-            $order_data['shipping_area'] = $request->shipping_area ?? 0;
-            $order_data['personal_vehicle'] = $request->personal_vehicle ?? 0;
-            $order_data['delivery_option'] = $request->delivery_option ?? 0;
-
-
-
-            $order = Order::create($order_data);
-
-            foreach ($carts as $key => $cart) {
-                $order_detail['order_id'] = $order->id;
-                $order_detail['product_id'] = $cart->product_id;
-                $order_detail['quantity'] = $cart->quantity;
-                $order_detail['varient_id'] = $cart->variation_id;
-
-                if ($cart->variation_id == 0){
-                    $order_detail['f_price'] = $cart->productInfo->price ?? 0;
-                    $order_detail['price'] = $cart->productInfo->discount_price ?? 0;
-                    $order_detail['discount'] = $cart->productInfo->discount ?? 0;
-                    $order_detail['discount_type'] = $cart->productInfo->discount_type ?? 0;
-                } else {
-                    $order_detail['f_price'] = $cart->varientInfo->price ?? 0;
-                    $order_detail['price'] = $cart->varientInfo->discount_price ?? 0;
-                    $order_detail['discount'] = $cart->varientInfo->discount ?? 0;
-                    $order_detail['discount_type'] = $cart->varientInfo->discount_type ?? 0;
+                $shipping_address = ShippingAddress::where('id', $request->shipping_address)->where('user_id', auth()->user()->id)->latest()->first();
+                if (!$shipping_address) {
+                    return back()->with('error', "Shipping address not found");
                 }
 
-                OrderDetail::create($order_detail);
-            }
+                if (count($carts) == 0) {
+                    return back()->with('error', "Your cart is empty");
+                }
 
-            $payment_data['user_id'] = auth()->user()->id;
-            $payment_data['order_id'] = $order->id;
-            $payment_data['amount'] = $order->grand_total_price;
-            $payment_data['payment_method'] = $request->delivery_option ?? 0; // 1 = cash on delivery, 2 = bkash, 3 = online payment
-            $payment_data['bank_id'] = $request->bank_id ?? "";
+                $product_total_price = 0; // total sale price
+                $product_before_discount = 0;
+                foreach ($carts as $key => $cart) {
+                    if ($cart->variation_id == 0) {
+                        $product_total_price +=  ($cart->productInfo->discount_price ?? 0)  * $cart->quantity;
+                        $product_before_discount +=  ($cart->productInfo->price ?? 0)  * $cart->quantity;
+                    } else {
+                        $product_total_price +=  ($cart->varientInfo->discount_price ?? 0)  * $cart->quantity;
+                        $product_before_discount +=  ($cart->varientInfo->price ?? 0)  * $cart->quantity;
+                    }
+                }
 
-            if (isset($request->document) and $request->file('document')) {
-                $path = $request->file('document')->store('/public/document');
-                $path = Str::replace('public/document', '', $path);
-                $payment_data['document'] = Str::replace('/', '', $path);
-            }
-
-            if (isset($request->mb_document) and $request->file('mb_document')) {
-                $path = $request->file('mb_document')->store('/public/mb_document');
-                $path = Str::replace('public/mb_document', '', $path);
-                $payment_data['mb_document'] = Str::replace('/', '', $path);
-            }
-
-            $payment_data['status'] = 0;
-            $payment_data['type'] = 1;
-            $payment_data['mb_sender_no'] = $request->mb_sender_no ?? "";
-            $payment_data['mb_receiver_no'] = $request->mb_receiver_no ?? "";
-            $payment_data['created_by'] = auth()->user()->id;
-
-            Payment::create($payment_data);
-
-            // Cart::where('user_id', auth()->user()->id)->delete();
-            Cart::where('user_id', auth()->user()->id)->whereIn('id',$productIds)->delete();
-        });
+                $tracking_code = date("yhis");
+                $order_data['tracking_code'] = $tracking_code;
+                $order_data['user_id'] = auth()->user()->id;
+                $order_data['status'] = 0;
+                $order_data['payment_status'] = 0;
+                $order_data['total_price'] = $product_total_price;
+                $order_data['grand_total_price'] = $product_total_price + ($shipping_address->divisionInfo->shipping_cost ?? 0);
+                $order_data['discount_amount'] = 0;
+                $order_data['coupon_discount'] = 0;
+                $order_data['shipping_cost'] = $shipping_address->divisionInfo->shipping_cost ?? 0;
+                $order_data['type'] = 2;
+                $order_data['vat'] = $request->vat ?? 0;
+                $order_data['tax'] = $request->tax ?? 0;
+                $order_data['shipping_address'] = $request->shipping_address ?? "";
+                $order_data['ship_different_address'] = 0;
+                $order_data['delivery_status'] = 0;
+                $order_data['shipping_area'] = $request->shipping_area ?? 0;
+                $order_data['personal_vehicle'] = $request->personal_vehicle ?? 0;
+                $order_data['delivery_option'] = $request->delivery_option ?? 0;
+                $order_data['transaction_id'] = $tracking_code;
 
 
-        return redirect()->route('account_orders')->with('success','Your order is under review');
+
+                $order = Order::create($order_data);
+
+                foreach ($carts as $key => $cart) {
+                    $order_detail['order_id'] = $order->id;
+                    $order_detail['product_id'] = $cart->product_id;
+                    $order_detail['quantity'] = $cart->quantity;
+                    $order_detail['varient_id'] = $cart->variation_id;
+
+                    if ($cart->variation_id == 0){
+                        $order_detail['f_price'] = $cart->productInfo->price ?? 0;
+                        $order_detail['price'] = $cart->productInfo->discount_price ?? 0;
+                        $order_detail['discount'] = $cart->productInfo->discount ?? 0;
+                        $order_detail['discount_type'] = $cart->productInfo->discount_type ?? 0;
+                    } else {
+                        $order_detail['f_price'] = $cart->varientInfo->price ?? 0;
+                        $order_detail['price'] = $cart->varientInfo->discount_price ?? 0;
+                        $order_detail['discount'] = $cart->varientInfo->discount ?? 0;
+                        $order_detail['discount_type'] = $cart->varientInfo->discount_type ?? 0;
+                    }
+
+                    OrderDetail::create($order_detail);
+                }
+
+                $payment_data['user_id'] = auth()->user()->id;
+                $payment_data['order_id'] = $order->id;
+                $payment_data['amount'] = $order->grand_total_price;
+                $payment_data['payment_method'] = $request->delivery_option ?? 0; // 1 = cash on delivery, 2 = bkash, 3 = online payment
+                $payment_data['bank_id'] = $request->bank_id ?? "";
+
+                if (isset($request->document) and $request->file('document')) {
+                    $path = $request->file('document')->store('/public/document');
+                    $path = Str::replace('public/document', '', $path);
+                    $payment_data['document'] = Str::replace('/', '', $path);
+                }
+
+                if (isset($request->mb_document) and $request->file('mb_document')) {
+                    $path = $request->file('mb_document')->store('/public/mb_document');
+                    $path = Str::replace('public/mb_document', '', $path);
+                    $payment_data['mb_document'] = Str::replace('/', '', $path);
+                }
+
+                $payment_data['status'] = 0;
+                $payment_data['type'] = 1;
+                $payment_data['mb_sender_no'] = $request->mb_sender_no ?? "";
+                $payment_data['mb_receiver_no'] = $request->mb_receiver_no ?? "";
+                $payment_data['created_by'] = auth()->user()->id;
+
+                Payment::create($payment_data);
+
+                // Cart::where('user_id', auth()->user()->id)->delete();
+                Cart::where('user_id', auth()->user()->id)->whereIn('id',$productIds)->delete();
+
+
+
+                return redirect()->route('account_orders')->with('success','Your order is under review');
+            });
+        }
 
     }
 
@@ -1549,4 +1560,5 @@ class FrontendController extends Controller
         $page = Page::where('slug',$slug)->latest()->first();
         return view('frontend.page_info', compact('page'));
     }
+
 }

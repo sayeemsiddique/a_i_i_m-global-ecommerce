@@ -3,3 +3,4 @@ discount
 discount_type
 ALTER TABLE `order_return_details` ADD `discount` DECIMAL(11,2) NULL AFTER `unit`, ADD `discount_type` INT NULL AFTER `discount`;
 ALTER TABLE `order_return_details` ADD `order_detail_id` INT NULL AFTER `order_id`;
+ALTER TABLE `orders` ADD `currency` TEXT NULL AFTER `remark`;

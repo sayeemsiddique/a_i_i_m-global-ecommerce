@@ -35,6 +35,7 @@ use App\Http\Controllers\{
     StockReportController,
     SalesReportController,
     OrderReturnController,
+    SslCommerzPaymentController,
 };
 
 use App\Http\Middleware\SetLocale;
@@ -481,6 +482,11 @@ Route::middleware([SetLocale::class])->group(function () {
     Route::get('/check-auth', [FrontEndController::class, 'check_auth'])->name('check_auth');
     Route::post('/forgot-sent-otp-code', [FrontendController::class, 'sent_forgot_password_otp_code'])->name('sent_forgot_password_otp_code');
     Route::post('/forgot-verify-otp-code', [FrontendController::class, 'forgot_password_otp_verify'])->name('forgot_password_otp_verify');
+
+    Route::post('/success', [SslCommerzPaymentController::class, 'success']);
+    Route::post('/fail', [SslCommerzPaymentController::class, 'fail']);
+    Route::post('/cancel', [SslCommerzPaymentController::class, 'cancel']);
+    Route::post('/ipn', [SslCommerzPaymentController::class, 'ipn']);
 
 
 });

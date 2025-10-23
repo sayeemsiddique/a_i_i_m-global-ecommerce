@@ -54,6 +54,7 @@ function orderStatus()
         0 => 'Pending',
         1 => 'Order Accept',
         2 => 'Order Decline',
+        // 3 => 'SSL integration',
     );
 
     return $delivery_status;
