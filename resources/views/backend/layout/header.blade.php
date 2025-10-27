@@ -40,7 +40,7 @@
 				margin-left: -5px;
 			}
 
-		
+
 			.checkbox.checkbox-light-success > span {
 				background-color: #fdfdfd;
 				border: 1px solid #0b0a0a;
@@ -60,10 +60,14 @@
 			.btn.btn-clean:not(:disabled):not(.disabled).active, .btn.btn-clean:not(:disabled):not(.disabled):active:not(.btn-text), .show .btn.btn-clean.btn-dropdown, .show>.btn.btn-clean.dropdown-toggle {
 				background-color: #6D3CBB;
 			}
-		
+
+            .menu-item.menu-item-submenu.menu-item-open .menu-link.menu-toggle {
+                box-shadow: 0 2px 1px 1px #1415152b;
+            }
+
 		</style>
 
-		<style> 
+		<style>
 			@media only screen and (max-width: 768px) {
 				#kt_content {
 					margin-left: 0px;
@@ -72,7 +76,7 @@
 		</style>
 
 		@stack('css')
-		
+
 		<link rel="shortcut icon" href="{{ asset('storage/setting/' . $global_setting->logo) }}" />
 	</head>
 	<!--end::Head-->
@@ -83,7 +87,7 @@
 		<div class="bbs-loader-wrapper" id="loader-1">
 			<div id="loader"></div>
 		</div>
-		
+
 		<!--begin::Main-->
 		<!--begin::Header Mobile-->
 		<div id="kt_header_mobile" class="header-mobile align-items-center header-mobile-fixed">
@@ -223,9 +227,9 @@
 								@endphp
 
 								@can('notification', $user)
-									
+
 									<div class="dropdown">
-										
+
 										<!--begin::Toggle-->
 										<div class="topbar-item" data-toggle="dropdown" data-offset="10px,0px">
 											<div class="btn btn-icon btn-clean btn-dropdown btn-lg mr-1 pulse pulse-primary">
@@ -254,7 +258,7 @@
 														@endif
 													</h4>
 													<!--end::Title-->
-													
+
 												</div>
 												<!--end::Header-->
 												<!--begin::Content-->
@@ -265,7 +269,7 @@
 														<!--begin::Nav-->
 														<div class="navi navi-hover scroll" data-scroll="true" data-height="330" data-mobile-height="200">
 															@if (count($unread) > 0)
-					
+
 																{{-- Get all New notifications --}}
 																@foreach ($unread as $ur)
 
@@ -275,9 +279,9 @@
 																			<div class="navi-icon mr-2">
 																				<i class="flaticon2-notification text-primary"></i>
 																			</div>
-																			
+
 																			<div class="navi-text mr-2">
-																				
+
 																				<div class="font-weight-bold">
 																					{{ $ur->data }}
 																				</div>
@@ -311,9 +315,9 @@
 										</div>
 										<!--end::Dropdown-->
 									</div>
-									<!--end::Notifications-->	
+									<!--end::Notifications-->
 								@endcan
-								
+
 								<!--end::Notifications-->
 								<!--begin::Quick Actions-->
 								{{-- <div class="dropdown">

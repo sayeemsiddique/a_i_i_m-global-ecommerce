@@ -3,37 +3,7 @@
 @section('content')
 <!--begin::Content-->
 <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
-    <!--begin::Subheader-->
-    <div class="subheader py-2 py-lg-6 subheader-solid" id="kt_subheader">
-        <div class="container-fluid d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
-            <!--begin::Info-->
-            <div class="d-flex align-items-center flex-wrap mr-1">
-                <!--begin::Page Heading-->
-                <div class="d-flex align-items-baseline flex-wrap mr-5">
-                    <!--begin::Page Title-->
-                    <h5 class="text-dark font-weight-bold my-1 mr-5">Divisions</h5>
-                    <!--end::Page Title-->
-                    <!--begin::Breadcrumb-->
-                    <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-2 font-size-sm">
-                        <li class="breadcrumb-item">
-                            <a href="{{route('admin.index')}}" class="text-muted">Dashboard</a>
-                        </li>
-                        @can('all_division')
-                        <li class="breadcrumb-item">
-                            <a href="{{route('admin.divisions.index')}}" class="text-muted">Manage Division</a>
-                        </li>
-                        @endcan
-                        <li class="breadcrumb-item active">
-                            <a class="text-muted">All Divisions</a>
-                        </li>
-                    </ul>
-                    <!--end::Breadcrumb-->
-                </div>
-                <!--end::Page Heading-->
-            </div>
-            <!--end::Info-->
-        </div>
-    </div>
+
     <!--end::Subheader-->
         <!--begin::Entry-->
         <div class="d-flex flex-column-fluid">
@@ -46,17 +16,64 @@
                         <!--begin::Card-->
                         <div class="card card-custom example example-compact">
                             <div class="card-header">
-                                <h3 class="card-title">All Division List</h3>
-                                <div class="d-flex align-items-center">                                    
-                                    <input type="text" data-url="{{ route('admin.searchAjax',['type'=> 'designation']) }}" class="form-control form-control-lg form-control-solid ajax-data-search" name="q" placeholder="Enter Divisions, Description, Level">
+                                <h3 class="card-title">All Region List</h3>
+                                <div class="d-flex align-items-center">
+                                    @can('add_region')
+                                        <button type="button" class="btn btn-primary" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalgrid">
+                                            {{__('Add new region')}}
+                                        </button>
+
+                                        <div id="exampleModalgrid" class="modal fade" role="dialog" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalgridLabel">{{__('Add new region')}}</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form action="{{route('admin.region.store')}}" method="POST" enctype="multipart/form-data">
+                                                            @csrf
+                                                            <div class="row g-3">
+
+                                                                <div class="col-12">
+                                                                    <div>
+                                                                        <label for="Name" class="form-label">{{__('Region Name')}} <span style="color:red;">*</span></label>
+                                                                        <input type="text" class="form-control" name="name" placeholder=" Region Name" required>
+                                                                    </div>
+                                                                </div><!--end col-->
+                                                                <div class="col-12 mt-2">
+                                                                    <div>
+                                                                        <label for="Name" class="form-label">{{__('Shipping Cost')}} <span style="color:red;">*</span></label>
+                                                                        <input type="number" class="form-control" name="shipping_cost" placeholder="Shipping Cost" required>
+                                                                    </div>
+                                                                </div><!--end col-->
+                                                                <div class="col-lg-12 mt-2">
+                                                                    <div class="form-check form-switch form-switch-custom form-switch-success mb-3">
+                                                                        <input class="form-check-input" type="checkbox" role="switch" name="status" id="SwitchCheck11" value="1" checked>
+                                                                        <label class="form-check-label" for="SwitchCheck11">{{__('Status')}} </label>
+                                                                    </div>
+                                                                </div><!--end col-->
+                                                                <div class="col-lg-12">
+                                                                    <div class="hstack gap-2 justify-content-end">
+                                                                        <button type="submit" class="btn btn-primary">{{__('Save')}}</button>
+
+                                                                    </div>
+                                                                </div><!--end col-->
+                                                            </div><!--end row-->
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endcan
                                 </div>
                             </div>
                             <div class="card-body">
-                                
+
                                 <div class="table-responsive ajax-data-container pt-3">
-                                    @include('backend.admin.division.ajax.tableBody')                                    
+                                    @include('backend.admin.division.ajax.tableBody')
                                 </div>
-                                {{$divisions->links()}}
+                                {{$regions->links()}}
                             </div>
                         </div>
                         <!--end::Card-->

@@ -26,12 +26,12 @@ class DesignationController extends Controller
         menuSubmenu('roles', 'all_designation');
         $user = Auth::user();
 
-        // if (Gate::allows('manage_designation', $user)) 
+        // if (Gate::allows('manage_designation', $user))
         // {
-        //     if (Gate::allows('all_designations', $user)) 
+        //     if (Gate::allows('all_designations', $user))
         //     {
-                $designations = Designation::latest()->paginate(25);
-        
+                $designations = Designation::latest()->paginate(20);
+
                 return view('backend.admin.designation.index',[
                     'designations' => $designations
                 ]);
@@ -59,9 +59,9 @@ class DesignationController extends Controller
         menuSubmenu('roles', 'all_designation');
         $user = Auth::user();
 
-        // if (Gate::allows('manage_designation', $user)) 
+        // if (Gate::allows('manage_designation', $user))
         // {
-            if (Gate::allows('add_designation', $user)) 
+            if (Gate::allows('add_designation', $user))
             {
                 return view('backend.admin.designation.create');
             } else {
@@ -83,7 +83,7 @@ class DesignationController extends Controller
     public function store(Request $request)
     {
         $validation = Validator::make($request->all(),
-        [ 
+        [
             'title'     => ['required','min:3','string'],
         ]);
 
@@ -108,7 +108,7 @@ class DesignationController extends Controller
         $designation->name          = $request->title;
         $designation->created_by    = Auth::id();
         $designation->status        = 1;
-       
+
         $designation->save();
 
         return redirect()->route('admin.designation.index')->with('success','Designation Created Successfully.');
@@ -135,11 +135,11 @@ class DesignationController extends Controller
     {
         $user = Auth::user();
 
-        // if (Gate::allows('manage_designation', $user)) 
+        // if (Gate::allows('manage_designation', $user))
         // {
-        //     if (Gate::allows('edit_designation', $user)) 
+        //     if (Gate::allows('edit_designation', $user))
         //     {
-        
+
                 return view('backend.admin.designation.edit',[
                     'designation' => $designation
                 ]);
@@ -165,7 +165,7 @@ class DesignationController extends Controller
     public function update(Request $request,Designation $designation)
     {
         $validation = Validator::make($request->all(),
-        [ 
+        [
             'title'     => ['required','min:3','string'],
         ]);
 
@@ -187,7 +187,7 @@ class DesignationController extends Controller
 
         $designation->name          = $request->title;
         $designation->updated_by    = Auth::id();
-       
+
         $designation->save();
 
         return redirect()->route('admin.designation.index')->with('success','Designation Updated Successfully.');
@@ -203,9 +203,9 @@ class DesignationController extends Controller
     {
         $user = Auth::user();
 
-        // if (Gate::allows('manage_designation', $user)) 
+        // if (Gate::allows('manage_designation', $user))
         // {
-        //     if (Gate::allows('delete_designation', $user)) 
+        //     if (Gate::allows('delete_designation', $user))
         //     {
                 // if($designation->status == 1)
                 // {
@@ -230,17 +230,17 @@ class DesignationController extends Controller
         //     abort(403);
         // }
     }
-    
+
     public function delete($id)
     {
         $user = Auth::user();
 
         Designation::find($id)->delete();
-        
+
         return back()->with('info', 'Designation Deleted.');
-        // if (Gate::allows('manage_designation', $user)) 
+        // if (Gate::allows('manage_designation', $user))
         // {
-        //     if (Gate::allows('delete_designation', $user)) 
+        //     if (Gate::allows('delete_designation', $user))
         //     {
                 // if($designation->status == 1)
                 // {

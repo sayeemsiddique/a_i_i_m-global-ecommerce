@@ -49,7 +49,7 @@ class ProductController extends Controller
                 $query->where('category_id', $request->category_id);
             }
 
-            $products = $query->select('id', 'type', 'name', 'slug', 'barcode', 'code','category_id', 'sub_category_id','status')->paginate(25);
+            $products = $query->select('id', 'type', 'name', 'slug', 'barcode', 'code','category_id', 'sub_category_id','status')->paginate(20);
 
             $categories = Category::where([
                 // 'parent_id' => 0,
@@ -927,7 +927,7 @@ class ProductController extends Controller
                 $query->where('name', 'like', '%'.$request->name.'%');
             }
 
-            $products = $query->paginate(25);
+            $products = $query->paginate(20);
 
             return view('backend.admin.product.material_index',compact('products'));
 

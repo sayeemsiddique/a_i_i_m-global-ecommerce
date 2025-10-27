@@ -36,6 +36,9 @@ use App\Http\Controllers\{
     SalesReportController,
     OrderReturnController,
     SslCommerzPaymentController,
+    DivisionController,
+    DistrictController,
+    UpazilaController,
 };
 
 use App\Http\Middleware\SetLocale;
@@ -106,7 +109,7 @@ Route::middleware([SetLocale::class])->group(function () {
         Route::get('/order-details/{orderId}', [FrontendController::class, 'orderDetails'])->name('orderDetails');
         Route::post('/cancel-order/{order_id}', [FrontendController::class, 'cancel_order'])->name('cancel_order');
         Route::post('/edit-address/{user}', [FrontendController::class, 'edit_address'])->name('edit_address');
-        Route::post('/edit-info/{user}', [FrontendController::class, 'edit_info'])->name('edit_info');
+        Route::patch('/edit-info/{user}', [FrontendController::class, 'edit_info'])->name('edit_info');
         Route::post('/edit-password/{user}', [FrontendController::class, 'edit_password'])->name('edit_password');
         Route::get('/add-to-cart', [FrontendController::class, 'add_to_cart'])->name('add_to_cart');
         Route::get('/buy-add-to-cart', [FrontendController::class, 'buy_add_to_cart'])->name('buy_add_to_cart');
@@ -259,12 +262,12 @@ Route::middleware([SetLocale::class])->group(function () {
 
 
             Route::prefix('role-permission')->as('rolePermission.')->group(function () {
-                Route::get('/index', [PermissionController::class, 'index'])->name('index');
-                Route::get('/create', [PermissionController::class, 'create'])->name('create');
-                Route::get('/edit/{rolePermission}', [PermissionController::class, 'edit'])->name('edit');
-                Route::get('/select/new/role', [PermissionController::class, 'selectNewRole'])->name('selectNewRole');
-                Route::post('/store', [PermissionController::class, 'store'])->name('store');
-                Route::post('/update/{rolePermission}', [PermissionController::class, 'update'])->name('update');
+                Route::get('/index', [RolePermissionController::class, 'index'])->name('index');
+                Route::get('/create', [RolePermissionController::class, 'create'])->name('create');
+                Route::get('/edit/{id}', [RolePermissionController::class, 'edit'])->name('edit');
+                Route::get('/select/new/role', [RolePermissionController::class, 'selectNewRole'])->name('selectNewRole');
+                Route::post('/store', [RolePermissionController::class, 'store'])->name('store');
+                Route::post('/update/{id}', [RolePermissionController::class, 'update'])->name('update');
             });
 
             Route::prefix('category')->as('category.')->group(function () {
@@ -463,6 +466,34 @@ Route::middleware([SetLocale::class])->group(function () {
 
                 Route::get('/remove/{id}', [ProductController::class, 'upload_remove'])->name('remove');
 
+            });
+
+            Route::group(['prefix' => '/region'], function() {
+                Route::get('/', [DivisionController::class, 'index'])->name('region.index');
+                Route::post('/store', [DivisionController::class, 'store'])->name('region.store');
+                Route::get('/edit/{region_id}', [DivisionController::class, 'edit'])->name('region.edit');
+                Route::post('/edit/{region_id}', [DivisionController::class, 'update'])->name('region.update');
+                Route::get('/view/{region_id}', [DivisionController::class, 'view'])->name('region.view');
+                Route::get('/delete/{region_id}', [DivisionController::class, 'destroy'])->name('region.delete');
+            });
+
+            Route::group(['prefix' => '/district'], function() {
+                Route::get('/', [DistrictController::class, 'index'])->name('district.index');
+                Route::post('/store', [DistrictController::class, 'store'])->name('district.store');
+                Route::get('/edit/{district_id}', [DistrictController::class, 'edit'])->name('district.edit');
+                Route::post('/edit/{district_id}', [DistrictController::class, 'update'])->name('district.update');
+                Route::get('/view/{district_id}', [DistrictController::class, 'view'])->name('district.view');
+                Route::get('/delete/{district_id}', [DistrictController::class, 'destroy'])->name('district.delete');
+            });
+
+            Route::group(['prefix' => '/upazila'], function() {
+                Route::get('/', [UpazilaController::class, 'index'])->name('upazila.index');
+                Route::get('/create', [UpazilaController::class, 'create'])->name('upazila.create');
+                Route::post('/store', [UpazilaController::class, 'store'])->name('upazila.store');
+                Route::get('/edit/{upazila_id}', [UpazilaController::class, 'edit'])->name('upazila.edit');
+                Route::post('/edit/{upazila_id}', [UpazilaController::class, 'update'])->name('upazila.update');
+                Route::get('/view/{upazila_id}', [UpazilaController::class, 'view'])->name('upazila.view');
+                Route::get('/delete/{upazila_id}', [UpazilaController::class, 'destroy'])->name('upazila.delete');
             });
 
         });

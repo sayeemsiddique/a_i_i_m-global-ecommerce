@@ -1,13 +1,13 @@
-<table class="table table-separate table-head-custom table-checkable">
+<table class="table table-bordered table-striped">
     <thead>
         <tr>
             <th>#</th>
-            
-            <th>Role</th> 
-            <th>Permissions</th>  
-            @can('edit_assign_permission')     
-            <th>Actions</th>
-            @endcan
+
+            <th class="text-left">Role</th>
+            {{-- <th>Permissions</th> --}}
+            {{-- @can('edit_assign_permission') --}}
+            <th >Actions</th>
+            {{-- @endcan --}}
         </tr>
     </thead>
     <tbody>
@@ -18,25 +18,25 @@
             <tr>
                 <td>{{$i}}</td>
 
-                <td>{{$rolePerm->role ? ucfirst($rolePerm->role->name) : ''}}</td>
+                <td class="text-left">{{$rolePerm->name}}</td>
 
-                <td>
-                    
-                    @foreach ($rolePerm->permissions($rolePerm->role_id) as $perm)
-                    
+                {{-- <td> --}}
+
+                    {{-- @foreach ($rolePerm->permissions($rolePerm->role_id) as $perm)
+
                         <span class="badge badge-success mb-2">{{$perm->permission ? $perm->permission->name_en : ''}}</span>
-                    @endforeach
-                        
-                    
-                </td>
+                    @endforeach --}}
+
+
+                {{-- </td> --}}
                 <td>
                     @can('edit_assign_permission')
-                    
-                    <a href="{{route('admin.rolePermission.edit',$rolePerm)}}" class="btn btn-sm btn-clean btn-icon" title="Edit">                                                         
-                        <i class="la la-edit text-warning"></i>
-                    </a>
+
+                        <a href="{{route('admin.rolePermission.edit',$rolePerm->id)}}" class="btn btn-sm bg-primary p-1" title="Edit">
+                            <i class="la la-edit p-0 text-white"></i>
+                        </a>
                     @endcan
-                    
+
                 </td>
             </tr>
             @php

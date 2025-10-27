@@ -24,29 +24,29 @@ class RolePermissionController extends Controller
      */
     public function index()
     {
-        
+
         $user = Auth::user();
 
-        // if (Gate::allows('user_management', $user)) 
+        // if (Gate::allows('user_management', $user))
         // {
         //     if(Gate::allows('assign_permission_list',$user))
-        //     {     
+        //     {
                 menuSubmenu('roles','assignPerm');
-        
-                // $rolePerms = RolePermission::where('role_id','<>',1)->groupBy('role_id')->latest()->paginate(25);
-                $query = RolePermission::groupBy('role_id');
+
+                // $rolePerms = RolePermission::where('role_id','<>',1)->groupBy('role_id')->latest()->paginate(20);
+                $query = Role::latest();
 
                 if (auth()->user()->id != 1) {
                     $query = $query->where('role_id','!=', 1);
                 }
-                
-                $rolePerms = $query->latest()->paginate(25);
-                
-                
+
+                $rolePerms = $query->paginate(20);
+
+
                 return view('backend.admin.rolePermission.index',[
                     'rolePerms' => $rolePerms
                 ]);
-                
+
         //     }
         //     else
         //     {
@@ -68,13 +68,13 @@ class RolePermissionController extends Controller
     {
         $user = Auth::user();
 
-        // if (Gate::allows('user_management', $user)) 
+        // if (Gate::allows('user_management', $user))
         // {
         //     if(Gate::allows('assign_permission',$user))
-        //     {                
-                
+        //     {
+
                 menuSubmenu('roles','assignPerm');
-                
+
                 $permissions = Permission::where('status', 1)->get();
                 $roles = Role::where('status',true)->get();
 
@@ -82,7 +82,7 @@ class RolePermissionController extends Controller
                     'roles' => $roles,
                     'permissions' => $permissions
                 ]);
-                
+
         //     }
         //     else
         //     {
@@ -93,7 +93,7 @@ class RolePermissionController extends Controller
         // {
         //     abort(403);
         // }
-        
+
     }
 
     public function selectNewRole(Request $request)
@@ -126,16 +126,16 @@ class RolePermissionController extends Controller
      */
     public function store(Request $request)
     {
-        
+
         $validation = Validator::make($request->all(),
-        [ 
+        [
             'role' => ['required'],
             'permission' => ['required'],
         ]);
 
         if($validation->fails())
         {
-           
+
             if($request->ajax())
             {
                 return Response()->json(array(
@@ -149,18 +149,18 @@ class RolePermissionController extends Controller
             ->withInput()
             ->withErrors($validation);
         }
-        
+
         $perms = $request->permission;
         foreach($perms as $perm)
         {
 
             $rolePerm = new RolePermission;
-    
+
             // $rolePerm->user_id = $request->user;
             $rolePerm->permission_id = $perm;
             $rolePerm->role_id = $request->role;
             $rolePerm->created_by = Auth::id();
-            
+
             $rolePerm->save();
         }
 
@@ -184,29 +184,30 @@ class RolePermissionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request,RolePermission $rolePermission)
+    public function edit(Request $request, $id)
     {
-        
+
         $user = Auth::user();
 
-        // if (Gate::allows('user_management', $user)) 
+        // if (Gate::allows('user_management', $user))
         // {
         //     if(Gate::allows('edit_assign_permission',$user))
-        //     {                
-                
-                
-                $perms = RolePermission::where('role_id',$rolePermission->role_id)->get();
-                
+        //     {
+
+
+                $perms = RolePermission::where('role_id',$id)->pluck('permission_id','permission_id')->toArray();
+
                 $permissions = Permission::where('status', 1)->get();
                 $roles = Role::where('status',true)->get();
-                
+                $role_info = Role::where('id',$id)->first();
+
                 return view('backend.admin.rolePermission.edit',[
                     'roles' => $roles,
                     'permissions' => $permissions,
                     'perms' => $perms,
-                    'rolePermission' => $rolePermission
+                    'role_info' => $role_info,
                 ]);
-                
+
         //     }
         //     else
         //     {
@@ -218,7 +219,7 @@ class RolePermissionController extends Controller
         //     abort(403);
         // }
 
-        
+
     }
 
 
@@ -229,17 +230,17 @@ class RolePermissionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, RolePermission $rolePermission)
+    public function update(Request $request, $id)
     {
-        
+
         $validation = Validator::make($request->all(),
-        [ 
+        [
             'permission' => ['required'],
         ]);
 
         if($validation->fails())
         {
-           
+
             if($request->ajax())
             {
                 return Response()->json(array(
@@ -253,25 +254,34 @@ class RolePermissionController extends Controller
             ->withInput()
             ->withErrors($validation);
         }
-        
-        
-        $rolePerms = RolePermission::where('role_id',$rolePermission->role_id)->get();
-        foreach($rolePerms as $perm)
-        {
-            $perm->delete();
-        }
-        $perms = $request->permission;
-        foreach($perms as $perm)
-        {
 
-            $rolePerm = new RolePermission;
-    
-            $rolePerm->permission_id = $perm;
-            $rolePerm->role_id = $request->role;
-            $rolePerm->created_by = Auth::id();
-            
-            $rolePerm->save();
+
+        RolePermission::where('role_id',$id)->delete();
+        $userId = auth()->user()->id;
+
+        $perms = $request->permission;
+        foreach ($perms as $perm) {
+            $data[] = [
+                'permission_id' => $perm,
+                'role_id'       => $id,
+                'created_by'    => $userId,
+                'created_at'    => now(),
+                'updated_at'    => now(),
+            ];
         }
+
+        RolePermission::insert($data);
+        // foreach($perms as $perm)
+        // {
+
+        //     $rolePerm = new RolePermission;
+
+        //     $rolePerm->permission_id = $perm;
+        //     $rolePerm->role_id = $id;
+        //     $rolePerm->created_by = Auth::id();
+
+        //     $rolePerm->save();
+        // }
 
         return redirect()->route('admin.rolePermission.index')->with('success','Role Permission Updated Successfully.');
 
@@ -285,6 +295,6 @@ class RolePermissionController extends Controller
      */
     public function destroy(RolePermission $rolePermission)
     {
-        
+
     }
 }

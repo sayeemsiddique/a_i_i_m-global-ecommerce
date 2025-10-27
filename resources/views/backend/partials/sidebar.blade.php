@@ -468,6 +468,62 @@
                     </li>
                 @endcan
 
+                @can('manage_location')
+
+                    <li class="menu-item menu-item-submenu {{ session('lsbm') == 'manage_location' ? ' menu-item-open ' : '' }}" aria-haspopup="true" data-menu-toggle="hover">
+                        <a href="javascript:;" class="menu-link menu-toggle">
+                            <span class="svg-icon menu-icon">
+                                <i style="color: #6e3cbc;" class="fab fa-uncharted"></i>
+                            </span>
+                            <span class="menu-text">Manage Location</span>
+                            <i class="menu-arrow"></i>
+                        </a>
+                        <div class="menu-submenu">
+                            <i class="menu-arrow"></i>
+                            <ul class="menu-subnav">
+                                <li class="menu-item menu-item-parent " aria-haspopup="true">
+                                    <span class="menu-link">
+                                        <span class="menu-text">Manage Location</span>
+                                    </span>
+                                </li>
+
+                                @can('manage_region')
+                                    <li class="menu-item {{ session('lsbsm') == 'manage_region' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
+                                        <a href="{{route('admin.region.index')}}" class="menu-link">
+                                            <i class="menu-bullet menu-bullet-dot">
+                                                <span></span>
+                                            </i>
+                                            <span class="menu-text">Manage Region</span>
+                                        </a>
+                                    </li>
+                                @endcan
+
+                                @can('manage_district')
+                                    <li class="menu-item {{ session('lsbsm') == 'manage_district' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
+                                        <a href="{{route('admin.district.index')}}" class="menu-link">
+                                            <i class="menu-bullet menu-bullet-dot">
+                                                <span></span>
+                                            </i>
+                                            <span class="menu-text">Manage District</span>
+                                        </a>
+                                    </li>
+                                @endcan
+
+                                @can('manage_upazila')
+                                    <li class="menu-item {{ session('lsbsm') == 'manage_upazila' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
+                                        <a href="{{route('admin.upazila.index')}}" class="menu-link">
+                                            <i class="menu-bullet menu-bullet-dot">
+                                                <span></span>
+                                            </i>
+                                            <span class="menu-text">Manage Upazila / Thana</span>
+                                        </a>
+                                    </li>
+                                @endcan
+                            </ul>
+                        </div>
+                    </li>
+                @endcan
+
                 @can('report_management')
                     <!-- Report Management -->
                     <li class="menu-item menu-item-submenu {{ session('lsbm') == 'report_management' ? ' menu-item-open ' : '' }}" aria-haspopup="true" data-menu-toggle="hover">

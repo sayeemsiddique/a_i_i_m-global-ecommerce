@@ -19,9 +19,9 @@ class SliderController extends Controller
 
         $user = Auth::user();
 
-        if (Gate::allows('manage_slider', $user)) 
+        if (Gate::allows('manage_slider', $user))
         {
-            if (Gate::allows('all_slider', $user)) 
+            if (Gate::allows('all_slider', $user))
             {
                 $query = Slider::latest();
 
@@ -29,7 +29,7 @@ class SliderController extends Controller
                     $query = $query->where('title', 'like', '%'.$request->name.'%');
                 }
 
-                $sliders = $query->paginate(25)->withQueryString();
+                $sliders = $query->paginate(20)->withQueryString();
 
                 return view('backend.admin.slider.index', compact('sliders'));
             }
@@ -55,9 +55,9 @@ class SliderController extends Controller
 
         $user = Auth::user();
 
-        if (Gate::allows('manage_slider', $user)) 
+        if (Gate::allows('manage_slider', $user))
         {
-            if (Gate::allows('add_slider', $user)) 
+            if (Gate::allows('add_slider', $user))
             {
                 return view('backend.admin.slider.create');
             }
@@ -86,7 +86,7 @@ class SliderController extends Controller
         ]);
 
         $data = $request->all();
-        
+
         if ($request->hasFile('image')) {
 
             $cp = $request->file('image');
@@ -97,7 +97,7 @@ class SliderController extends Controller
 
             $data['image'] = $randomFileName;
         }
-        
+
         $data['created_by'] = Auth::id();
 
         Slider::create($data);
@@ -147,7 +147,7 @@ class SliderController extends Controller
         menuSubmenu('settings', 'manage_slider');
 
         $userr = Auth::user();
-    
+
         if(Gate::allows('manage_slider', $userr))
         {
             if(Gate::allows('edit_slider',$userr))
@@ -177,7 +177,7 @@ class SliderController extends Controller
     public function update(Request $request, $id)
     {
         $data = $request->all();
-        
+
         unset($data['_token']);
         unset($data['_method']);
 
@@ -192,7 +192,7 @@ class SliderController extends Controller
                 if(file_exists($image_path)){
                     unlink($image_path);
                 }
-                
+
             }
 
             $cp = $request->file('image');
@@ -206,7 +206,7 @@ class SliderController extends Controller
         }
 
         $data['updated_by'] = Auth::user()->id;
-        
+
         Slider::where('id', $id)->update($data);
         return back()->with('success', 'Slider Updated Successfully');
     }

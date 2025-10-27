@@ -21,11 +21,11 @@ class SettingController extends Controller
         menuSubmenu('', 'templateSetting');
         $user = Auth::user();
 
-        // if (Gate::allows('settings', $user)) 
+        // if (Gate::allows('settings', $user))
         // {
         //     if(Gate::allows('all_template',$user))
         //     {
-                $templates = TemplateSetting::latest()->paginate(25);
+                $templates = TemplateSetting::latest()->paginate(20);
                 return view('backend.admin.setting.templateSetting',[
                     'templates' => $templates
                 ]);
@@ -34,7 +34,7 @@ class SettingController extends Controller
         //     {
         //         abort(403);
         //     }
-            
+
         // }
         // else
         // {
@@ -49,13 +49,13 @@ class SettingController extends Controller
 
         $user = Auth::user();
 
-        if (Gate::allows('website_settings', $user)) 
+        if (Gate::allows('website_settings', $user))
         {
-            
+
             $setting = Setting::where('id', $id)->first();
 
             return view('backend.admin.setting.edit', compact('setting'));
-            
+
         }
         else
         {
@@ -70,12 +70,12 @@ class SettingController extends Controller
 
         $user = Auth::user();
 
-        if (Gate::allows('order_settings', $user)) 
+        if (Gate::allows('order_settings', $user))
         {
             $setting = Setting::where('id', $id)->first();
 
             return view('backend.admin.setting.order_setting', compact('setting'));
-            
+
         }
         else
         {
@@ -112,7 +112,7 @@ class SettingController extends Controller
 
             $setting->logo = $randomFileName;
             $setting->save();
-      	} 
+      	}
 
         $setting->save();
 
@@ -142,7 +142,7 @@ class SettingController extends Controller
     {
         $user = Auth::user();
 
-        // if (Gate::allows('settings', $user)) 
+        // if (Gate::allows('settings', $user))
         // {
         //     if(Gate::allows('add_template',$user))
         //     {
@@ -160,13 +160,13 @@ class SettingController extends Controller
         //     {
         //         abort(403);
         //     }
-            
+
         // }
         // else
         // {
         //     abort(403);
         // }
-        
+
     }
 
     public function storeTemplate(Request $request)
@@ -209,7 +209,7 @@ class SettingController extends Controller
         $template->footer = $request->footer;
         $template->body = $request->body;
         $template->status = true;
-        
+
         // dd($template);
         $template->save();
 
@@ -218,10 +218,10 @@ class SettingController extends Controller
 
     public function editTemplate(TemplateSetting $template)
     {
-        
+
         $user = Auth::user();
 
-        // if (Gate::allows('settings', $user)) 
+        // if (Gate::allows('settings', $user))
         // {
         //     if(Gate::allows('edit_template',$user))
         //     {
@@ -235,20 +235,20 @@ class SettingController extends Controller
         //     {
         //         abort(403);
         //     }
-            
+
         // }
         // else
         // {
         //     abort(403);
         // }
-        
+
     }
 
     public function destroy(TemplateSetting $template)
     {
         $user = Auth::user();
 
-        // if (Gate::allows('settings', $user)) 
+        // if (Gate::allows('settings', $user))
         // {
         //     if(Gate::allows('status_template',$user))
         //     {
@@ -271,20 +271,20 @@ class SettingController extends Controller
         //     {
         //         abort(403);
         //     }
-            
+
         // }
         // else
         // {
         //     abort(403);
         // }
 
-        
+
     }
 
     public function updateTemplate(Request $request, TemplateSetting $template)
     {
         $validation = Validator::make($request->all(),
-        [   
+        [
             // 'service' => ['required'],
             'header' => ['required','min:3','string'],
             'footer' => ['required','min:3','string'],
@@ -307,12 +307,12 @@ class SettingController extends Controller
             ->withErrors($validation);
         }
 
-        
+
         $template->service_id = $request->service;
         $template->header = $request->header;
         $template->footer = $request->footer;
         $template->body = $request->body;
-        
+
         $template->save();
 
         return redirect()->route('admin.setting.templateSetting')->with('success','Template Create Successfully.');

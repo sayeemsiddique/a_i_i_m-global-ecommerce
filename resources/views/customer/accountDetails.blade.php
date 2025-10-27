@@ -19,7 +19,7 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <form class="form" action="{{route('admin.user.updateProfile', $user->id)}}" method="post" id="kt_form_1" enctype="multipart/form-data">
+                            <form class="form" action="{{route('edit_info', $user->id)}}" method="post" id="kt_form_1" enctype="multipart/form-data">
                                 @csrf
 
                                 @method('patch')

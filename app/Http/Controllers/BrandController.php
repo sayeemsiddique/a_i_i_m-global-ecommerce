@@ -16,10 +16,10 @@ class BrandController extends Controller
     {
         $user = Auth::user();
 
-        if (Gate::allows('inventory_management', $user)) 
+        if (Gate::allows('inventory_management', $user))
         {
             if(Gate::allows('all_brand',$user))
-            {            
+            {
                 menuSubmenu('product_setting', 'all_brand');
                 $query = Brand::latest();
 
@@ -27,12 +27,12 @@ class BrandController extends Controller
                     $query->where('name', 'like', '%'.$request->name.'%');
                 }
 
-                $brands = $query->paginate(25);
+                $brands = $query->paginate(20);
 
                 return view('backend.admin.brand.index',[
                     'brands' => $brands
                 ]);
-            
+
             } else {
                 abort(403);
             }
@@ -45,13 +45,13 @@ class BrandController extends Controller
     {
         $user = Auth::user();
 
-        if (Gate::allows('inventory_management', $user)) 
+        if (Gate::allows('inventory_management', $user))
         {
             if(Gate::allows('add_brand',$user))
-            {            
+            {
                 menuSubmenu('product_setting', 'add_brand');
                 return view('backend.admin.brand.create');
-            
+
             } else {
                 abort(403);
             }
@@ -59,12 +59,12 @@ class BrandController extends Controller
             abort(403);
         }
     }
-    
+
     public function store(Request $request)
     {
         $user = Auth::user();
 
-        if (Gate::allows('inventory_management', $user)) 
+        if (Gate::allows('inventory_management', $user))
         {
             if(Gate::allows('add_brand',$user))
             {
@@ -75,17 +75,17 @@ class BrandController extends Controller
                 $data = $request->all();
                 unset($data['files']);
                 if ($request->file('image')) {
-                    
+
                     $path = $request->file('image')->store('/public/brand');
-                    
+
                     $path = Str::replace('public/brand', '', $path);
                     $data['image'] = Str::replace('/', '', $path);
-                }  
-                
+                }
+
                 if ($request->file('banner')) {
-                    
+
                     $path = $request->file('banner')->store('/public/brand');
-                    
+
                     $path = Str::replace('public/brand', '', $path);
                     $data['banner'] = Str::replace('/', '', $path);
                 }
@@ -95,10 +95,10 @@ class BrandController extends Controller
                 $data['meta_title'] = $request->name ?? '';
                 $data['meta_description'] = $request->description ?? '';
 
-                
+
                 Brand::create($data);
                 return redirect()->route('admin.brand.index')->with('success', 'Brand Added');
-            
+
             } else {
                 abort(403);
             }
@@ -111,7 +111,7 @@ class BrandController extends Controller
     {
         $user = Auth::user();
 
-        if (Gate::allows('inventory_management', $user)) 
+        if (Gate::allows('inventory_management', $user))
         {
             if(Gate::allows('edit_brand',$user))
             {
@@ -138,20 +138,20 @@ class BrandController extends Controller
             if ($brand->image && Storage::exists('public/brand/' . $brand->image)) {
                 Storage::delete('public/brand/' . $brand->image);
             }
-                    
+
             $path = $request->file('image')->store('/public/brand');
-            
+
             $path = Str::replace('public/brand', '', $path);
             $data['image'] = Str::replace('/', '', $path);
-        }  
-        
+        }
+
         if ($request->file('banner')) {
             if ($brand->banner && Storage::exists('public/brand/' . $brand->banner)) {
                 Storage::delete('public/brand/' . $brand->banner);
             }
-            
+
             $path = $request->file('banner')->store('/public/brand');
-            
+
             $path = Str::replace('public/brand', '', $path);
             $data['banner'] = Str::replace('/', '', $path);
         }
@@ -162,18 +162,18 @@ class BrandController extends Controller
         if (isset($request->description) and $request->description != '') {
             $data['meta_description'] = $request->description ?? '';
         }
-        
+
 
         Brand::findOrFail($id)->update($data);
         return redirect()->route('admin.brand.index')->with('success', 'Brand Updated');
     }
-    
+
     public function show($id)
     {
         $brand = Brand::findOrFail($id);
         return view('backend.admin.brand.show', compact('brand'));
     }
-    
+
     public function destroy($id)
     {
         Brand::findOrFail($id)->delete();

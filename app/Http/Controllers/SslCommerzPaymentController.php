@@ -66,10 +66,15 @@ class SslCommerzPaymentController extends Controller
             }
         }
 
+        if (!auth()->user()->email) {
+            return back()->with('error', "Please set your email address before Pay With SSLCOMMERZ Gateway");
+        }
+
         $order_data['tracking_code'] = $tracking_code;
+        $order_data['transaction_id'] = $tracking_code;
         $order_data['user_id'] = auth()->user()->id;
         $order_data['status'] = 3;
-        $order_data['payment_status'] = 0;
+        $order_data['payment_status'] = 1;
         $order_data['total_price'] = $product_total_price;
         $order_data['grand_total_price'] = $product_total_price + ($shipping_address->divisionInfo->shipping_cost ?? 0);
         $order_data['discount_amount'] = 0;
@@ -125,6 +130,12 @@ class SslCommerzPaymentController extends Controller
         $post_data['value_d'] = "ref004";
 
 
+
+        $order_data['created_at'] = now();
+        $order_data['updated_at'] = now();
+        $order_data['update_by'] = auth()->user()->id;
+
+
         #Before  going to initiate the payment order status need to insert or update as Pending.
         $update_product = DB::table('orders')
             ->where([
@@ -144,9 +155,9 @@ class SslCommerzPaymentController extends Controller
             // ]);
 
         $sslc = new SslCommerzNotification();
+        // dd($sslc);
         # initiate(Transaction Data , false: Redirect to SSLCOMMERZ gateway/ true: Show all the Payement gateway here )
         $payment_options = $sslc->makePayment($post_data, 'hosted');
-
         if (!is_array($payment_options)) {
             print_r($payment_options);
             $payment_options = array();
@@ -243,9 +254,11 @@ class SslCommerzPaymentController extends Controller
                 'transaction_id' => $tran_id,
                 'user_id' => $user_id
             ])->first();
-
+// dd($tran_id);
+// dd($user_id);
         // if ($order->status == 'Pending') {
         if ($order) {
+
             $validation = $sslc->orderValidate($request->all(), $tran_id, $amount, $currency);
 
             if ($validation) {
@@ -344,7 +357,7 @@ class SslCommerzPaymentController extends Controller
                     $payment_data['payment_method'] = 2; // 1 = cash on delivery, 2 = bkash, 3 = online payment
                     // $payment_data['bank_id'] = $request->bank_id ?? "";
 
-                    $payment_data['status'] = 1;
+                    $payment_data['status'] = 2;
                     $payment_data['type'] = 1;
                     $payment_data['created_by'] = $user_id;
 
@@ -355,7 +368,7 @@ class SslCommerzPaymentController extends Controller
 
                 });
 
-                echo "<br >Transaction is successfully Completed";
+                return redirect()->route('account_orders')->with('success', "Transaction is successfully Completed");
             }
         // } else if ($order_details->status == 'Processing' || $order_details->status == 'Complete') {
             /*
@@ -364,7 +377,8 @@ class SslCommerzPaymentController extends Controller
             // echo "Transaction is successfully Completed";
         } else {
             #That means something wrong happened. You can redirect customer to your product page.
-            echo "Invalid Transaction";
+            // echo "Invalid Transaction";
+            return redirect()->route('account_orders')->with('success', "Invalid Transaction");
         }
 
 
@@ -378,10 +392,11 @@ class SslCommerzPaymentController extends Controller
         DB::table('orders')
             ->where([
                 'transaction_id' => $tran_id,
-                'user_id' => $user_id
+                'user_id' => $user_id,
+                // 'status' => 3,
             ])->delete();
 
-
+        return redirect()->route('checkout')->with('error', "Transaction is Failed");
 
     }
 
@@ -393,7 +408,8 @@ class SslCommerzPaymentController extends Controller
         DB::table('orders')
             ->where([
                 'transaction_id' => $tran_id,
-                'user_id' => $user_id
+                'user_id' => $user_id,
+                // 'status' => 3,
             ])->delete();
 
         // if ($order_details->status == 'Pending') {
@@ -406,7 +422,7 @@ class SslCommerzPaymentController extends Controller
         // } else {
         //     echo "Transaction is Invalid";
         // }
-
+        return redirect()->route('checkout')->with('error', "Transaction is Failed");
 
     }
 
@@ -429,17 +445,17 @@ class SslCommerzPaymentController extends Controller
             if ($order_details) {
                 $sslc = new SslCommerzNotification();
                 $validation = $sslc->orderValidate($request->all(), $tran_id, $order_details->grand_total_price, $order_details->currency);
-                if ($validation == TRUE) {
+                if ($order_details->status == 3) {
                     /*
                     That means IPN worked. Here you need to update order status
                     in order table as Processing or Complete.
                     Here you can also sent sms or email for successful transaction to customer
                     */
-                    $update_product = DB::table('orders')
-                        ->where('transaction_id', $tran_id)
-                        ->update(['status' => 0]);
+                    // $update_product = DB::table('orders')
+                    //     ->where('transaction_id', $tran_id)
+                    //     ->update(['status' => 0]);
 
-                    echo "Transaction is successfully Completed";
+                    echo "Transaction still incomplete";
                 }
             } else if ($order_details->status == 1 || $order_details->status == 2) {
 

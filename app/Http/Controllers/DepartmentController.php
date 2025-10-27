@@ -23,18 +23,18 @@ class DepartmentController extends Controller
     {
         $user = Auth::user();
 
-        // if (Gate::allows('manage_department', $user)) 
+        // if (Gate::allows('manage_department', $user))
         // {
             if(Gate::allows('all_department',$user))
-            {            
+            {
                 menuSubmenu('roles', 'all_department');
 
-                $departments = Department::latest()->paginate(25);
+                $departments = Department::latest()->paginate(20);
 
                 return view('backend.admin.department.index',[
                     'departments' => $departments
                 ]);
-                
+
             }
             else
             {
@@ -56,16 +56,16 @@ class DepartmentController extends Controller
     {
         $user = Auth::user();
 
-        // if (Gate::allows('manage_department', $user)) 
+        // if (Gate::allows('manage_department', $user))
         // {
         //     if(Gate::allows('add_department',$user))
-        //     {            
+        //     {
                 menuSubmenu('department', 'add_department');
 
                 // $levels = Level::get();
 
                 return view('backend.admin.department.create');
-                
+
         //     }
         //     else
         //     {
@@ -110,16 +110,16 @@ class DepartmentController extends Controller
     {
         $user = Auth::user();
 
-        // if (Gate::allows('manage_department', $user)) 
+        // if (Gate::allows('manage_department', $user))
         // {
         //     if(Gate::allows('view_department',$user))
-        //     {            
+        //     {
                 $department = Department::with('user', 'user_update')
                                 ->where('id', $id)
                                 ->first();
 
                 return view('backend.admin.department.show', compact('department'));
-                
+
         //     }
         //     else
         //     {
@@ -142,16 +142,16 @@ class DepartmentController extends Controller
     {
         $user = Auth::user();
 
-        // if (Gate::allows('manage_department', $user)) 
+        // if (Gate::allows('manage_department', $user))
         // {
         //     if(Gate::allows('edit_department',$user))
-        //     {            
+        //     {
                 // $levels = Level::get();
 
                 $department = Department::where('id', $id)->first();
 
                 return view('backend.admin.department.edit', compact('department'));
-                
+
         //     }
         //     else
         //     {
@@ -197,10 +197,10 @@ class DepartmentController extends Controller
     {
         $user = Auth::user();
 
-        // if (Gate::allows('manage_department', $user)) 
+        // if (Gate::allows('manage_department', $user))
         // {
         //     if(Gate::allows('delete_department',$user))
-        //     {            
+        //     {
                 if ($department->status == 0) {
                     $department->status       = 1;
                     $department->updated_by   = Auth::id();
@@ -209,11 +209,11 @@ class DepartmentController extends Controller
                     $department->status       = 0;
                     $department->updated_by   = Auth::id();
                 }
-        
+
                 $department->save();
-        
+
                 return redirect()->route('admin.department.index')->with('success', 'department Status Changed Successfully.');
-                
+
         //     }
         //     else
         //     {

@@ -18,9 +18,9 @@ class CategoryController extends Controller
     {
         $user = Auth::user();
 
-        
+
         if(Gate::allows('all_category',$user))
-        {            
+        {
             menuSubmenu('product_setting', 'all_category');
 
             $query = Category::latest();
@@ -29,23 +29,23 @@ class CategoryController extends Controller
                 $query->where('name', 'like', '%'.$request->name.'%');
             }
 
-            $categories = $query->paginate(25);
+            $categories = $query->paginate(20);
 
             return view('backend.admin.category.index',[
                 'categories' => $categories
             ]);
-        
+
         } else {
             abort(403);
         }
-        
+
     }
 
     public function create()
     {
         $user = Auth::user();
 
-        if (Gate::allows('inventory_management', $user)) 
+        if (Gate::allows('inventory_management', $user))
         {
             if(Gate::allows('add_category',$user))
             {
@@ -54,7 +54,7 @@ class CategoryController extends Controller
                 $categories = Category::latest()->select('id','name','parent_id')->get();
 
                 return view('backend.admin.category.create', compact('categories'));
-            
+
             } else {
                 abort(403);
             }
@@ -62,12 +62,12 @@ class CategoryController extends Controller
             abort(403);
         }
     }
-    
+
     public function store(Request $request)
     {
         $user = Auth::user();
 
-        if (Gate::allows('inventory_management', $user)) 
+        if (Gate::allows('inventory_management', $user))
         {
             if(Gate::allows('add_category',$user))
             {
@@ -85,8 +85,8 @@ class CategoryController extends Controller
                     Storage::disk('public')->put('category/'.$randomFileName, File::get($cp));
 
                     $data['image'] = $randomFileName;
-                }  
-                
+                }
+
                 if ($request->file('banner')) {
 
                     $cp = $request->file('banner');
@@ -103,10 +103,10 @@ class CategoryController extends Controller
                 $data['meta_title'] = $request->name ?? '';
                 $data['meta_description'] = $request->description ?? '';
 
-                
+
                 Category::create($data);
                 return redirect()->route('admin.category.index')->with('success', 'Category Added');
-            
+
             } else {
                 abort(403);
             }
@@ -119,7 +119,7 @@ class CategoryController extends Controller
     {
         $user = Auth::user();
 
-        if (Gate::allows('inventory_management', $user)) 
+        if (Gate::allows('inventory_management', $user))
         {
             if(Gate::allows('edit_category',$user))
             {
@@ -156,14 +156,14 @@ class CategoryController extends Controller
             Storage::disk('public')->put('category/'.$randomFileName, File::get($cp));
 
             $data['image'] = $randomFileName;
-        }  
-        
+        }
+
         if ($request->file('banner')) {
 
             if ($category->banner && Storage::exists('public/category/' . $category->banner)) {
                 Storage::delete('public/category/' . $category->banner);
             }
-            
+
             $cp = $request->file('banner');
             $extension = strtolower($cp->getClientOriginalExtension());
             $randomFileName = 'image'.date('Y_m_d_his').'_'.rand(10000000,99999999).'.'.$extension;
@@ -179,25 +179,25 @@ class CategoryController extends Controller
         if (isset($request->description) and $request->description != '') {
             $data['meta_description'] = $request->description ?? '';
         }
-        
+
 
         Category::findOrFail($id)->update($data);
         return redirect()->route('admin.category.index')->with('success', 'Category Updated');
     }
-    
+
     public function show($id)
     {
         menuSubmenuSubsubmeny('settings', 'product_setting', 'view_category');
         $category = Category::findOrFail($id);
         return view('backend.admin.category.show', compact('category'));
     }
-    
+
     public function destroy($id)
     {
         Category::findOrFail($id)->delete();
         return redirect()->back()->with('success', 'Category Deleted');
     }
-    
+
     public function get_child_category(Request $request)
     {
         $categories = Category::where([
@@ -205,7 +205,7 @@ class CategoryController extends Controller
             ['parent_id', '!=', 0],
             ['parent_id', '=', $request->id],
         ])->with('childTreeInfo')->get();
-        
+
 
         return view('backend.admin.category.option_list', compact('categories'));
     }

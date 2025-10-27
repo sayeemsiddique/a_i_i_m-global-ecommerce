@@ -7,7 +7,7 @@
             <th class="text-left">Name</th>
             <th>Date</th>
             <th>Amount</th>
-            <th>Status</th> 
+            <th>Status</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -21,12 +21,12 @@
                     <td>
                         {{ $i }}
                     </td>
-                    
+
                     <td>{{ $order->tracking_code }}</td>
 
                     <td align="left">{{ $order->orderUserInfo ? ($order->orderUserInfo->first_name.' '.$order->orderUserInfo->last_name) : '' }}</td>
 
-                    <td>{{ $order->created_at->format('d-M-Y') }}</td>
+                    <td>{{ $order->created_at ? $order->created_at->format('d-M-Y'):'' }}</td>
 
                     <td>৳ {{ $order->grand_total_price ?? '0.00' }}</td>
 
@@ -61,7 +61,7 @@
                                 <i class="la la-trash"></i>
                             </button> --}}
                             {{-- @if ($order->status == 1)
-                                
+
                                 @elseif ($order->status == 0)
                                     <button class="btn btn-sm btn-clean btn-icon delete" title="Active" data-id="{{ $order->id }}">
                                         <i class="la la-check"></i>
@@ -80,24 +80,24 @@
     </tbody>
 </table>
 
-{{-- <div class="ajax-pagination-area"> 
+{{-- <div class="ajax-pagination-area">
 
-    
+
     {{ $orders->appends([
         'q' => isset($q) ? $q : null,
         'orders' => isset($orders) ? $orders : null
         ])->render() }}
-        
+
 </div> --}}
 
 @push('stackScript')
-    <script> 
+    <script>
         $(".delete").click(function(e) {
 
             var data_id = $(this).attr("data-id");
             var url =  '<a href="{{route("admin.order.delete", ":id")}}" class="swal2-confirm swal2-styled" title="Delete">Confirm</a>';
             url = url.replace(':id', data_id );
-            
+
             Swal.fire({
                 title: 'Are you sure ?',
                 icon: 'info',

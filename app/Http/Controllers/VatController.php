@@ -14,7 +14,7 @@ class VatController extends Controller
     {
         $user = Auth::user();
 
-        
+
         if(Gate::allows('all_vat_type',$user))
         {
             menuSubmenu('product_setting', 'all_vat_type');
@@ -25,34 +25,34 @@ class VatController extends Controller
                 $query->where('name', 'like', '%'.$request->name.'%');
             }
 
-            $vats = $query->paginate(25);
+            $vats = $query->paginate(20);
 
             return view('backend.admin.vat.index',[
                 'vats' => $vats
             ]);
-        
+
         } else {
             abort(403);
         }
-        
+
     }
 
     public function create()
     {
         $user = Auth::user();
-        
+
         if(Gate::allows('add_vat_type',$user))
         {
             menuSubmenu('product_setting', 'add_vat_type');
 
             return view('backend.admin.vat.create');
-        
+
         } else {
             abort(403);
         }
-        
+
     }
-    
+
     public function store(Request $request)
     {
         $user = Auth::user();
@@ -70,11 +70,11 @@ class VatController extends Controller
             Vat::create($data);
 
             return redirect()->route('admin.vat.index')->with('success', 'Vat Added');
-        
+
         } else {
             abort(403);
         }
-        
+
     }
 
     public function edit($id)
@@ -89,7 +89,7 @@ class VatController extends Controller
         } else {
             abort(403);
         }
-        
+
     }
 
     public function update(Request $request, $id)
@@ -103,10 +103,10 @@ class VatController extends Controller
         $data = $request->all();
         $data['updated_by'] = auth()->user()->id;
         Vat::findOrFail($id)->update($data);
-        
+
         return redirect()->route('admin.vat.index')->with('success', 'Vat Updated');
     }
-    
+
     public function show($id)
     {
         $user = Auth::user();
@@ -119,12 +119,12 @@ class VatController extends Controller
         } else {
             abort(403);
         }
-        
+
     }
-    
+
     public function destroy($id)
     {
-        
+
         $user = Auth::user();
 
         if(Gate::allows('delete_vat_type',$user))
@@ -134,6 +134,6 @@ class VatController extends Controller
         } else {
             abort(403);
         }
-        
+
     }
 }

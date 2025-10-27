@@ -20,22 +20,22 @@ class RoleController extends Controller
     {
         $user = Auth::user();
 
-        // if (Gate::allows('user_management', $user)) 
+        // if (Gate::allows('user_management', $user))
         // {
         //     if(Gate::allows('all_roles',$user))
         //     {
                 menuSubmenu('roles','allRoles');
-        
+
                 $query = Role::latest();
                 if(Auth::user()->role_id != 1){
                     $query = $query->where('id','!=',1);
                 }
-                $roles = $query->paginate(25);
+                $roles = $query->paginate(20);
 
                 return view('backend.admin.role.index',[
                     'roles' => $roles
                 ]);
-                
+
         //     }
         //     else
         //     {
@@ -55,9 +55,9 @@ class RoleController extends Controller
      */
     public function create(Request $request)
     {
-        
+
         $validation = Validator::make($request->all(),
-        [ 
+        [
             'role_name' => ['required', 'string', 'max:255','min:3'],
             'display_name' => ['required']
         ]);
@@ -134,7 +134,7 @@ class RoleController extends Controller
     public function update(Request $request,$id)
     {
         $validation = Validator::make($request->all(),
-        [ 
+        [
             'role_name' => ['required', 'string', 'max:255','min:3'],
             'display_name' => ['required', 'string', 'max:255','min:3'],
         ]);
@@ -155,7 +155,7 @@ class RoleController extends Controller
             ->withInput()
             ->withErrors($validation);
         }
-        
+
         $role = Role::find($id);
 
         $role->name = $request->role_name;
@@ -173,23 +173,23 @@ class RoleController extends Controller
 
         $user = Auth::user();
 
-        // if (Gate::allows('user_management', $user)) 
+        // if (Gate::allows('user_management', $user))
         // {
         //     if(Gate::allows('delete_role',$user))
-        //     {                
-                
-                
+        //     {
+
+
                 $role = Role::find($id);
                 if($role->status == false){
                     $role->status = true;
                 } else {
                     $role->status = false;
                 }
-                
+
                 $role->updated_by = Auth::id();
                 $role->save();
                 return back()->with('success','Role Disable Successfully.');
-                
+
         //     }
         //     else
         //     {
@@ -201,7 +201,7 @@ class RoleController extends Controller
         //     abort(403);
         // }
 
-        
+
 
     }
     /**

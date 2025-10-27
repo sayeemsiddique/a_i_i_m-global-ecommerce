@@ -15,7 +15,7 @@ class VarientTypeController extends Controller
         $user = Auth::user();
 
         if(Gate::allows('all_varient_type',$user))
-        {            
+        {
             menuSubmenu('product_setting', 'all_varient_type');
             $query = VarientType::latest();
 
@@ -23,30 +23,30 @@ class VarientTypeController extends Controller
                 $query->where('name', 'like', '%'.$request->name.'%');
             }
 
-            $varienttypes = $query->paginate(25);
+            $varienttypes = $query->paginate(20);
 
             return view('backend.admin.varienttype.index',[
                 'varienttypes' => $varienttypes
             ]);
-        
+
         } else {
             abort(403);
         }
-        
+
     }
 
     public function create()
     {
         $user = Auth::user();
 
-        if (Gate::allows('inventory_management', $user)) 
+        if (Gate::allows('inventory_management', $user))
         {
             if(Gate::allows('add_varient_type',$user))
-            {            
+            {
                 menuSubmenu('product_setting', 'create_varient_type');
 
                 return view('backend.admin.varienttype.create');
-            
+
             } else {
                 abort(403);
             }
@@ -54,12 +54,12 @@ class VarientTypeController extends Controller
             abort(403);
         }
     }
-    
+
     public function store(Request $request)
     {
         $user = Auth::user();
 
-        
+
         if(Gate::allows('add_varient_type',$user))
         {
             $request->validate([
@@ -69,14 +69,14 @@ class VarientTypeController extends Controller
             $data = $request->all();
             $data['created_by'] = auth()->user()->id;
 
-            
+
             VarientType::create($data);
             return redirect()->route('admin.varienttype.index')->with('success', 'Varient type Added');
-        
+
         } else {
             abort(403);
         }
-        
+
     }
 
     public function edit($id)
@@ -90,7 +90,7 @@ class VarientTypeController extends Controller
         } else {
             abort(403);
         }
-        
+
     }
 
     public function update(Request $request, $id)
@@ -102,12 +102,12 @@ class VarientTypeController extends Controller
         $data = $request->all();
 
         $data['updated_by'] = auth()->user()->id;
-        
+
 
         VarientType::findOrFail($id)->update($data);
         return redirect()->route('admin.varienttype.index')->with('success', 'Varient type Updated');
     }
-    
+
     public function show($id)
     {
         $user = Auth::user();
@@ -119,9 +119,9 @@ class VarientTypeController extends Controller
         } else {
             abort(403);
         }
-        
+
     }
-    
+
     public function destroy($id)
     {
         $user = Auth::user();
@@ -132,6 +132,6 @@ class VarientTypeController extends Controller
         } else {
             abort(403);
         }
-        
+
     }
 }

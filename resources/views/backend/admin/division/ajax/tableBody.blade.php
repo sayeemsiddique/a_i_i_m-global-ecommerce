@@ -1,4 +1,4 @@
-<table class="table table-separate table-head-custom table-checkable dataTable table-striped">
+<table class="table table-bordered table-striped">
     <thead>
         <tr>
             <th>#</th>
@@ -8,98 +8,107 @@
         </tr>
     </thead>
     <tbody>
-        @if ($divisions->count() > 0)
+        @if ($regions->count() > 0)
             @php
-                $i = (($divisions->currentPage() - 1) * $divisions->perPage() + 1);
+                $i = (($regions->currentPage() - 1) * $regions->perPage() + 1);
             @endphp
-            @foreach ($divisions as $division)
-            <tr>
-                <td>{{$i}}</td>
-                <td align="left">{{$division->name}}</td>
-                <td>
-                    @if ($division->status == 1)
-                            <p class="text-success">Active</p>
-                                
-                    @elseif ($division->status == 0)
-                            <p class="text-danger">Deactivated</p>
-                            
-                    @endif
-                </td>
-                <td>
-                    @can('view_division')
-                        
-                        <a href="{{route('admin.divisions.show', $division->id)}}" class="btn btn-sm btn-clean btn-icon" title="view">
-                            <i class="la la-eye"></i>
-                        </a>
-                    @endcan
-                    @can('edit_division')
+            @foreach ($regions as $region)
+                <tr>
+                    <td>{{$i++}}</td>
+                    <td class="text-left">{{$region->name}}</td>
+                    <td>
+                        @if ($region->status == 1)
+                                <span class="badge bg-success">Active</span>
 
-                        <a href="{{route('admin.divisions.edit', $division->id)}}" class="btn btn-sm btn-clean btn-icon" title="Edit">
-                            <i class="la la-edit"></i>
-                        </a>
-                    @endcan
-                    
+                        @elseif ($region->status == 0)
+                                <span class="badge bg-danger">Deactivated</span>
 
-                    @can('delete_division')
-                        @if ($division->status == 1 )
-                            <button class="btn btn-sm btn-clean btn-icon delete" title="Delete" data-id="{{ $division->id }}">
-                                <i class="la la-trash"></i>
-                            </button>
-                        @elseif ($division->status == 0)
-                            <button class="btn btn-sm btn-clean btn-icon delete" title="Restore" data-id="{{ $division->id }}">
-                                <i class="la la-trash-restore"></i>
-                            </button>
-                            
-                            <a onclick="return confirm('Are you sure to delete this permanently')" href="{{route('admin.divisions.delete_division_permanently',$division->id)}}" class="btn btn-sm btn-clean btn-icon" title="Delete Permanently" data-id="{{ $division->id }}">
-                                <i class="la la-trash"></i>
-                            </a>
                         @endif
-                    {{-- @endcan --}}
-                </td>
-            </tr>
-            @php
-                $i++;
-            @endphp
+                    </td>
+                    <td>
+                        {{-- @can('view_region')
+
+                            <a href="{{route('admin.region.show', $region->id)}}" class="btn btn-sm bg-primary p-1" title="view">
+                                <i class="la la-eye p-0 text-white"></i>
+                            </a>
+                        @endcan --}}
+                        @can('edit_region')
+                            <a href="#" class="btn btn-sm bg-info p-1" title="Edit" data-toggle="modal" data-target="#exampleModalgrid_{{$region->id}}">
+                                <i class="la la-edit p-0 text-white"></i>
+                            </a>
+
+                            <div id="exampleModalgrid_{{$region->id}}" class="modal fade" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalgridLabel">{{__('Edit region')}}</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form action="{{route('admin.region.update', $region->id)}}" method="POST" enctype="multipart/form-data">
+                                                @csrf
+                                                <div class="row g-3">
+
+                                                    <div class="col-12">
+                                                        <div class="text-left">
+                                                            <label for="Name" class="form-label">{{__('Region Name')}} <span style="color:red;">*</span></label>
+                                                            <input type="text" class="form-control" name="name" value="{{$region->name}}" placeholder=" Region Name" required>
+                                                        </div>
+                                                    </div><!--end col-->
+                                                    <div class="col-12 mt-2">
+                                                        <div class="text-left">
+                                                            <label for="Name" class="form-label">{{__('Shipping Cost')}} <span style="color:red;">*</span></label>
+                                                            <input type="number" class="form-control" name="shipping_cost" value="{{$region->shipping_cost}}" placeholder="Shipping Cost" required>
+                                                        </div>
+                                                    </div><!--end col-->
+                                                    <div class="col-lg-12 mt-2">
+                                                        <div class="form-check form-switch form-switch-custom form-switch-success mb-3 text-left">
+                                                            <input class="form-check-input" type="checkbox" role="switch" name="status" id="SwitchCheck11{{$region->id}}" value="1" @if($region->status == 1) checked @endif>
+                                                            <label class="form-check-label" for="SwitchCheck11{{$region->id}}">{{__('Status')}} </label>
+                                                        </div>
+                                                    </div><!--end col-->
+                                                    <div class="col-lg-12">
+                                                        <div class="hstack gap-2 justify-content-end">
+                                                            <button type="submit" class="btn btn-primary">{{__('Save')}}</button>
+
+                                                        </div>
+                                                    </div><!--end col-->
+                                                </div><!--end row-->
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endcan
+
+
+                        @can('delete_region')
+                            <a onclick="return confirm('Are you sure to delete this permanently')" href="{{route('admin.region.delete',$region->id)}}" class="btn btn-sm bg-danger p-1" title="Delete Permanently" data-id="{{ $region->id }}">
+                                <i class="la la-trash p-0 text-white"></i>
+                            </a>
+                        @endcan
+                    </td>
+                </tr>
+
             @endforeach
         @else
             <tr class="odd"><td valign="top" colspan="11" class="dataTables_empty">No matching records found</td></tr>
         @endif
-        
+
     </tbody>
 </table>
 
 @push('stackScript')
-    <script> 
-        $(".block").click(function(e) {
 
-            var data_id = $(this).attr("data-id");
-            var url =  '<a href="{{route("admin.user.block",":id")}}" class="swal2-confirm swal2-styled" title="Block">Confirm</a>';
-            url = url.replace(':id', data_id );
-            
-            Swal.fire({
-                title: 'Are you sure ?',
-                icon: 'info',
-                showCancelButton: true,
-                confirmButtonText: url,
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    Swal.fire('Status Changed Successfully!', '', 'success')
-                } else if (result.dismiss === "cancel") {
-                    Swal.fire('Canceled', '', 'error')
-                }
-            })
-        });
 
-    </script>
-
-    <script> 
+    <script>
         $(".delete").click(function(e) {
 
             var data_id = $(this).attr("data-id");
             // alert(data_id);
-            var url =  '<a href="{{route("admin.divisions.deleteDivision",":id")}}" class="swal2-confirm swal2-styled" title="Delete">Confirm</a>';
+            var url =  '<a href="{{route("admin.region.delete",":id")}}" class="swal2-confirm swal2-styled" title="Delete">Confirm</a>';
             url = url.replace(':id', data_id );
-            
+
             Swal.fire({
                 title: 'Are you sure ?',
                 icon: 'info',

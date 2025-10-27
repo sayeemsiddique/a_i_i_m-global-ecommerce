@@ -42,6 +42,8 @@ use Carbon\Carbon;
 use Validator;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\SslCommerzPaymentController;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class FrontendController extends Controller
 {
@@ -556,47 +558,32 @@ class FrontendController extends Controller
     public function edit_info(Request $request, User $user)
     {
 
-        if ($user->type == 1) {
+        // if ($user->type == 1) {
             $request->validate([
                 'first_name'    => 'required|max:255',
                 'last_name'     => 'required|max:255',
                 'mobile'        => 'required|min:11|unique:users,mobile,'.$user->id,
                 'email'         => 'email|unique:users,email,'.$user->id,
             ]);
-        } else {
-            $request->validate([
-                'first_name'        => 'required|max:255',
-                'last_name'         => 'required|max:255',
-                'mobile'            => 'required|min:11|unique:users,mobile,'.$user->id,
-                'email'             => 'email|unique:users,email,'.$user->id,
-                'nid_no'            => 'required|unique:users,nid_no,'.$user->id,
-                'bin_no'            => 'required|unique:users,bin_no,'.$user->id,
-                'tin_no'            => 'required|unique:users,tin_no,'.$user->id,
-            ]);
-        }
+        // } else {
+        //     $request->validate([
+        //         'first_name'        => 'required|max:255',
+        //         'last_name'         => 'required|max:255',
+        //         'mobile'            => 'required|min:11|unique:users,mobile,'.$user->id,
+        //         'email'             => 'email|unique:users,email,'.$user->id,
+        //         'nid_no'            => 'required|unique:users,nid_no,'.$user->id,
+        //         'bin_no'            => 'required|unique:users,bin_no,'.$user->id,
+        //         'tin_no'            => 'required|unique:users,tin_no,'.$user->id,
+        //     ]);
+        // }
 
-        if ($user->type == 1) {
+        // if ($user->type == 1) {
             $user->first_name           = $request->first_name;
             $user->last_name            = $request->last_name;
             $user->mobile               = $request->mobile;
             $user->email                = $request->email;
-
-            $user->save();
-        } else {
-            $user->first_name           = $request->first_name;
-            $user->last_name            = $request->last_name;
-            $user->mobile               = $request->mobile;
-            $user->email                = $request->email;
-            $user->nid_no               = $request->nid_no;
-            $user->bin_no               = $request->bin_no;
-            $user->tin_no               = $request->tin_no;
-
-            $user->save();
-
-            $user->username             = Str::lower($request->first_name.$request->last_name.$user->id);
-            $user->updated_by           = $user->id;
-
-            $user->save();
+            $user->present_address                = $request->present_address;
+            $user->permanent_address                = $request->permanent_address;
 
             if($request->hasFile('image'))
             {
@@ -604,12 +591,12 @@ class FrontendController extends Controller
                 $extension = strtolower($cp->getClientOriginalExtension());
                 $randomFileName = $user->id.'image'.date('Y_m_d_his').'_'.rand(10000000,99999999).'.'.$extension;
 
+                #delete old rows of profilepic
                 Storage::disk('public')->put('users/'.$randomFileName, File::get($cp));
 
                 if($user->image)
                 {
                     $f = 'users/'.$user->image;
-
                     if(Storage::disk('public')->exists($f))
                     {
                         Storage::disk('public')->delete($f);
@@ -619,70 +606,109 @@ class FrontendController extends Controller
                 $user->image = $randomFileName;
                 $user->save();
             }
-            if($request->hasFile('nid_new'))
-            {
-                $cp = $request->file('nid_new');
-                $extension = strtolower($cp->getClientOriginalExtension());
-                $randomFileName = $user->id.'nid'.date('Y_m_d_his').'_'.rand(10000000,99999999).'.'.$extension;
 
-                Storage::disk('public')->put('nid/'.$randomFileName, File::get($cp));
+            $user->save();
+        // } else {
+        //     $user->first_name           = $request->first_name;
+        //     $user->last_name            = $request->last_name;
+        //     $user->mobile               = $request->mobile;
+        //     $user->email                = $request->email;
+        //     $user->nid_no               = $request->nid_no;
+        //     $user->bin_no               = $request->bin_no;
+        //     $user->tin_no               = $request->tin_no;
 
-                if($user->nid)
-                {
-                    $f = 'nid/'.$user->nid;
+        //     $user->save();
 
-                    if(Storage::disk('public')->exists($f))
-                    {
-                        Storage::disk('public')->delete($f);
-                    }
-                }
+        //     $user->username             = Str::lower($request->first_name.$request->last_name.$user->id);
+        //     $user->updated_by           = $user->id;
 
-                $user->nid = $randomFileName;
-                $user->save();
-            }
-            if($request->hasFile('bin_new'))
-            {
-                $cp = $request->file('bin_new');
-                $extension = strtolower($cp->getClientOriginalExtension());
-                $randomFileName = $user->id.'bin'.date('Y_m_d_his').'_'.rand(10000000,99999999).'.'.$extension;
+        //     $user->save();
 
-                Storage::disk('public')->put('bin/'.$randomFileName, File::get($cp));
+        //     if($request->hasFile('image'))
+        //     {
+        //         $cp = $request->file('image');
+        //         $extension = strtolower($cp->getClientOriginalExtension());
+        //         $randomFileName = $user->id.'image'.date('Y_m_d_his').'_'.rand(10000000,99999999).'.'.$extension;
 
-                if($user->bin)
-                {
-                    $f = 'bin/'.$user->bin;
+        //         Storage::disk('public')->put('users/'.$randomFileName, File::get($cp));
 
-                    if(Storage::disk('public')->exists($f))
-                    {
-                        Storage::disk('public')->delete($f);
-                    }
-                }
+        //         if($user->image)
+        //         {
+        //             $f = 'users/'.$user->image;
 
-                $user->bin = $randomFileName;
-                $user->save();
-            }
-            if($request->hasFile('tin_new'))
-            {
-                $cp = $request->file('tin_new');
-                $extension = strtolower($cp->getClientOriginalExtension());
-                $randomFileName = $user->id.'tin'.date('Y_m_d_his').'_'.rand(10000000,99999999).'.'.$extension;
+        //             if(Storage::disk('public')->exists($f))
+        //             {
+        //                 Storage::disk('public')->delete($f);
+        //             }
+        //         }
 
-                Storage::disk('public')->put('tin/'.$randomFileName, File::get($cp));
+        //         $user->image = $randomFileName;
+        //         $user->save();
+        //     }
+        //     if($request->hasFile('nid_new'))
+        //     {
+        //         $cp = $request->file('nid_new');
+        //         $extension = strtolower($cp->getClientOriginalExtension());
+        //         $randomFileName = $user->id.'nid'.date('Y_m_d_his').'_'.rand(10000000,99999999).'.'.$extension;
 
-                if($user->tin)
-                {
-                    $f = 'tin/'.$user->tin;
+        //         Storage::disk('public')->put('nid/'.$randomFileName, File::get($cp));
 
-                    if(Storage::disk('public')->exists($f))
-                    {
-                        Storage::disk('public')->delete($f);
-                    }
-                }
+        //         if($user->nid)
+        //         {
+        //             $f = 'nid/'.$user->nid;
 
-                $user->tin = $randomFileName;
-                $user->save();
-            }
-        }
+        //             if(Storage::disk('public')->exists($f))
+        //             {
+        //                 Storage::disk('public')->delete($f);
+        //             }
+        //         }
+
+        //         $user->nid = $randomFileName;
+        //         $user->save();
+        //     }
+        //     if($request->hasFile('bin_new'))
+        //     {
+        //         $cp = $request->file('bin_new');
+        //         $extension = strtolower($cp->getClientOriginalExtension());
+        //         $randomFileName = $user->id.'bin'.date('Y_m_d_his').'_'.rand(10000000,99999999).'.'.$extension;
+
+        //         Storage::disk('public')->put('bin/'.$randomFileName, File::get($cp));
+
+        //         if($user->bin)
+        //         {
+        //             $f = 'bin/'.$user->bin;
+
+        //             if(Storage::disk('public')->exists($f))
+        //             {
+        //                 Storage::disk('public')->delete($f);
+        //             }
+        //         }
+
+        //         $user->bin = $randomFileName;
+        //         $user->save();
+        //     }
+        //     if($request->hasFile('tin_new'))
+        //     {
+        //         $cp = $request->file('tin_new');
+        //         $extension = strtolower($cp->getClientOriginalExtension());
+        //         $randomFileName = $user->id.'tin'.date('Y_m_d_his').'_'.rand(10000000,99999999).'.'.$extension;
+
+        //         Storage::disk('public')->put('tin/'.$randomFileName, File::get($cp));
+
+        //         if($user->tin)
+        //         {
+        //             $f = 'tin/'.$user->tin;
+
+        //             if(Storage::disk('public')->exists($f))
+        //             {
+        //                 Storage::disk('public')->delete($f);
+        //             }
+        //         }
+
+        //         $user->tin = $randomFileName;
+        //         $user->save();
+        //     }
+        // }
 
         return back()->with('success', 'Information Updated Successfully.');
     }
@@ -1063,7 +1089,7 @@ class FrontendController extends Controller
                 $order_data['tracking_code'] = $tracking_code;
                 $order_data['user_id'] = auth()->user()->id;
                 $order_data['status'] = 0;
-                $order_data['payment_status'] = 0;
+                $order_data['payment_status'] = 1; // 1 means pending helper function check
                 $order_data['total_price'] = $product_total_price;
                 $order_data['grand_total_price'] = $product_total_price + ($shipping_address->divisionInfo->shipping_cost ?? 0);
                 $order_data['discount_amount'] = 0;
@@ -1123,7 +1149,7 @@ class FrontendController extends Controller
                     $payment_data['mb_document'] = Str::replace('/', '', $path);
                 }
 
-                $payment_data['status'] = 0;
+                $payment_data['status'] = 1; // helper function payment functon check
                 $payment_data['type'] = 1;
                 $payment_data['mb_sender_no'] = $request->mb_sender_no ?? "";
                 $payment_data['mb_receiver_no'] = $request->mb_receiver_no ?? "";
