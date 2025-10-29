@@ -137,7 +137,7 @@
                         data-arrow-right-classes="fas fa-arrow-right u-slick__arrow-classic-inner u-slick__arrow-classic-inner--right mr-lg-2 mr-xl-4"
                         data-nav-for="#sliderSyncingThumb">
                         <div class="js-slide">
-                            <div class="zoom-box" style="display: inline-block;width: 200px;height: 300px;">
+                            <div class="zoom-box" >
                                 <img loading="lazy" class="img-fluid imgZoom" src="{{asset('storage/product')}}/{{$product->image}}" alt="Image Description">
                             </div>
                         </div>
@@ -145,12 +145,27 @@
                         @foreach ($product->productGallery as $Gallery)
 
                         <div class="js-slide">
-                            <div class="zoom-box" style="display: inline-block;width: 200px;height: 300px;">
+                            <div class="zoom-box" >
 
                                 <img loading="lazy" class="img-fluid imgZoom" src="{{asset('storage/gallery')}}/{{$Gallery->name}}" alt="Image Description">
                             </div>
                         </div>
                         @endforeach
+
+                        @if ($product->has_varient == 1)
+                            @foreach ($product->productVarient->where('status',1) as $productVarient)
+
+                                @if ($productVarient->image)
+                                        <div class="js-slide">
+                                            <div class="zoom-box" >
+
+                                                <img loading="lazy" class="img-fluid imgZoom" src="{{asset('storage/varient_image')}}/{{$productVarient->image}}" alt="Image Description">
+                                            </div>
+                                        </div>
+                                @endif
+
+                            @endforeach
+                        @endif
 
                     </div>
 
@@ -161,14 +176,26 @@
                         data-nav-for="#sliderSyncingNav">
 
                         <div class="js-slide" style="cursor: pointer;">
-                            <img loading="lazy" style="height: auto" class="img-fluid" src="{{asset('storage/product')}}/{{$product->image}}" alt="Image Description">
+                            <img loading="lazy" style="height: 60px" class="img-fluid" src="{{asset('storage/product')}}/{{$product->image}}" alt="Image Description">
 
                         </div>
                         @foreach ($product->productGallery as $Gallery)
                         <div class="js-slide" style="cursor: pointer;">
-                            <img loading="lazy" style="height: auto" class="img-fluid" src="{{asset('storage/gallery')}}/{{$Gallery->name}}" alt="Image Description">
+                            <img loading="lazy" style="height: 60px" class="img-fluid" src="{{asset('storage/gallery')}}/{{$Gallery->name}}" alt="Image Description">
                         </div>
                         @endforeach
+
+                        @if ($product->has_varient == 1)
+                            @foreach ($product->productVarient->where('status',1) as $productVarient)
+
+                                @if ($productVarient->image)
+                                        <div class="js-slide" style="cursor: pointer;">
+                                            <img loading="lazy" style="height: 60px" class="img-fluid" src="{{asset('storage/varient_image')}}/{{$productVarient->image}}" alt="Image Description">
+                                        </div>
+                                @endif
+
+                            @endforeach
+                        @endif
 
                     </div>
                 </div>
@@ -249,7 +276,7 @@
                                 <ins class="font-size-36 text-decoration-none">
 
                                     ৳ <span class="price_append_area">{{$sale_price}}</span>
-                                    @if ($has_discount == 1)
+                                    @if (($has_discount == 1) and ($sale_price_without_discount != $sale_price))
                                         <del class="font-size-20 ml-2 text-danger">৳ {{$sale_price_without_discount}}</del>
                                     @endif
 

@@ -64,7 +64,10 @@
                                             <td class="order-id">{{$order->tracking_code}}</td>
                                             <td class="order-date">{{ date('d M Y', strtotime($order->created_at)) }}</td>
                                             <td class="order-status">
-                                                @if ($order->status == 1)
+                                                @foreach (orderStatus() as $key => $order_status)
+														@if($order->status == $key) <span class="badge badge-info">{{$order_status}}</span> @endif
+													@endforeach
+                                                {{-- @if ($order->status == 1)
                                                     <span class="badge badge-success">Accepted</span>
                                                 @elseif ($order->status == 2)
                                                     <span class="badge badge-danger">Declined</span>
@@ -74,17 +77,17 @@
                                                     <span class="badge badge-danger">Canceled</span>
                                                 @else
                                                     <span class="badge" style="background:#144ceb; color:white;">Pending</span>
-                                                @endif
+                                                @endif --}}
                                             </td>
                                             <td class="order-total">
                                                 <span class="order-price">৳ {{$order->grand_total_price}}</span>
                                             </td>
                                             <td class="order-action">
-                                                <a href="{{route('orderDetails', $order->id)}}" class="btn btn-outline btn-success btn-sm btn-rounded">View</a>
+                                                <a href="{{route('orderDetails', $order->id)}}" class="mt-2 btn btn-outline btn-success btn-sm btn-rounded">View</a>
 
                                                 {{-- <a title="Exchange Order" href="{{route('orderExchange', $order->id)}}" class="btn btn-outline btn-default btn-sm btn-rounded">Exchange Order</a> --}}
 
-                                                @if ($order->payment_status == 0 && $order->status != 4)
+                                                @if ($order->status == 0)
                                                     <button class="mt-2 btn btn-danger btn-default text-white btn-outline btn-sm btn-rounded" style="cursor: pointer;" data-target="#exampleModalCenter{{$order->id}}" data-toggle="modal">Cancel</button>
                                                 @endif
                                             </td>

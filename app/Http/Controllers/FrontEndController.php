@@ -36,6 +36,8 @@ use App\Models\Upazila;
 use App\Models\GuestCart;
 use App\Models\Otpvarification;
 use App\Models\ShippingAddress;
+use App\Models\OrderReturn;
+use App\Models\OrderReturnDetail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
@@ -470,7 +472,7 @@ class FrontendController extends Controller
                 'product_id' => $product->id,
                 'varient_id' => 0,
             ])->whereHas('orderInfo', function($q){
-                $q->whereIn('status', [0,1])->where('type',2)->where('delivery_status',1);
+                $q->whereIn('status', [0,1])->where('type',2)->whereIn('delivery_status',[0,1]);
             })->sum('quantity');
 
             $pending_orders_quantity_array[$product->id] = $pending_orders_quantity;
@@ -1162,8 +1164,9 @@ class FrontendController extends Controller
 
 
 
-                return redirect()->route('account_orders')->with('success','Your order is under review');
+
             });
+            return redirect()->route('account_orders')->with('success','Your order is under review');
         }
 
     }
@@ -1175,6 +1178,24 @@ class FrontendController extends Controller
         $orders = Order::where('user_id', $user->id)->latest()->paginate(20);
 
         return view('customer.orderList', compact('user', 'orders', 'request'));
+    }
+
+    public function order_return(Request $request)
+    {
+        $user = Auth::user();
+
+        if ($request->order_no and $request->order_no != '') {
+            $order = Order::where([
+                'user_id' => $user->id,
+                'tracking_code' => $request->order_no,
+                'status' => 1,
+                'delivery_status' => 3,
+            ])->latest()->with('orderDetails.returnOrderInfo.orderDetails')->first();
+        } else {
+            $order = '';
+        }
+
+        return view('customer.order_return', compact('order'));
     }
 
     // User order details page
@@ -1303,9 +1324,15 @@ class FrontendController extends Controller
     {
         $order = Order::where('id', $order_id)->first();
 
-        if ($order->status == 0) {
+        if ($order->status != 0) {
             return redirect()->back()->with('success', 'Order Cancelation not possible at this stage!');
         }
+
+        $request->validate([
+            'remark' => 'required',
+        ]);
+
+
 
         $order->remark  = $request->remark;
         $order->status  = 2;
@@ -1585,6 +1612,108 @@ class FrontendController extends Controller
     {
         $page = Page::where('slug',$slug)->latest()->first();
         return view('frontend.page_info', compact('page'));
+    }
+
+    public function return_order(Request $request)
+    {
+        // dd($request->all());
+        $request->validate([
+            'order_id' => 'required',
+            'reason' => 'required',
+        ]);
+
+        if (!isset($request->details_id) or count($request->details_id) == 0) {
+            return redirect()->back()->with('error', 'Please select at least one product to return.');
+        }
+
+        $quantity_sum = array_sum($request->details_id);
+
+        if ($quantity_sum <= 0) {
+            return redirect()->back()->with('error', 'Please select at least one product to return.');
+        }
+
+        $order_id = Crypt::decryptString($request->order_id);
+
+        $order = Order::where('id', $order_id)->first();
+
+        foreach ($request->details_id as $detail_id => $quantity) {
+            if ($quantity > 0) {
+                $detail_id = Crypt::decryptString($detail_id);
+                $order_detail = OrderDetail::where([
+                    'id' => $detail_id,
+                ])->first();
+
+                if ($order_detail) {
+                    if ($order_detail->quantity < $quantity) {
+                        return redirect()->back()->with('error', 'Return quantity exceeds ordered quantity for a product.');
+                    }
+                    $check_already_returned = OrderReturnDetail::where([
+                        'order_id' => $order->id,
+                        'varient_id' => $order_detail->varient_id,
+                        'product_id' => $order_detail->product_id,
+                    ])->whereHas('orderReturnInfo', function($q) use ($order) {
+                        $q->whereIn('status', [0,1])->where('order_id', $order->id);
+                    })->sum('quantity');
+
+                    if (($check_already_returned + $quantity) > $order_detail->quantity) {
+                        return redirect()->back()->with('error', 'You have already requested return for this product. Return quantity exceeds ordered quantity.');
+                    }
+                } else {
+                    return redirect()->back()->with('error', 'Order detail not found.');
+                }
+            }
+        }
+
+        if (($order->status == 0) or $order->delivery_status != 3) {
+            return redirect()->back()->with('error', 'Order Return not possible at this stage!');
+        }
+
+        DB::transaction(function () use ($request,$order) {
+
+            $tracking_code = date("yhis");
+            $data['tracking_code'] = $tracking_code;
+            $data['invoice_no'] = sprintf('%08d', $order->id);;
+            $data['order_id'] = $order->id;
+            $data['user_id'] = $order->user_id;
+            $data['remark'] = $request->reason;
+            $data['status'] = 0;
+            $return_order = OrderReturn::create($data);
+
+            foreach ($request->details_id as $detail_id => $quantity) {
+                if ($quantity > 0) {
+
+                    $detail_id = Crypt::decryptString($detail_id);
+                    $order_detail = OrderDetail::where([
+                        'id' => $detail_id,
+                    ])->first();
+
+                    if ($order_detail) {
+                        $return_data['return_order_id'] = $return_order->id;
+                        $return_data['order_id'] = $order->id;
+                        $return_data['order_detail_id'] = $detail_id;
+                        $return_data['product_id'] = $order_detail->product_id;
+                        $return_data['varient_id'] = $order_detail->varient_id;
+                        $return_data['quantity'] = $quantity;
+                        $return_data['price'] = $order_detail->price;
+                        $return_data['f_price'] = $order_detail->f_price;
+                        $return_data['discount'] = $order_detail->discount;
+                        $return_data['discount_type'] = $order_detail->discount_type;
+                        $return_data['weight'] = $order_detail->weight;
+                        $return_data['unit'] = $order_detail->unit;
+
+                        OrderReturnDetail::create($return_data);
+                    }
+                }
+            }
+        });
+
+
+
+
+
+        return redirect()->back()->with('success', 'Order Return Request Submitted Successfully!');
+
+
     }
 
 }

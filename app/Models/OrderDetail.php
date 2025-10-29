@@ -15,7 +15,7 @@ class OrderDetail extends Model
     {
         return $this->belongsTo(Order::class, 'order_id', 'id');
     }
-    
+
     public function productInfo()
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
@@ -34,6 +34,16 @@ class OrderDetail extends Model
     public function varientData()
     {
         return $this->hasMany(VarientData::class, 'varient_id', 'varient_id');
+    }
+
+    public function returnOrderDetailsInfo()
+    {
+        return $this->hasMany(OrderReturnDetail::class, 'order_detail_id', 'id');
+    }
+
+    public function returnOrderInfo()
+    {
+        return $this->hasMany(OrderReturn::class, 'order_id', 'order_id');
     }
 
 }

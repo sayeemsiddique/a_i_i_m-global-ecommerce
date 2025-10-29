@@ -84,9 +84,9 @@
             }
 
             .slick-slide img, .product-item__outer img {
-                height: 150px;
+                height: 250px;
                 width: 100%;
-                object-fit: cover;
+                object-fit: contain;
             }
             .category-home img {
                 height: 75px;

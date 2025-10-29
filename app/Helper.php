@@ -84,3 +84,14 @@ function paymentStatus()
     return $payment_status;
 }
 
+function returnOrderStatus()
+{
+    $return = array(
+        0 => 'Pending',
+        1 => 'Order Accept',
+        2 => 'Order Decline',
+    );
+
+    return $return;
+}
+

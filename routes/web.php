@@ -114,6 +114,8 @@ Route::middleware([SetLocale::class])->group(function () {
         Route::get('/add-to-cart', [FrontendController::class, 'add_to_cart'])->name('add_to_cart');
         Route::get('/buy-add-to-cart', [FrontendController::class, 'buy_add_to_cart'])->name('buy_add_to_cart');
         Route::post('/cart-update', [FrontendController::class, 'update_cart'])->name('update_cart');
+        Route::get('/order-return', [FrontendController::class, 'order_return'])->name('order_return');
+        Route::post('/return-order', [FrontendController::class, 'return_order'])->name('return_order');
 
         Route::prefix('shipping-address')->as('shipping_address.')->group(function () {
             Route::get('/index', [ShippingAddressController::class, 'index'])->name('index');

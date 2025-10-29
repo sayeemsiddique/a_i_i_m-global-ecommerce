@@ -101,6 +101,8 @@ class ProductController extends Controller
         DB::transaction(function () use ($request) {
         $user = Auth::user();
 
+        $tracking_code = date("yhis");
+
         if(Gate::allows('add_product',$user))
         {
             $request->validate([
@@ -207,6 +209,8 @@ class ProductController extends Controller
                 $order['type'] = 3;
                 $order['user_id'] = auth()->user()->id;
                 $order['delivery_status'] = 1;
+                $order['transaction_id'] = $tracking_code;
+                $order['tracking_code'] = $tracking_code;
 
                 $order_data = Order::create($order);
 
@@ -305,6 +309,8 @@ class ProductController extends Controller
                 $order['type'] = 3;
                 $order['user_id'] = auth()->user()->id;
                 $order['delivery_status'] = 1;
+                $order['transaction_id'] = $tracking_code;
+                $order['tracking_code'] = $tracking_code;
                 $order_data = Order::create($order);
 
                 $order_detail['order_id'] = $order_data->id;
@@ -446,6 +452,8 @@ class ProductController extends Controller
 
         $get = Product::where('id', $id)->update($product);
 
+        $tracking_code = date("yhis");
+
 
         $product_info['meta_title'] = $request->name ?? '';
         $product_info['product_id'] = $id;
@@ -466,7 +474,7 @@ class ProductController extends Controller
                     $image['name'] = $randomFileName;
                     $image['table'] = 'product';
                     // // product id
-                    $image['service_id'] = $get->id;
+                    $image['service_id'] = $old_product->id;
                     $image['myme_type'] = $request->file('gallery')[$key]->extension();
                     $image['real_name'] = $request->file('gallery')[$key]->getClientOriginalName();
 
@@ -560,9 +568,10 @@ class ProductController extends Controller
                             // get order exist
                             $get_order_detail = OrderDetail::where([
                                 'product_id' => $id,
-                            ])->with(['orderInfo' => function ($query) {
+                                'varient_id' => $request->varient_id[$key],
+                            ])->whereHas('orderInfo', function($query) {
                                 $query->where('type', 3);
-                            }])->latest()->first();
+                            })->latest()->first();
 
                             if ($get_order_detail) {
                                 $order_get_data = $get_order_detail->orderInfo;
@@ -570,14 +579,16 @@ class ProductController extends Controller
                                 $order_data['type'] = 3;
                                 $order_data['user_id'] = auth()->user()->id;
                                 $order_data['delivery_status'] = 1;
+                                $order_data['transaction_id'] = $tracking_code;
+                                $order_data['tracking_code'] = $tracking_code;
                                 $order_get_data = Order::create($order_data);
                             }
-
+                            // dd($get_order_detail);
                             // get order details exist
                             $get_order_detail_data = OrderDetail::where([
                                 'product_id' => $id,
                                 'order_id' => $order_get_data->id,
-                                'varient_id' => $request->varient_id[$key],
+                                'varient_id' => $request->varient_id[$key] ?? 0,
                             ])->latest()->first();
 
                             if ($get_order_detail_data) {
@@ -630,9 +641,10 @@ class ProductController extends Controller
                             // get order exist
                             $get_order_detail = OrderDetail::where([
                                 'product_id' => $id,
-                            ])->with(['orderInfo' => function ($query) {
+                                'varient_id' => $varient_data->id,
+                            ])->whereHas('orderInfo', function($query) {
                                 $query->where('type', 3);
-                            }])->latest()->first();
+                            })->latest()->first();
 
                             if ($get_order_detail) {
                                 $order_get_data = $get_order_detail->orderInfo;
@@ -640,6 +652,8 @@ class ProductController extends Controller
                                 $order_data['type'] = 3;
                                 $order_data['user_id'] = auth()->user()->id;
                                 $order_data['delivery_status'] = 1;
+                                $order_data['transaction_id'] = $tracking_code;
+                                $order_data['tracking_code'] = $tracking_code;
                                 $order_get_data = Order::create($order_data);
                             }
 
@@ -868,7 +882,9 @@ class ProductController extends Controller
             ]);
         }
         $order['type'] = 1;
-        $order['tracking_code'] = date("yhis");
+        $tracking_code = date("yhis");
+        $order['tracking_code'] = $tracking_code;
+        $order['transaction_id'] = $tracking_code;
         if ($request->file('document')) {
             $path = $request->file('document')->store('/public/document');
             $path = Str::replace('public/document', '', $path);
@@ -985,6 +1001,9 @@ class ProductController extends Controller
             $order['type'] = 3;
             $order['user_id'] = auth()->user()->id;
             $order['delivery_status'] = 1;
+            $tracking_code = date("yhis");
+            $order['transaction_id'] = $tracking_code;
+            $order['tracking_code'] = $tracking_code;
             $order_data = Order::create($order);
 
             $order_detail['order_id'] = $order_data->id;
@@ -1169,6 +1188,9 @@ class ProductController extends Controller
             $order['type'] = 3;
             $order['user_id'] = auth()->user()->id;
             $order['delivery_status'] = 1;
+            $tracking_code = date("yhis");
+            $order['tracking_code'] = $tracking_code;
+            $order['transaction_id'] = $tracking_code;
             $order_data = Order::create($order);
 
 

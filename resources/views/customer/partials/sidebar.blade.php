@@ -24,6 +24,14 @@
                         <span class="menu-text">Orders</span>
                     </a>
                 </li>
+                <li class="menu-item {{ request()->routeIs('order_return') ? 'menu-item-active' : '' }}" aria-haspopup="true">
+                    <a href="{{ route('order_return') }}" class="menu-link">
+                        <span class="svg-icon menu-icon">
+                            <i style="text-shadow: 3px 3px #eaeaea;" class="fas fa-exchange-alt"></i>
+                        </span>
+                        <span class="menu-text">Order Return</span>
+                    </a>
+                </li>
                 <li class="menu-item {{ request()->routeIs('shipping_address.index') ? 'menu-item-active' : '' }}" aria-haspopup="true">
                     <a href="{{ route('shipping_address.index') }}" class="menu-link">
                         <span class="svg-icon menu-icon">

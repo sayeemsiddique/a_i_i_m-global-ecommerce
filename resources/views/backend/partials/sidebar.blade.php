@@ -6,7 +6,7 @@
         <a href="{{route('index')}}" class="brand-logo">
 
             <img alt="Logo" src="{{ asset('storage/setting/' . $global_setting->logo) }}" style="max-height: 45px;"/>
-            <h6 class="mt-1 ml-5" style="color: #f1f1f1; font-size:12px;"> {{ $global_setting->sub_title ?? ''}}</h6>
+            {{-- <h6 class="mt-1 ml-5" style="color: #f1f1f1; font-size:12px;"> {{ $global_setting->sub_title ?? ''}}</h6> --}}
         </a>
         <!--end::Logo-->
         <!--begin::Toggle-->
