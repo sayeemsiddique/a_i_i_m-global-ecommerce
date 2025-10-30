@@ -78,7 +78,7 @@ function paymentStatus()
         1 => 'Pending',
         2 => 'Recieved',
         3 => 'Rejected',
-        4 => 'Returned',
+        // 4 => 'Returned',
     );
 
     return $payment_status;
@@ -93,5 +93,15 @@ function returnOrderStatus()
     );
 
     return $return;
+}
+
+function returnPaymentStatus()
+{
+    $payment_status = array(
+        0 => 'Pending',
+        1 => 'Returned',
+    );
+
+    return $payment_status;
 }
 

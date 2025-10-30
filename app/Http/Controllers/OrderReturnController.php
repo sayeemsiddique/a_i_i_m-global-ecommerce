@@ -13,6 +13,7 @@ use App\Models\Stock;
 use App\Models\OrderDetail;
 use App\Models\Payment;
 use Auth;
+use Illuminate\Support\Facades\Crypt;
 
 class OrderReturnController extends Controller
 {
@@ -354,11 +355,11 @@ class OrderReturnController extends Controller
                 $query->where('tracking_code', 'like','%'.$request->order_id.'%');
             }
 
-            if(isset($request->type) and $request->type != '') {
-                $query->whereHas('userInfo',function ($new_query) use ($request) {
-                    $new_query->where('type',$request->type);
-                });
-            }
+            // if(isset($request->type) and $request->type != '') {
+            //     $query->whereHas('userInfo',function ($new_query) use ($request) {
+            //         $new_query->where('type',$request->type);
+            //     });
+            // }
             $orders = $query->paginate(20);
             $setting = Setting::oldest()->first();
 
@@ -374,12 +375,13 @@ class OrderReturnController extends Controller
     public function order_return_show($id)
     {
         menuSubmenu('manage_order', 'order_return_list');
+        $id = Crypt::decryptString($id);
 
-        $order = Order::where('id',$id)->latest()->first();
+        // $order = Order::where('id',$id)->latest()->first();
         $orderReturn = OrderReturn::where('id',$id)->latest()->first();
         $setting = Setting::oldest()->first();
         $payment = Payment::where('order_id', $id)->first();
 
-        return view('backend.admin.order.order_return_show', compact('order', 'orderReturn', 'setting', 'payment'));
+        return view('backend.admin.order.order_return_show', compact('orderReturn', 'setting', 'payment'));
     }
 }

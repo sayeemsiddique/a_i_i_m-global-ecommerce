@@ -4,32 +4,7 @@
 
 <!--begin::Content-->
 <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
-    <!--begin::Subheader-->
-    <div class="subheader py-2 py-lg-6 subheader-solid" id="kt_subheader">
-        <div class="container-fluid d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
-            <!--begin::Info-->
-            <div class="d-flex align-items-center flex-wrap mr-1">
-                <!--begin::Page Heading-->
-                <div class="d-flex align-items-baseline flex-wrap mr-5">
-                    <!--begin::Page Title-->
-                    <h5 class="text-dark font-weight-bold my-1 mr-5">All Return Orders</h5>
-                    <!--end::Page Title-->
-                    <!--begin::Breadcrumb-->
-                    <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-2 font-size-sm">
-                        <li class="breadcrumb-item">
-                            <a href="{{route('admin.index')}}" class="text-muted">Dashboard</a>
-                        </li>
-                        <li class="breadcrumb-item active">
-                            <a class="text-muted">All Return Orders</a>
-                        </li>
-                    </ul>
-                    <!--end::Breadcrumb-->
-                </div>
-                <!--end::Page Heading-->
-            </div>
-            <!--end::Info-->
-        </div>
-    </div>
+
     <!--begin::Entry-->
     <div class="d-flex flex-column-fluid">
         <!--begin::Container-->
@@ -41,16 +16,16 @@
                     <div class="card card-custom example example-compact">
                         <div class="card-header">
                             <h3 class="card-title">Order Return List</h3>
-                            <div class="d-flex align-items-center"> 
+                            <div class="d-flex align-items-center">
 
-                                                            
+
                                 {{-- <input type="text"data-url="{{ route('admin.searchAjax',['type'=> 'designation']) }}" class="form-control form-control-lg form-control-solid ajax-data-search" name="q" placeholder="Enter Designation, Description, Level"> --}}
                             </div>
                         </div>
 
                         {{-- Advance filter --}}
                         <div class="form-group card-body mb-0 pb-0 row">
-                    
+
                             <form class="form-inline" method="GET">
                                 <table>
                                     <tr>
@@ -70,8 +45,8 @@
                                             @endif>
                                             </div>
                                         </td>
-                                        <td>
-                                            
+                                        {{-- <td>
+
                                             <div class="form-group">
                                                 <label class="pr-2 pl-2">User Type :</label>
                                                 <select class="form-control" name="type" id="type">
@@ -81,7 +56,7 @@
                                                     <option @if (isset($_GET['type']) and $_GET['type']==3) selected @endif value="3">Dealer</option>
                                                 </select>
                                             </div>
-                                        </td>
+                                        </td> --}}
                                         <td>
                                             <div class="form-group mt-2">
                                                 <label class="pr-2 pl-2">Order ID :</label>
@@ -94,20 +69,20 @@
                                             <button type="submit" class="btn btn-success mt-2 ml-2">Search</button>
                                             <a href="{{route('admin.order.order_return_list')}}" class="btn btn-danger mt-2 ml-2">Reset Search</button>
                                         </td>
-                                        
+
                                     </tr>
                                 </table>
-                                
+
                             </form>
                         </div>
                         {{-- End Filter --}}
 
                         <div class="card-body">
-                            
+
                             <div class="table-responsive ajax-data-container pt-3">
-                                @include('backend.admin.order.ajax.orderReturn')                                    
+                                @include('backend.admin.order.ajax.orderReturn')
                             </div>
-                            {{$orders->links()}}
+                            {{$orders->appends($_GET)->links()}}
                         </div>
                     </div>
                 </div>
@@ -117,5 +92,5 @@
 </div>
 
 
-    
+
 @endsection

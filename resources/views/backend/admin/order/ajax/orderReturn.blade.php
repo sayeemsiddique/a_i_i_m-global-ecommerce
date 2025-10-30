@@ -1,4 +1,4 @@
-@php
+{{-- @php
     $user_types = array(
         [
             'id' => 1,
@@ -13,17 +13,17 @@
             'name' => 'Dealer'
         ],
     );
-@endphp
+@endphp --}}
 <table class="table table-separate table-head-custom table-checkable table-striped">
     <thead>
         <tr>
             <th>#</th>
             <th>Order ID</th>
-            <th class="text-left">User Type</th>
+            {{-- <th class="text-left">User Type</th> --}}
             <th class="text-left">Name</th>
             <th>Date</th>
             <th>Amount</th>
-            {{-- <th>Status</th>  --}}
+            <th>Status</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -37,18 +37,16 @@
                     <td>
                         {{ $i }}
                     </td>
-                    
+
                     <td>{{ $order->tracking_code }}</td>
 
-                    <td align="left">
-                        {{-- @if (isset($_GET['type']) and $_GET['type'] != '') --}}
+                    {{-- <td align="left">
                             @foreach ($user_types as $user_type)
                                 @if ($user_type['id'] == ($order->userInfo->type ?? 0))
                                     {{$user_type['name']}}
                                 @endif
                             @endforeach
-                        {{-- @endif --}}
-                    </td>
+                    </td> --}}
 
                     <td align="left">{{ $order->userInfo ? ($order->userInfo->first_name.' '.$order->userInfo->last_name) : '' }}</td>
 
@@ -56,8 +54,11 @@
 
                     <td>৳ {{ $order->grand_total_price ?? '0.00' }}</td>
 
-                    {{-- <td>
-                        @if ($order->stage == 1)
+                    <td>
+                        @foreach (returnOrderStatus() as $key => $order_status)
+                            @if($order->status == $key) <span class="badge badge-info">{{$order_status}}</span> @endif
+                        @endforeach
+                        {{-- @if ($order->stage == 1)
                             <span class="label label-lg font-weight-bold label-success label-inline">Accepted</span>
                         @elseif ($order->stage == 0)
                             <span class="label label-lg font-weight-bold label-inline" style="color: white; background:blue;">Pending</span>
@@ -71,29 +72,29 @@
                             <span class="label label-lg font-weight-bold label-danger label-inline">Canceled</span>
                         @else
                             <span class="label label-lg font-weight-bold label-warning label-inline">Unknown Status</span>
-                        @endif
+                        @endif --}}
 
-                    </td> --}}
+                    </td>
 
                     <td>
                         @can('view_order')
-                            <a href="{{route('admin.order.order_return_show', $order->id)}}" class="btn btn-sm btn-clean btn-icon" title="view">
+                            <a href="{{route('admin.order.order_return_show', Crypt::encryptString($order->id))}}" class="btn btn-sm btn-clean btn-icon" title="view">
                                 <i class="la la-eye"></i>
                             </a>
                         @endcan
 
-                        @can('delete_order')
+                        {{-- @can('delete_order') --}}
                             {{-- <button class="btn btn-sm btn-clean btn-icon delete" title="Delete" data-id="{{ $order->id }}">
                                 <i class="la la-trash"></i>
                             </button> --}}
                             {{-- @if ($order->status == 1)
-                                
+
                                 @elseif ($order->status == 0)
                                     <button class="btn btn-sm btn-clean btn-icon delete" title="Active" data-id="{{ $order->id }}">
                                         <i class="la la-check"></i>
                                     </button>
                                 @endif --}}
-                        @endcan
+                        {{-- @endcan --}}
                     </td>
                 </tr>
                 @php
@@ -107,13 +108,13 @@
 </table>
 
 @push('stackScript')
-    {{-- <script> 
+    {{-- <script>
         $(".delete").click(function(e) {
 
             var data_id = $(this).attr("data-id");
             var url =  '<a href="{{route("admin.order.delete", ":id")}}" class="swal2-confirm swal2-styled" title="Delete">Confirm</a>';
             url = url.replace(':id', data_id );
-            
+
             Swal.fire({
                 title: 'Are you sure ?',
                 icon: 'info',

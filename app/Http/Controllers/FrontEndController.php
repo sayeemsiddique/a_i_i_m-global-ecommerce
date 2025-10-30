@@ -1046,6 +1046,10 @@ class FrontendController extends Controller
     {
         // dd($request->all());
 
+        if (in_array($request->delivery_option, [1,2])   ) {
+            return redirect()->back()->with('error', 'Please use proper delivery option.');
+        }
+
         if ($request->delivery_option == 2) {
 
             $sslCommerz = new SslCommerzPaymentController();
@@ -1679,6 +1683,7 @@ class FrontendController extends Controller
             $data['status'] = 0;
             $return_order = OrderReturn::create($data);
 
+            $grand_total_price = 0;
             foreach ($request->details_id as $detail_id => $quantity) {
                 if ($quantity > 0) {
 
@@ -1688,6 +1693,7 @@ class FrontendController extends Controller
                     ])->first();
 
                     if ($order_detail) {
+                        $grand_total_price += ($order_detail->price * $quantity);
                         $return_data['return_order_id'] = $return_order->id;
                         $return_data['order_id'] = $order->id;
                         $return_data['order_detail_id'] = $detail_id;
@@ -1705,6 +1711,18 @@ class FrontendController extends Controller
                     }
                 }
             }
+
+            $payment['type'] = 2;
+            $payment['order_id'] = $return_order->id;
+            $payment['user_id'] = $order->user_id;
+            $payment['amount'] = $grand_total_price;
+            $payment['payment_method'] = 5;
+            $payment['status'] = 0; // helper function return payment functon status check
+            $payment['created_by'] = $order->user_id;
+            Payment::create($payment);
+
+            $return_order->grand_total_price = $grand_total_price;
+            $return_order->save();
         });
 
 
@@ -1714,6 +1732,35 @@ class FrontendController extends Controller
         return redirect()->back()->with('success', 'Order Return Request Submitted Successfully!');
 
 
+    }
+
+    public function return_order_list(Request $request)
+    {
+        $user = Auth::user();
+
+        $orders = OrderReturn::where([
+                'user_id' => $user->id,
+                // 'tracking_code' => $request->order_no,
+            ])->latest()->paginate(20);
+
+        return view('customer.return_order_list', compact('orders'));
+    }
+
+    public function returnOrderDetails($id)
+    {
+        $user = Auth::user();
+        $id = Crypt::decryptString($id);
+
+        $orderDetails = OrderReturn::where([
+                'user_id' => $user->id,
+                'id' => $id,
+            ])->latest()->first();
+
+        if (!$orderDetails) {
+            return redirect()->back()->with('error', 'Return order not found.');
+        }
+
+        return view('customer.returnOrderDetails', compact('orderDetails','user'));
     }
 
 }
