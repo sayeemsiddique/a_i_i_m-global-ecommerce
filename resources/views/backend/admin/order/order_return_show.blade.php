@@ -109,7 +109,15 @@
 																@foreach ($orderReturn->orderDetails as $order_detail)
 																	<tr>
 																		<td class="text-left">
-																			{{ $order_detail->productInfo->name ?? '' }}
+																			{{ $order_detail->productInfo->name ?? '' }} <br>
+                                                                            @if ($order_detail->varient_id > 0)
+                                                                                @foreach ($order_detail->varientDataInfo as $varient)
+                                                                                    <small class="text-info">
+                                                                                        {{$varient->varientTypeInfo->name ?? ''}}: {{$varient->data_value}}
+                                                                                        @if (!$loop->last) , @endif
+                                                                                    </small>
+                                                                                @endforeach
+                                                                            @endif
 																		</td>
 
 																		<td class="text-right">
@@ -149,7 +157,7 @@
                                                         <button type="button" class="btn btn-sm btn-success mb-4" data-toggle="modal" data-target="#manageOrderStatus">Manage Order Status</button>
 
                                                         <div class="modal fade" id="manageOrderStatus" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
                                                                 <h5 class="modal-title" id="exampleModalLongTitle">Order Status</h5>
@@ -158,7 +166,7 @@
                                                                 </button>
                                                                 </div>
                                                                 <div class="modal-body">
-                                                                    <form action="{{route('admin.order.orderStatusUpdate')}}" method="POST">
+                                                                    <form action="{{route('admin.order.returnOrderStatusUpdate')}}" method="POST">
                                                                         @csrf
                                                                         {{-- Hidden file --}}
                                                                         <input type="hidden" name="orderId" value="{{$orderReturn->id}}" required>
@@ -179,7 +187,7 @@
                                                                                             <td class="text-left">{{ $orderDetail->productInfo->name ?? '' }}</td>
                                                                                             <td>{{ number_format($orderDetail->quantity) }}</td>
                                                                                             <td>
-                                                                                                <input type="checkbox" @if($orderDetail->) name="return_to_stock[{{$orderDetail->id}}]" value="1">
+                                                                                                <input autocomplete="off" type="checkbox" @if($orderDetail->stock_status == 1) checked @endif name="return_to_stock[{{$orderDetail->id}}]" value="1">
                                                                                             </td>
                                                                                         </tr>
                                                                                     @endforeach
@@ -189,14 +197,15 @@
                                                                         </div>
                                                                         <div class="form-group row">
 
-                                                                            <label for="stage" class="col-sm-4 col-form-label">Order Status</label>
+                                                                            <label for="status" class="col-sm-4 col-form-label">Order Status</label>
                                                                             <div class="col-sm-8">
-                                                                                <select class="form-control" id="stage" name="stage" required>
+                                                                                <select autocomplete="off" class="form-control" id="status" name="status" required>
                                                                                     <option value="">Select</option>
                                                                                     @foreach (returnOrderStatus() as $key => $order_status)
                                                                                         <option @if($orderReturn->status == $key) selected @endif value="{{$key}}">{{$order_status}}</option>
                                                                                     @endforeach
                                                                                 </select>
+                                                                                <small>'Return to Stock' only acceptable when status: Order Accept </small>
                                                                             </div>
 
                                                                         </div>
@@ -205,7 +214,7 @@
 
                                                                             <label for="payment_status" class="col-sm-4 col-form-label">Payment Status</label>
                                                                             <div class="col-sm-8">
-                                                                                <select class="form-control" id="payment_status" name="payment_status" required>
+                                                                                <select autocomplete="off" class="form-control" id="payment_status" name="payment_status" required>
                                                                                     <option value="">Select</option>
                                                                                     @foreach(returnPaymentStatus() as $key => $payment_status)
                                                                                         <option @if(($orderReturn->paymentInfo->status ?? 0) == $key) selected @endif value="{{$key}}">{{$payment_status}}</option>
@@ -214,20 +223,6 @@
                                                                             </div>
 
                                                                         </div>
-                                                                        <div class="form-group row">
-
-                                                                            <label for="payment_status" class="col-sm-4 col-form-label">Payment Status</label>
-                                                                            <div class="col-sm-8">
-                                                                                <select class="form-control" id="payment_status" name="payment_status" required>
-                                                                                    <option value="">Select</option>
-                                                                                    @foreach(returnPaymentStatus() as $key => $payment_status)
-                                                                                        <option @if(($orderReturn->paymentInfo->status ?? 0) == $key) selected @endif value="{{$key}}">{{$payment_status}}</option>
-                                                                                    @endforeach
-                                                                                </select>
-                                                                            </div>
-
-                                                                        </div>
-
 
                                                                         <div class="row">
                                                                             <div class="col-8">

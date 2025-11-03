@@ -4,7 +4,7 @@
             <th>#</th>
             <th class="text-left">Product Name</th>
             <th>Product Code</th>
-            
+
             <th>Stock (pcs)</th>
             <th>Weight</th>
             {{-- <th>Action</th> --}}
@@ -25,9 +25,9 @@
                     </td>
                     <td align="left">
                         <span @if ($product->has_varient == 1) style="cursor: pointer;color:blue;"  data-toggle="modal" data-target="#stock_details{{$product->id}}" @endif>
-                            {{ $product->name }} 
+                            {{ $product->name }}
                         </span>
-                        
+
                     </td>
 
                     <td>
@@ -44,16 +44,16 @@
                         <div class="modal" id="stock_details{{$product->id}}">
                             <div class="modal-dialog">
                             <div class="modal-content">
-                            
+
                                 <!-- Modal Header -->
                                 <div class="modal-header">
                                 <h1 class="modal-title">{{$product->name}} Stock Details</h1>
                                 <button type="button" class="close" data-dismiss="modal">×</button>
                                 </div>
-                                
+
                                 <!-- Modal body -->
                                 <div class="modal-body">
-                                
+
                                 <table class="table table-bordered table-sm">
                                     <thead>
                                         <tr>
@@ -69,24 +69,24 @@
                                         <tr>
                                             <td class="text-center">
                                                 @foreach ($item->varientDataInfo as $varient)
-                                                    {{$varient->data_value}} <br>
+                                                    {{$varient->varientTypeInfo->name ?? ''}}: {{$varient->data_value}} <br>
                                                 @endforeach
                                             </td>
                                             <td class="text-center">{{number_format($item->quantity)}}</td>
-                                            
+
                                         </tr>
                                         @endforeach
                                     </tbody>
 
                                   </table>
-                                
+
                                 </div>
-                                
+
                                 <!-- Modal footer -->
                                 <div class="modal-footer">
                                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                                 </div>
-                                
+
                             </div>
                             </div>
                         </div>
@@ -105,7 +105,7 @@
                         <a title="Add Stock" class="btn btn-success btn-sm" href="{{route('admin.product.add_stock', $product->id)}}">+</a>
                     </td> --}}
 
-                    
+
                 </tr>
                 @php
                     $i++;
@@ -125,13 +125,13 @@
 
 
 @push('stackScript')
-    <script> 
+    <script>
         $(".delete").click(function(e) {
 
             var data_id = $(this).attr("data-id");
             var url =  '<a href="{{route("admin.product.delete",":id")}}" class="swal2-confirm swal2-styled" title="Delete">Confirm</a>';
             url = url.replace(':id', data_id );
-            
+
             Swal.fire({
                 title: 'Are you sure ?',
                 icon: 'info',

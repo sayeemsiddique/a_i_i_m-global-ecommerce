@@ -56,7 +56,17 @@
 
                                 @foreach ($orderDetails->orderDetails as $order)
                                     <tr>
-                                        <td class="order-id text-left">{{ $order->productInfo->name ?? '' }}</td>
+                                        <td class="order-id text-left">
+                                            {{ $order->productInfo->name ?? '' }} <br>
+                                            @if ($order->varient_id > 0)
+                                                @foreach ($order->varientDataInfo as $varient)
+                                                    <small class="text-info">
+                                                        {{$varient->varientTypeInfo->name ?? ''}}: {{$varient->data_value}}
+                                                        @if (!$loop->last) , @endif
+                                                    </small>
+                                                @endforeach
+                                            @endif
+                                        </td>
                                         <td class="order-date">৳ {{ number_format($order->price, 2, '.', '') }}</td>
                                         <td class="order-date">{{ number_format($order->quantity) ?? 0 }}</td>
                                         @php

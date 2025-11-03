@@ -83,7 +83,7 @@
                                                 <span class="order-price">৳ {{$order->grand_total_price}}</span>
                                             </td>
                                             <td class="order-action">
-                                                <a href="{{route('orderDetails', $order->id)}}" class="mt-2 btn btn-outline btn-success btn-sm btn-rounded">View</a>
+                                                <a href="{{route('orderDetails', Crypt::encryptString($order->id))}}" class="mt-2 btn btn-outline btn-success btn-sm btn-rounded">View</a>
 
                                                 {{-- <a title="Exchange Order" href="{{route('orderExchange', $order->id)}}" class="btn btn-outline btn-default btn-sm btn-rounded">Exchange Order</a> --}}
 

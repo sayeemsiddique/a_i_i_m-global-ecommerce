@@ -75,7 +75,15 @@
 
                                                 <tr>
                                                     <td class="text-left">
-                                                        {{ $orderProduct->productInfo->name ?? ''}}
+                                                        {{ $orderProduct->productInfo->name ?? ''}} <br>
+                                                        @if ($orderProduct->varient_id > 0)
+                                                            @foreach ($orderProduct->varientData as $varient)
+                                                                <small class="text-info">
+                                                                    {{$varient->varientTypeInfo->name ?? ''}} : {{$varient->data_value}}
+                                                                    @if (!$loop->last) , @endif
+                                                                </small>
+                                                            @endforeach
+                                                        @endif
 
                                                     </td>
                                                     <td>{{ number_format(($orderProduct->quantity - $return_quantity), 2, '.', '') }}</td>

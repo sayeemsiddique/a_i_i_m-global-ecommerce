@@ -31,7 +31,10 @@
                     <td>৳ {{ $order->grand_total_price ?? '0.00' }}</td>
 
                     <td>
-                        @if ($order->stage == 1)
+                        @foreach (orderStatus() as $key => $order_status)
+                            @if($order->status == $key) {{$order_status}} @endif
+                        @endforeach
+                        {{-- @if ($order->stage == 1)
                             <span class="label label-lg font-weight-bold label-success label-inline">Accepted</span>
                         @elseif ($order->stage == 0)
                             <span class="label label-lg font-weight-bold label-inline" style="color: white; background:blue;">Pending</span>
@@ -45,7 +48,7 @@
                             <span class="label label-lg font-weight-bold label-danger label-inline">Canceled</span>
                         @else
                             <span class="label label-lg font-weight-bold label-warning label-inline">Unknown Status</span>
-                        @endif
+                        @endif --}}
 
                     </td>
 

@@ -180,7 +180,6 @@
 																			@if ($order_detail->varient_id > 0)
 																				<span class="text-success">
 																					<small>
-
 																							{{ $order_detail->varientDataInfo->varientTypeInfo->name ?? '' }}: {{ $order_detail->varientDataInfo->data_value ?? '' }}
 																					</small>
 																				</span>

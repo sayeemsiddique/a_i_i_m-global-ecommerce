@@ -1206,6 +1206,7 @@ class FrontendController extends Controller
     public function orderDetails(Request $request, $orderId)
     {
         $user = Auth::user();
+        $orderId = Crypt::decryptString($orderId);
         $orderDetails = Order::with('orderDetails')->where('id', $orderId)->first();
         $setting = Setting::oldest()->first();
 

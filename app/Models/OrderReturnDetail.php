@@ -19,4 +19,9 @@ class OrderReturnDetail extends Model
     {
         return $this->belongsTo(Product::class, 'return_order_id', 'id');
     }
+
+    public function varientDataInfo()
+    {
+        return $this->hasMany(VarientData::class, 'varient_id', 'varient_id');
+    }
 }

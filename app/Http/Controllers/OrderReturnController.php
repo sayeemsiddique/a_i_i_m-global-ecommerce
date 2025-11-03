@@ -384,4 +384,264 @@ class OrderReturnController extends Controller
 
         return view('backend.admin.order.order_return_show', compact('orderReturn', 'setting', 'payment'));
     }
+
+    public function returnOrderStatusUpdate(Request $request)
+    {
+        $user = Auth::user();
+        // dd($request->all());
+
+        // if(Gate::allows('order_return_list', $user))
+        // {
+            $orderReturn = OrderReturn::where('id',$request->orderId)->latest()->first();
+
+            if (!$orderReturn) {
+                return redirect()->back()->with('error','Order not found.');
+            }
+
+            $update_data['status'] = $request->status;
+            $update_data['payment_status'] = $request->payment_status;
+            $orderReturn->update($update_data);
+
+            $get_payment = Payment::where([
+                'order_id' => $orderReturn->id,
+                'type' => 2
+            ])->latest()->first();
+
+            $previous_payment_status = $get_payment->status ?? 0;
+
+            if ($get_payment) {
+                $payment_update['status'] = $request->payment_status;
+                $get_payment->update($payment_update);
+            } else {
+                $get_payment = new Payment;
+                $get_payment->type = 2;
+                $get_payment->order_id = $orderReturn->id;
+                $get_payment->user_id = $orderReturn->user_id;
+                $get_payment->amount = $orderReturn->grand_total_price;
+                $get_payment->payment_method = $orderReturn->delivery_option;
+                $get_payment->status = $request->payment_status; // helper function return payment functon status check
+                $get_payment->created_by = $user->id;
+                $get_payment->save();
+            }
+
+            $get_main_order_payment = Payment::where([
+                'order_id' => $orderReturn->order_id,
+                'type' => 1
+            ])->latest()->first();
+
+            $get_main_order = Order::where([
+                'id' => $orderReturn->order_id,
+            ])->latest()->first();
+
+            // dd($orderReturn);
+
+            if ($request->payment_status == 1) {
+                if ($get_main_order_payment) {
+                    if ($previous_payment_status != 1) {
+                        $deducted_amount = $get_main_order_payment->amount - $get_payment->amount;
+                        $main_payment_update['amount'] = $deducted_amount;
+                        $get_main_order_payment->update($main_payment_update);
+
+                        $main_order_amount_update['grand_total_price'] = $get_main_order->grand_total_price - $get_payment->amount;
+                        $main_order_amount_update['total_price'] = $get_main_order->total_price - $get_payment->amount;
+                        $get_main_order->update($main_order_amount_update);
+                    }
+                }
+            } else {
+                if ($get_main_order_payment) {
+                    if ($previous_payment_status == 1) {
+                        $added_amount = $get_main_order_payment->amount + $get_payment->amount;
+                        $main_payment_update['amount'] = $added_amount;
+                        $get_main_order_payment->update($main_payment_update);
+
+                        $main_order_amount_update['grand_total_price'] = $get_main_order->grand_total_price + $get_payment->amount;
+                        $main_order_amount_update['total_price'] = $get_main_order->total_price + $get_payment->amount;
+                        $get_main_order->update($main_order_amount_update);
+                    }
+                }
+            }
+
+            if (isset($request->return_to_stock) and count($request->return_to_stock) > 0 and $request->status == 1) {
+                foreach ($request->return_to_stock as $key => $value) {
+
+                    $order_return_detail = OrderReturnDetail::where('id',$key)->latest()->first();
+
+                    if ($order_return_detail) {
+                        $order_return_detail_update['stock_status'] = 1;
+                        $order_return_detail->update($order_return_detail_update);
+
+                        if ($order_return_detail->quantity > 0) {
+                            $inventory = Inventory::where([
+                                'order_id' => $orderReturn->id,
+                                'type' => 6,
+                                'product_id' => $order_return_detail->product_id,
+                                'varient_id' => $order_return_detail->varient_id,
+                            ])->latest()->first();
+
+                            if ($inventory) {
+
+                                if ($inventory->quantity > $order_return_detail->quantity) {
+                                    $inventory_update['quantity'] = $order_return_detail->quantity;
+                                    $inventory->update($inventory_update);
+
+
+                                    $difference = $inventory->quantity - $order_return_detail->quantity;
+                                    Stock::where([
+                                        'varient_id' => $order_return_detail->varient_id,
+                                        'product_id' => $order_return_detail->product_id,
+                                    ])->increment('quantity', $$difference);
+
+                                    OrderDetail::where('order_id', $orderReturn->order_id)
+                                        ->where('product_id', $order_return_detail->product_id)
+                                        ->where('varient_id', $order_return_detail->varient_id)
+                                        ->where('id', $order_return_detail->order_detail_id)
+                                        ->decrement('quantity', $difference);
+                                } else if ($inventory->quantity < $order_return_detail->quantity) {
+                                    $difference = $order_return_detail->quantity - $inventory->quantity;
+
+                                    $check_stock = Stock::where([
+                                        'varient_id' => $order_return_detail->varient_id,
+                                        'product_id' => $order_return_detail->product_id,
+                                    ])->first();
+
+                                    if ($check_stock && ($check_stock->quantity < $difference)) {
+                                       return redirect()->back()->with('error','Insufficient stock for product: '.($order_return_detail->productInfo->name ?? '').'. Available stock is '.$check_stock->quantity.', required '.$difference.'.');
+                                    }
+
+                                    $inventory_update['quantity'] = $order_return_detail->quantity;
+                                    $inventory->update($inventory_update);
+
+
+                                    Stock::where([
+                                        'varient_id' => $order_return_detail->varient_id,
+                                        'product_id' => $order_return_detail->product_id,
+                                    ])->decrement('quantity', $difference);
+
+                                    OrderDetail::where('order_id', $orderReturn->order_id)
+                                        ->where('product_id', $order_return_detail->product_id)
+                                        ->where('varient_id', $order_return_detail->varient_id)
+                                        ->where('id', $order_return_detail->order_detail_id)
+                                        ->increment('quantity', $difference);
+                                }
+
+                            } else {
+                                $inventory = new Inventory;
+                                $inventory->order_id = $orderReturn->id;
+                                $inventory->type = 6;
+                                $inventory->product_id = $order_return_detail->product_id;
+                                $inventory->varient_id = $order_return_detail->varient_id;
+                                $inventory->quantity = $order_return_detail->quantity;
+                                $inventory->created_by = $user->id;
+                                $inventory->save();
+
+
+                                Stock::where([
+                                    'varient_id' => $order_return_detail->varient_id,
+                                    'product_id' => $order_return_detail->product_id,
+                                ])->increment('quantity', $order_return_detail->quantity);
+
+                                OrderDetail::where('order_id', $orderReturn->order_id)
+                                    ->where('product_id', $order_return_detail->product_id)
+                                    ->where('varient_id', $order_return_detail->varient_id)
+                                    ->where('id', $order_return_detail->order_detail_id)
+                                    ->decrement('quantity', $order_return_detail->quantity);
+
+                            }
+                        }
+
+
+                    }
+                }
+            }
+
+            if ($request->status == 1 and (!isset($request->return_to_stock) or count($request->return_to_stock) == 0)) {
+
+                $order_return_details = OrderReturnDetail::where('return_order_id',$orderReturn->id)->get();
+                foreach ($order_return_details as $order_return_detail) {
+                    $order_return_detail_update['stock_status'] = 0;
+                    $order_return_detail->update($order_return_detail_update);
+
+                    $inventory = Inventory::where([
+                        'order_id' => $orderReturn->id,
+                        'type' => 6,
+                        'product_id' => $order_return_detail->product_id,
+                        'varient_id' => $order_return_detail->varient_id,
+                    ])->latest()->first();
+
+                    if ($inventory) {
+
+                        $check_stock = Stock::where([
+                            'varient_id' => $order_return_detail->varient_id,
+                            'product_id' => $order_return_detail->product_id,
+                        ])->first();
+
+                        if ($check_stock && ($check_stock->quantity < $order_return_detail->quantity)) {
+                            return redirect()->back()->with('error','Insufficient stock for product: '.($order_return_detail->productInfo->name ?? '').'. Available stock is '.$check_stock->quantity.', required '.$order_return_detail->quantity.'.');
+                        }
+
+                        Stock::where([
+                            'varient_id' => $order_return_detail->varient_id,
+                            'product_id' => $order_return_detail->product_id,
+                        ])->decrement('quantity', $order_return_detail->quantity);
+
+                        OrderDetail::where('order_id', $orderReturn->order_id)
+                            ->where('product_id', $order_return_detail->product_id)
+                            ->where('varient_id', $order_return_detail->varient_id)
+                            ->where('id', $order_return_detail->order_detail_id)
+                            ->increment('quantity', $order_return_detail->quantity);
+
+                        $inventory->delete();
+                    }
+                }
+            }
+
+            if ($request->status != 1) {
+                $order_return_details = OrderReturnDetail::where('return_order_id',$orderReturn->id)->get();
+
+                foreach ($order_return_details as $order_return_detail) {
+                    $order_return_detail_update['stock_status'] = 0;
+                    $order_return_detail->update($order_return_detail_update);
+
+                    $inventory = Inventory::where([
+                        'order_id' => $orderReturn->id,
+                        'type' => 6,
+                        'product_id' => $order_return_detail->product_id,
+                        'varient_id' => $order_return_detail->varient_id,
+                    ])->latest()->first();
+
+                    if ($inventory) {
+
+                        $check_stock = Stock::where([
+                            'varient_id' => $order_return_detail->varient_id,
+                            'product_id' => $order_return_detail->product_id,
+                        ])->first();
+
+                        if ($check_stock && ($check_stock->quantity < $order_return_detail->quantity)) {
+                            return redirect()->back()->with('error','Insufficient stock for product: '.($order_return_detail->productInfo->name ?? '').'. Available stock is '.$check_stock->quantity.', required '.$order_return_detail->quantity.'.');
+                        }
+
+                        Stock::where([
+                            'varient_id' => $order_return_detail->varient_id,
+                            'product_id' => $order_return_detail->product_id,
+                        ])->decrement('quantity', $order_return_detail->quantity);
+
+                        OrderDetail::where('order_id', $orderReturn->order_id)
+                            ->where('product_id', $order_return_detail->product_id)
+                            ->where('varient_id', $order_return_detail->varient_id)
+                            ->where('id', $order_return_detail->order_detail_id)
+                            ->increment('quantity', $order_return_detail->quantity);
+
+                        $inventory->delete();
+                    }
+                }
+            }
+
+            return redirect()->back()->with('success','Order return status has been updated successfully.');
+
+        // }
+        // else
+        // {
+        //     abort(403);
+        // }
+    }
 }

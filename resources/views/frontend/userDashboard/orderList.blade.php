@@ -36,7 +36,7 @@
                 @include('frontend.layout.accountMenu')
 
                 <div class="tab-content mb-6" style="padding: 1rem;">
-                    
+
                     <div class="tab-pane mb-4 active in" id="account-orders">
                         <div class="icon-box icon-box-side icon-box-light">
                             <span class="icon-box-icon icon-orders">
@@ -82,16 +82,16 @@
                                                 <span class="order-price">৳ {{$order->grand_total_price}}</span>
                                             </td>
                                             <td class="order-action">
-                                                <a href="{{route('orderDetails', $order->id)}}" class="btn btn-outline btn-default btn-sm btn-rounded">View</a>
-    
+                                                <a href="{{route('orderDetails', Crypt::encryptString($order->id))}}" class="btn btn-outline btn-default btn-sm btn-rounded">View</a>
+
                                                 {{-- <a title="Exchange Order" href="{{route('orderExchange', $order->id)}}" class="btn btn-outline btn-default btn-sm btn-rounded">Exchange Order</a> --}}
-    
+
                                                 @if ($order->payment_status == 0 && $order->status != 4)
                                                     <button class="mt-2 btn btn-danger btn-default text-white btn-outline btn-sm btn-rounded" style="cursor: pointer;" data-target="#exampleModalCenter{{$order->id}}" data-toggle="modal">Cancel</button>
                                                 @endif
                                             </td>
-                                        </tr>  
-                                        
+                                        </tr>
+
                                         <!-- Modal -->
                                         <div class="modal fade" id="exampleModalCenter{{$order->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -102,22 +102,22 @@
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
                                                     </div>
-    
+
                                                     <form action="{{ route('cancel_order', $order->id) }}" method="post">
                                                         @csrf
-    
+
                                                         <div class="modal-body">
                                                             <div class="form-group row">
-                                                                <div class="col-md-2 col-form-label text-right"> 
+                                                                <div class="col-md-2 col-form-label text-right">
                                                                     <label for="cancel_order">Remark: </label>
                                                                 </div>
-    
-                                                                <div class="col-md-10"> 
+
+                                                                <div class="col-md-10">
                                                                     <input type="text" class="form-control" id="cancel_order" name="remark" placeholder="Why you want to cancel the order ?" required>
                                                                 </div>
                                                             </div>
                                                         </div>
-    
+
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                                             <button type="submit" class="btn btn-primary text-white">Submit</button>
@@ -127,11 +127,11 @@
                                             </div>
                                         </div>
                                     @endforeach
-                                    
+
                                 </tbody>
                             </table>
                         </div>
-                        
+
 
                         {{ $orders->links() }}
 
