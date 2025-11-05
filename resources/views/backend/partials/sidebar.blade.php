@@ -74,18 +74,7 @@
                                     </li>
                                 @endcan
 
-                                {{-- @can('complete_order_list')
-                                    <li class="menu-item {{ session('lsbsm') == 'complete_order_list' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
-                                        <a href="{{route('admin.order.completed_list')}}" class="menu-link">
-                                            <i class="menu-bullet menu-bullet-dot">
-                                                <span></span>
-                                            </i>
-                                            <span class="menu-text">Completed Orders</span>
-                                        </a>
-                                    </li>
-                                @endcan --}}
-
-                                @can('declined_order_list')
+                                {{-- @can('declined_order_list')
                                     <li class="menu-item {{ session('lsbsm') == 'declined_order_list' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
                                         <a href="{{route('admin.order.declined_list')}}" class="menu-link">
                                             <i class="menu-bullet menu-bullet-dot">
@@ -94,7 +83,7 @@
                                             <span class="menu-text">Declined Orders</span>
                                         </a>
                                     </li>
-                                @endcan
+                                @endcan --}}
 
                                 @can('order_return')
                                     <li class="menu-item {{ session('lsbsm') == 'order_return' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
@@ -300,93 +289,7 @@
                     </li>
                 @endcan --}}
 
-                {{-- Manage page --}}
-                @can('manage_page')
-                    <!-- user management -->
-                    <li class="menu-item menu-item-submenu {{ session('lsbm') == 'manage_page' ? ' menu-item-open ' : '' }}" aria-haspopup="true" data-menu-toggle="hover">
-                        <a href="javascript:;" class="menu-link menu-toggle">
-                            <span class="svg-icon menu-icon">
-                                <i style="color: #6e3cbc;" class="fab fa-uncharted"></i>
-                            </span>
-                            <span class="menu-text">Pages Management</span>
-                            <i class="menu-arrow"></i>
-                        </a>
-                        <div class="menu-submenu">
-                            <i class="menu-arrow"></i>
-                            <ul class="menu-subnav">
-                                <li class="menu-item menu-item-parent " aria-haspopup="true">
-                                    <span class="menu-link">
-                                        <span class="menu-text">Pages Management</span>
-                                    </span>
-                                </li>
 
-                                @can('manage_page')
-                                    <li class="menu-item {{ session('lsbsm') == 'manage_page' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
-                                        <a href="{{route('admin.page.index')}}" class="menu-link">
-                                            <i class="menu-bullet menu-bullet-dot">
-                                                <span></span>
-                                            </i>
-                                            <span class="menu-text">Pages Management</span>
-                                        </a>
-                                    </li>
-                                @endcan
-
-                                {{-- @can('edit_page')
-                                    <li class="menu-item {{ session('lsbsm') == 'pageDetail' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
-                                        <a href="{{ route('admin.page.pageDetail', 1) }}" class="menu-link">
-                                            <i class="menu-bullet menu-bullet-dot">
-                                                <span></span>
-                                            </i>
-
-                                            <span class="menu-text">About Us</span>
-                                        </a>
-                                    </li>
-
-                                    <li class="menu-item {{ session('lsbsm') == 'pageDetail' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
-                                        <a href="{{ route('admin.page.pageDetail', 2) }}" class="menu-link">
-                                            <i class="menu-bullet menu-bullet-dot">
-                                                <span></span>
-                                            </i>
-
-                                            <span class="menu-text">Contact Us</span>
-                                        </a>
-                                    </li>
-
-                                    <li class="menu-item {{ session('lsbsm') == 'pageDetail' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
-                                        <a href="{{ route('admin.page.pageDetail', 3) }}" class="menu-link">
-                                            <i class="menu-bullet menu-bullet-dot">
-                                                <span></span>
-                                            </i>
-
-                                            <span class="menu-text">Privacy Policy</span>
-                                        </a>
-                                    </li>
-
-                                    <li class="menu-item {{ session('lsbsm') == 'pageDetail' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
-                                        <a href="{{ route('admin.page.pageDetail', 4) }}" class="menu-link">
-                                            <i class="menu-bullet menu-bullet-dot">
-                                                <span></span>
-                                            </i>
-
-                                            <span class="menu-text">Return and Refund Policy</span>
-                                        </a>
-                                    </li>
-
-                                    <li class="menu-item {{ session('lsbsm') == 'pageDetail' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
-                                        <a href="{{ route('admin.page.pageDetail', 5) }}" class="menu-link">
-                                            <i class="menu-bullet menu-bullet-dot">
-                                                <span></span>
-                                            </i>
-
-                                            <span class="menu-text">Terms and Conditions</span>
-                                        </a>
-                                    </li>
-                                @endcan --}}
-
-                            </ul>
-                        </div>
-                    </li>
-                @endcan
 
                 @can('user_management')
                     <!-- user management -->
@@ -439,6 +342,28 @@
                                         </a>
                                     </li>
                                @endcan
+
+                               @can('all_department')
+                                    <li class="menu-item {{ session('lsbssm') == 'all_department' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
+                                        <a href="{{route('admin.department.index')}}" class="menu-link">
+                                            <i class="menu-bullet menu-bullet-dot">
+                                                <span></span>
+                                            </i>
+                                            <span class="menu-text">Manage Department</span>
+                                        </a>
+                                    </li>
+                                @endcan
+
+                                @can('all_designation')
+                                    <li class="menu-item {{ session('lsbssm') == 'all_designation' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
+                                        <a href="{{route('admin.designation.index')}}" class="menu-link">
+                                            <i class="menu-bullet menu-bullet-dot">
+                                                <span></span>
+                                            </i>
+                                            <span class="menu-text">Manage Designation</span>
+                                        </a>
+                                    </li>
+                                @endcan
 
                                 @can('all_permissions')
                                     <li class="menu-item {{ session('lsbsm') == 'permissions' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
@@ -519,6 +444,42 @@
                                         </a>
                                     </li>
                                 @endcan
+                            </ul>
+                        </div>
+                    </li>
+                @endcan
+
+                {{-- Manage page --}}
+                @can('manage_page')
+                    <!-- user management -->
+                    <li class="menu-item menu-item-submenu {{ session('lsbm') == 'manage_page' ? ' menu-item-open ' : '' }}" aria-haspopup="true" data-menu-toggle="hover">
+                        <a href="javascript:;" class="menu-link menu-toggle">
+                            <span class="svg-icon menu-icon">
+                                <i style="color: #6e3cbc;" class="fab fa-uncharted"></i>
+                            </span>
+                            <span class="menu-text">Pages Management</span>
+                            <i class="menu-arrow"></i>
+                        </a>
+                        <div class="menu-submenu">
+                            <i class="menu-arrow"></i>
+                            <ul class="menu-subnav">
+                                <li class="menu-item menu-item-parent " aria-haspopup="true">
+                                    <span class="menu-link">
+                                        <span class="menu-text">Pages Management</span>
+                                    </span>
+                                </li>
+
+                                @can('manage_page')
+                                    <li class="menu-item {{ session('lsbsm') == 'manage_page' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
+                                        <a href="{{route('admin.page.index')}}" class="menu-link">
+                                            <i class="menu-bullet menu-bullet-dot">
+                                                <span></span>
+                                            </i>
+                                            <span class="menu-text">Pages Management</span>
+                                        </a>
+                                    </li>
+                                @endcan
+
                             </ul>
                         </div>
                     </li>
@@ -687,7 +648,7 @@
                             <span class="svg-icon menu-icon">
                                 <i style="color: #6e3cbc;" class="fab fa-uncharted"></i>
                             </span>
-                            <span class="menu-text">Product Settings</span>
+                            <span class="menu-text">Manage Product</span>
                             <i class="menu-arrow"></i>
                         </a>
                         <div class="menu-submenu">
@@ -695,7 +656,7 @@
                             <ul class="menu-subnav">
                                 <li class="menu-item menu-item-parent " aria-haspopup="true">
                                     <span class="menu-link">
-                                        <span class="menu-text">Product Settings</span>
+                                        <span class="menu-text">Manage Product</span>
                                     </span>
                                 </li>
 
@@ -720,6 +681,7 @@
                                         </a>
                                     </li>
                                 @endcan
+
                                 @can('all_brand')
                                     <li class="menu-item {{ session('lsbsm') == 'all_brand' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
                                         <a href="{{route('admin.brand.index')}}" class="menu-link">
@@ -825,6 +787,40 @@
                 @endcan
 
                 @can('settings')
+                    <li class="menu-item menu-item-submenu {{ session('lsbm') == 'settings' ? ' menu-item-open ' : '' }}" aria-haspopup="true" data-menu-toggle="hover">
+                        <a href="javascript:;" class="menu-link menu-toggle">
+                            <span class="svg-icon menu-icon">
+                                <i style="color: #6e3cbc;" class="fab fa-uncharted"></i>
+                            </span>
+                            <span class="menu-text">Settings</span>
+                            <i class="menu-arrow"></i>
+                        </a>
+                        <div class="menu-submenu">
+                            <i class="menu-arrow"></i>
+                            <ul class="menu-subnav">
+                                <li class="menu-item menu-item-parent " aria-haspopup="true">
+                                    <span class="menu-link">
+                                        <span class="menu-text">Settings</span>
+                                    </span>
+                                </li>
+
+                                @can('manage_slider')
+                                    <li class="menu-item {{ session('lsbsm') == 'manage_slider' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
+                                        <a href="{{ route('admin.slider.index') }}" class="menu-link">
+                                            <i class="menu-bullet menu-bullet-dot">
+                                                <span></span>
+                                            </i>
+                                            <span class="menu-text">Slider Setting</span>
+                                        </a>
+                                    </li>
+                                @endcan
+
+                            </ul>
+                        </div>
+                    </li>
+                @endcan
+
+                {{-- @can('settings')
                     <li class="menu-item menu-item-submenu {{ session('lsbm') == 'settings' ? ' menu-item-open ' : '' }}"  aria-haspopup="true" data-menu-toggle="hover">
                         <a href="javascript:;" class="menu-link menu-toggle">
                             <span class="svg-icon menu-icon">
@@ -1141,27 +1137,7 @@
                                         <i class="menu-arrow"></i>
                                         <ul class="menu-subnav">
 
-                                            @can('all_department')
-                                                <li class="menu-item {{ session('lsbssm') == 'all_department' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
-                                                    <a href="{{route('admin.department.index')}}" class="menu-link">
-                                                        <i class="menu-bullet menu-bullet-dot">
-                                                            <span></span>
-                                                        </i>
-                                                        <span class="menu-text">Manage Department</span>
-                                                    </a>
-                                                </li>
-                                            @endcan
 
-                                            @can('all_designation')
-                                                <li class="menu-item {{ session('lsbssm') == 'all_designation' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
-                                                    <a href="{{route('admin.designation.index')}}" class="menu-link">
-                                                        <i class="menu-bullet menu-bullet-dot">
-                                                            <span></span>
-                                                        </i>
-                                                        <span class="menu-text">Manage Designation</span>
-                                                    </a>
-                                                </li>
-                                            @endcan
 
                                             @can('all_vehicles')
                                                 <li class="menu-item {{ session('lsbssm') == 'all_vehicles' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
@@ -1177,16 +1153,7 @@
                                     </div>
                                 </li>
 
-                                @can('manage_slider')
-                                    <li class="menu-item {{ session('lsbsm') == 'manage_slider' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
-                                        <a href="{{ route('admin.slider.index') }}" class="menu-link">
-                                            <i class="menu-bullet menu-bullet-dot">
-                                                <span></span>
-                                            </i>
-                                            <span class="menu-text">Slider Setting</span>
-                                        </a>
-                                    </li>
-                                @endcan
+
 
                                 @can('order_settings')
                                     <li class="menu-item {{ session('lsbsm') == 'order_settings' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
@@ -1202,7 +1169,7 @@
                             </ul>
                         </div>
                     </li>
-                @endcan
+                @endcan --}}
 
                 @can('website_settings')
                 <li class="menu-item {{ session('lsbm') == 'setup' ? ' menu-item-active ' : '' }}" aria-haspopup="true">

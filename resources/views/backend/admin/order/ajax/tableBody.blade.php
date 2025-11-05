@@ -32,7 +32,7 @@
 
                     <td>
                         @foreach (orderStatus() as $key => $order_status)
-                            @if($order->status == $key) {{$order_status}} @endif
+                            @if($order->status == $key) <span class="label label-lg font-weight-bold label-primary label-inline">{{$order_status}}</span> @endif
                         @endforeach
                         {{-- @if ($order->stage == 1)
                             <span class="label label-lg font-weight-bold label-success label-inline">Accepted</span>

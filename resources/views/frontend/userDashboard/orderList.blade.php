@@ -103,7 +103,7 @@
                                                         </button>
                                                     </div>
 
-                                                    <form action="{{ route('cancel_order', $order->id) }}" method="post">
+                                                    <form action="{{ route('cancel_order', Crypt::encryptString($order->id)) }}" method="post">
                                                         @csrf
 
                                                         <div class="modal-body">

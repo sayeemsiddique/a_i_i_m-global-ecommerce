@@ -179,60 +179,77 @@
             <div class="mx-xl-10">
                 <div class="mb-6 text-center">
                     <h1 class="mb-6">Thanks for your query.</h1>
-                    
+
                 </div>
                 <div class="my-4 my-xl-8" style="min-height: 200px;">
 
-                    
+
                     @isset($order)
-                        
+
                         <div class="track">
-                            
-                            <div class="step @if($order->stage == 0) active @elseif($order->stage == 1) active @elseif($order->stage == 2) active @elseif($order->stage == 3) active @elseif($order->stage == 5) active @elseif($order->stage == 4) active @else  @endif"> 
-                                <span class="icon"> 
-                                    <i class="fa fa-paper-plane"></i> 
-                                </span> 
-                                <span class="text">Pending</span> 
+
+                            <div class="step @if($order->status == 0) active @elseif($order->status == 1) active @elseif($order->status == 2) active @endif">
+                                <span class="icon">
+                                    <i class="fa fa-paper-plane"></i>
+                                </span>
+                                <span class="text">
+                                    @if($order->status == 0) Pending @elseif($order->status == 1) Approved @elseif($order->status == 2) Declined @endif
+                                </span>
                             </div>
-                            @if ($order->stage == 2)
-                                
-                            <div class="step @if($order->stage == 0) active @elseif($order->stage == 2) active  @endif"> 
-                                <span class="icon"> 
-                                    <i class="fa fa-times"></i> 
-                                </span> 
-                                <span class="text">Reject</span> 
+
+                            <div class="step @if(in_array($order->delivery_status, [1,2,3])) active @endif ">
+                                <span class="icon">
+                                    <i class="fa fa-truck"></i>
+                                </span>
+                                <span class="text"> On Delivery </span>
+                            </div>
+
+                            <div class="step @if(in_array($order->delivery_status, [3])) active @endif ">
+                                <span class="icon">
+                                    <i class="fa fa-box"></i>
+                                </span>
+                                <span class="text">Delivered</span>
+                            </div>
+
+                            {{-- @if ($order->stage == 2)
+
+                            <div class="step @if($order->stage == 0) active @elseif($order->stage == 2) active  @endif">
+                                <span class="icon">
+                                    <i class="fa fa-times"></i>
+                                </span>
+                                <span class="text">Reject</span>
                             </div>
                             @endif
                             @if ($order->stage == 5)
-                                
-                            <div class="step @if($order->stage == 0) active @elseif($order->stage == 5) active  @endif"> 
-                                <span class="icon"> 
-                                    <i class="fa fa-times"></i> 
-                                </span> 
-                                <span class="text">Cancel</span> 
+
+                            <div class="step @if($order->stage == 0) active @elseif($order->stage == 5) active  @endif">
+                                <span class="icon">
+                                    <i class="fa fa-times"></i>
+                                </span>
+                                <span class="text">Cancel</span>
                             </div>
                             @endif
 
-                            <div class="step @if($order->stage == 3) active @elseif($order->stage == 1) active @elseif($order->stage == 4) active  @else  @endif "> 
-                                <span class="icon"> <i class="fa fa-check"></i> 
-                                </span> 
-                                <span class="text"> Confirmed</span> 
+                            <div class="step @if($order->stage == 3) active @elseif($order->stage == 1) active @elseif($order->stage == 4) active  @else  @endif ">
+                                <span class="icon"> <i class="fa fa-check"></i>
+                                </span>
+                                <span class="text"> Confirmed</span>
                             </div>
-                            <div class="step @if($order->stage == 3) active @elseif($order->stage == 4) active  @else  @endif "> 
-                                <span class="icon"> 
-                                    <i class="fa fa-truck"></i> 
-                                </span> 
-                                <span class="text"> On Delivery </span> 
+                            <div class="step @if($order->stage == 3) active @elseif($order->stage == 4) active  @else  @endif ">
+                                <span class="icon">
+                                    <i class="fa fa-truck"></i>
+                                </span>
+                                <span class="text"> On Delivery </span>
                             </div>
-                            <div class="step @if($order->stage == 4) active @endif"> 
-                                <span class="icon"> 
-                                    <i class="fa fa-box"></i> 
-                                </span> 
-                                <span class="text">Delivered</span> 
-                            </div>
+                            <div class="step @if($order->stage == 4) active @endif">
+                                <span class="icon">
+                                    <i class="fa fa-box"></i>
+                                </span>
+                                <span class="text">Delivered</span>
+                            </div> --}}
                         </div>
 
-                    @else 
+                    @else
                         <h4 class="text-center text-red"><i class="fa fa-times fa-5x"></i></h4>
                         <h5 class="text-center text-red">No Order Found</h5>
                         <div class="text-center">

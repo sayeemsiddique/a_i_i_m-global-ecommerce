@@ -1045,8 +1045,9 @@ class FrontendController extends Controller
     public function checkout_complete(Request $request)
     {
         // dd($request->all());
+        // dd(in_array($request->delivery_option, [1,2]));
 
-        if (in_array($request->delivery_option, [1,2])   ) {
+        if (!in_array($request->delivery_option, [1,2])) {
             return redirect()->back()->with('error', 'Please use proper delivery option.');
         }
 
@@ -1166,10 +1167,15 @@ class FrontendController extends Controller
                 // Cart::where('user_id', auth()->user()->id)->delete();
                 Cart::where('user_id', auth()->user()->id)->whereIn('id',$productIds)->delete();
 
+                if(auth()->user()->mobile != ''){
+                    $data['number'] = auth()->user()->mobile;
+                    $data['message'] = 'Your Order has been placed, Your Order Tracking ID: '.$tracking_code;
 
-
+                    $this->sms_send($data);
+                }
 
             });
+
             return redirect()->route('account_orders')->with('success','Your order is under review');
         }
 
@@ -1261,8 +1267,10 @@ class FrontendController extends Controller
         $order = Order::where([
             'tracking_code' => $request->tracking_code,
             'type' => 2,
-            'phone' => $request->mobile
-        ])->first();
+            // 'phone' => $request->mobile
+        ])->whereHas('orderUserInfo', function ($query) use ($request) {
+            $query->where('mobile',$request->mobile);
+        })->first();
 
         // if($order){
         //     $order = $order;
@@ -1327,6 +1335,7 @@ class FrontendController extends Controller
 
     public function cancel_order(Request $request, $order_id)
     {
+        $order_id = Crypt::decryptString($order_id);
         $order = Order::where('id', $order_id)->first();
 
         if ($order->status != 0) {
@@ -1641,6 +1650,14 @@ class FrontendController extends Controller
 
         $order = Order::where('id', $order_id)->first();
 
+        if ($order->status != 1) {
+            return redirect()->back()->with('error', 'This order return not possible at this stage');
+        }
+
+        if ($order->delivery_status != 3) {
+            return redirect()->back()->with('error', 'This order return not possible at this stage');
+        }
+
         foreach ($request->details_id as $detail_id => $quantity) {
             if ($quantity > 0) {
                 $detail_id = Crypt::decryptString($detail_id);
@@ -1650,14 +1667,14 @@ class FrontendController extends Controller
 
                 if ($order_detail) {
                     if ($order_detail->quantity < $quantity) {
-                        return redirect()->back()->with('error', 'Return quantity exceeds ordered quantity for a product.');
+                        return redirect()->back()->with('error', 'Return quantity exceeds ordered quantity for the product.');
                     }
                     $check_already_returned = OrderReturnDetail::where([
                         'order_id' => $order->id,
                         'varient_id' => $order_detail->varient_id,
                         'product_id' => $order_detail->product_id,
                     ])->whereHas('orderReturnInfo', function($q) use ($order) {
-                        $q->whereIn('status', [0,1])->where('order_id', $order->id);
+                        $q->whereIn('status', [0])->where('order_id', $order->id);
                     })->sum('quantity');
 
                     if (($check_already_returned + $quantity) > $order_detail->quantity) {
@@ -1671,6 +1688,14 @@ class FrontendController extends Controller
 
         if (($order->status == 0) or $order->delivery_status != 3) {
             return redirect()->back()->with('error', 'Order Return not possible at this stage!');
+        }
+
+        $orgin_order_details_quantity = OrderDetail::where([
+                        'order_id' => $order_id,
+                    ])->sum('quantity');
+
+        if ($orgin_order_details_quantity < $quantity_sum) {
+            return redirect()->back()->with('error', 'Product Return quantity mismatched.');
         }
 
         DB::transaction(function () use ($request,$order) {
@@ -1762,6 +1787,17 @@ class FrontendController extends Controller
         }
 
         return view('customer.returnOrderDetails', compact('orderDetails','user'));
+    }
+
+    function safeMail($to, $mailable)
+    {
+        try {
+            Mail::to($to)->send($mailable);
+            return true;
+        } catch (\Throwable $e) {
+            Log::warning('Mail send failed: '.$e->getMessage());
+            return false;
+        }
     }
 
 }

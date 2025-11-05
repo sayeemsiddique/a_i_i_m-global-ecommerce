@@ -48,17 +48,104 @@
 
 
                             @if ($order)
-                            <hr>
 
-                            <div class=" mb-5">
+                            <form action="{{route('admin.order.order_return_confirm')}}" method="post">
+                                @csrf
+                                <input type="hidden" name="order_id" value="{{ Crypt::encryptString($order->id) }}">
+                                <table class="table table-bordered">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th class="text-left">Product Name</th>
+                                            <th>Quantity</th>
+                                            <th>Price</th>
+                                            <th>Total Price</th>
+                                            <th>Return Quantity</th>
+                                            {{-- <th>Return Reason</th> --}}
+                                            {{-- <th>Action</th> --}}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($order->orderDetails as $orderProduct)
+                                            @php
+                                                $returned_orders = $orderProduct->returnOrderInfo->where('status', 0)->where('user_id', $order->user_id);
+                                                $return_quantity = 0;
+                                                if (count($returned_orders) > 0) {
+                                                    foreach ($returned_orders as $key => $returned_order) {
+                                                        foreach ($returned_order->orderDetails as $key => $returnOrderDetails) {
+                                                            if ($returnOrderDetails->order_detail_id == $orderProduct->id) {
+                                                                $return_quantity += $returnOrderDetails->quantity;
+                                                            }
+
+                                                        }
+                                                    }
+                                                }
+
+
+                                            @endphp
+                                            @if (($orderProduct->quantity - $return_quantity) > 0)
+
+                                                <tr>
+                                                    <td class="text-left">
+                                                        {{ $orderProduct->productInfo->name ?? ''}} <br>
+                                                        @if ($orderProduct->varient_id > 0)
+                                                            @foreach ($orderProduct->varientData as $varient)
+                                                                <small class="text-info">
+                                                                    {{$varient->varientTypeInfo->name ?? ''}} : {{$varient->data_value}}
+                                                                    @if (!$loop->last) , @endif
+                                                                </small>
+                                                            @endforeach
+                                                        @endif
+
+                                                    </td>
+                                                    <td>{{ number_format(($orderProduct->quantity - $return_quantity), 2, '.', '') }}</td>
+                                                    <td>{{ number_format($orderProduct->price, 2, '.', '') }}</td>
+                                                    <td>{{ number_format((($orderProduct->quantity - $return_quantity) * $orderProduct->price), 2, '.', '') }}</td>
+                                                    <td>
+                                                        <input type="number" min="0" max="{{ ($orderProduct->quantity - $return_quantity) }}" name="details_id[{{Crypt::encryptString($orderProduct->id)}}]" class="form-control" placeholder="Return Quantity" />
+                                                    </td>
+                                                </tr>
+                                            @endif
+                                        @endforeach
+
+                                        <tr>
+                                            <td colspan="4" class="text-right"><strong>Shipping Cost</strong></td>
+                                            <td colspan="1" class="text-right">{{ number_format($order->shipping_cost, 2, '.', '') }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" class="text-right"><strong>Grand Total</strong></td>
+                                            <td colspan="1" class="text-right">{{ number_format($order->grand_total_price, 2, '.', '') }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" class="text-right"><strong>Payment Status</strong></td>
+                                            <td colspan="1" class="text-right">
+                                                <select autocomplete="off" class="form-control" id="payment_status" name="payment_status" required>
+                                                    <option value="">Select</option>
+                                                    @foreach(returnPaymentStatus() as $key => $payment_status)
+                                                        <option value="{{$key}}">{{$payment_status}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3" class="text-right"><strong>Return Reason</strong></td>
+                                            <td colspan="2" class="text-right">
+                                                <textarea class="form-control" placeholder="Enter return reason" name="reason"></textarea>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-primary text-right">Submit Return Request</button>
+                                </div>
+                            </form>
+                            {{-- <hr> --}}
+
+                            {{-- <div class=" mb-5">
                                 <div class="row">
                                     <div class="col-md-3 col-sm-6">
-                                        {{-- <span class="font-weight-bold"><b>Invoice Number:</b> {{ $order->invoice_no = sprintf('%08d', $order->invoice_no) }}</span> <br> --}}
-                                        {{-- <span class="font-weight-bold"><b>Invoice Date:</b> {{ date('d-M-Y') }}</span> <br> <br> --}}
 
                                         <span class="font-weight-bold"><b>Order ID:</b> {{ $order->tracking_code }}</span> <br>
                                         <span class="font-weight-bold"><b>Order Date:</b> {{ date('d-M-Y', strtotime($order->created_at)) }}</span> <br>
-                                        {{-- <span class="font-weight-bold"><b>Status:</b> --}}
                                             <label class="">Order Status:</label>
 													@foreach (orderStatus() as $key => $order_status)
 														@if($order->status == $key) {{$order_status}} @endif
@@ -84,36 +171,10 @@
 														@if(($order->paymentInfo->status ?? 0) == $key) {{$payment_status}} @endif
 													@endforeach
 
-
-
-                                            {{-- @if ($order->stage == 0)
-                                                <span class="badge badge-warning">Pending</span>
-                                            @elseif($order->stage == 1)
-                                                <span class="badge badge-primary">Order Accepted</span>
-                                            @elseif($order->stage == 2)
-                                                <span class="badge badge-danger">Order Declined</span>
-                                            @elseif($order->stage == 3)
-                                                <span class="badge badge-primary">On Delivery</span>
-                                            @elseif($order->stage == 4)
-                                                <span class="badge badge-success">Order Complete</span>
-                                            @elseif($order->stage == 5)
-                                                <span class="badge badge-danger">Order Canceled</span>
-                                            @else
-                                                <span class="badge badge-danger">Unknown Status</span>
-                                            @endif --}}
                                         </span>
                                     </div>
                                     <div class="col-md-6"></div>
                                     <div class="col-md-3">
-                                        @if (isset($order->orderUserInfo) && ($order->orderUserInfo->type == 0))
-                                            <span class="d-block" style="font-size: 15px;"><b>User Type :</b> System User</span>
-                                        @elseif(isset($order->orderUserInfo) && ($order->orderUserInfo->type == 1))
-                                            <span class="d-block" style="font-size: 15px;"><b>User Type :</b> Consumer</span>
-                                        @elseif(isset($order->orderUserInfo) && ($order->orderUserInfo->type == 2))
-                                            <span class="d-block" style="font-size: 15px;"><b>User Type :</b> Corporate Consumer</span>
-                                        @elseif(isset($order->orderUserInfo) && ($order->orderUserInfo->type == 3))
-                                            <span class="d-block" style="font-size: 15px;"><b>User Type :</b> Dealer</span>
-                                        @endif
 
                                         <span class="d-block" style="font-size: 15px;"><b>User Name :</b> {{ $order->orderUserInfo ? $order->orderUserInfo->first_name : ''}} {{ $order->orderUserInfo ? $order->orderUserInfo->last_name : ''}} </span>
 
@@ -125,31 +186,15 @@
 
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
 
-                            <div class=" top-0 left-0 right-0">
+                            {{-- <div class=" top-0 left-0 right-0">
                                 <div class="row justify-content-center">
                                     <div class="col-md-12">
                                         <div class="table-responsive">
                                             <form action="{{route("admin.order.order_return_confirm")}}" method="post">
                                                 @csrf
                                                 <input type="hidden" name="order_id" value="{{$order->id}}">
-                                            {{-- for calculation --}}
-                                            {{-- <input class="courier_cost" type="hidden" value="{{$order->courier_cost ? $order->courier_cost:0}}"> --}}
-                                            {{-- user_type_discount if user is in 2,3 then their discount type --}}
-                                            {{-- <input class="user_type_discount" type="hidden" value="{{$order->user_type_discount ? $order->user_type_discount:0}}"> --}}
-                                            {{-- <input class="discount_on_amount" type="hidden" value="{{$order->discount_on_amount ? $order->discount_on_amount:0}}"> --}}
-                                            {{-- <input class="discount_percent_in_total" type="hidden" value="{{$order->discount_percent_in_total ? $order->discount_percent_in_total:0}}"> --}}
-                                            {{-- <input class="discount_amount_in_total" type="hidden" value="{{$order->discount_amount_in_total ? $order->discount_amount_in_total:0}}"> --}}
-                                            {{-- <input class="packing_type" type="hidden" value="{{$order->packing_type ? $order->packing_type:0}}"> --}}
-                                            {{-- <input class="packing_amount" type="hidden" value="{{$order->packing_amount ? $order->packing_amount:0}}"> --}}
-                                            {{-- <input class="dealer_discount_percent" type="hidden" value="{{$setting->dealer_discount_percent ?? 0}}"> --}}
-                                            {{-- <input class="consumer_discount_percent" type="hidden" value="{{$setting->consumer_discount_percent ?? 0}}"> --}}
-                                            {{-- if user checkout more then this amount --}}
-                                            {{-- <input class="discount_amount" type="hidden" value="{{$setting->discount_amount ?? 0}}"> --}}
-                                            {{-- if user checkout more then this amount then he get this % duscount--}}
-                                            {{-- <input class="discount_percentage" type="hidden" value="{{$setting->discount_percentage ?? 0}}"> --}}
-                                            {{-- for calculation --}}
 
 
                                                 <table class="table table-bordered table-responseve">
@@ -158,7 +203,6 @@
                                                             <th class="text-left">Ordered Items</th>
                                                             <th class="text-center">Qty</th>
                                                             <th class="">Return Qty</th>
-                                                            {{-- <th class="">Unit Price</th> --}}
                                                             <th class="text-right">Amount</th>
                                                         </tr>
                                                     </thead>
@@ -167,10 +211,6 @@
                                                             $subTotal = 0;
                                                             $totalProductPrice = 0;
                                                             $orderUserType = 0;
-                                                            // $discount = 0;
-                                                            // $discountPrice = 0;
-                                                            // $vatAmount = 0;
-                                                            // $taxAmount = 0;
                                                             $shippingArea = 0;
                                                             $shippingCharge = 0;
                                                             $shippingPrice = 0;
@@ -197,9 +237,6 @@
                                                                 <td class="text-right pt-7 align-middle">
                                                                     {{$order_detail->price}}
                                                                 </td>
-                                                                {{-- <td class="text-primary pr-0 pt-7 text-right align-middle">
-                                                                    ৳ {{number_format($subTotal = $order_detail->price * $order_detail->quantity,2,".","")}}
-                                                                </td> --}}
                                                             </tr>
                                                             @php
                                                                 $totalProductPrice += $subTotal;
@@ -208,7 +245,6 @@
 
                                                         @endforeach
 
-                                                        <!--Show area wise shipping charge-->
                                                         <tr>
                                                             @php
                                                                 $shippingArea = $order->shipping_area ? $order->shipping_area : 0;
@@ -222,14 +258,11 @@
                                                                 </span>
                                                             </th>
 
-
-                                                            <!--calculate shipping price and show total-->
                                                             @php
                                                                 $shippingPrice = $totalProductPrice + $shippingCharge;
                                                             @endphp
                                                         </tr>
 
-                                                        <!--Show total price-->
 
                                                         <tr style="border-top: 1px solid #000;">
                                                             <th class="text-right" colspan="3">Total</th>
@@ -254,7 +287,7 @@
 
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             @endif
 
 

@@ -37,7 +37,7 @@ class RolePermissionController extends Controller
                 $query = Role::latest();
 
                 if (auth()->user()->id != 1) {
-                    $query = $query->where('role_id','!=', 1);
+                    $query = $query->where('id','!=', 1);
                 }
 
                 $rolePerms = $query->paginate(20);

@@ -59,9 +59,17 @@
                                         </td> --}}
                                         <td>
                                             <div class="form-group mt-2">
-                                                <label class="pr-2 pl-2">Order ID :</label>
+                                                <label class="pr-2 pl-2">Return Order ID :</label>
                                                 <input class="form-control" type="text" name="order_id"  placeholder="Search by Order ID" @if (isset($_GET['order_id']) and $_GET['order_id']!='')
                                                 value="{{$_GET['order_id']}}"
+                                            @endif>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group mt-2">
+                                                <label class="pr-2 pl-2">Main Order ID :</label>
+                                                <input class="form-control" type="text" name="main_order_id"  placeholder="Search by Order ID" @if (isset($_GET['main_order_id']) and $_GET['main_order_id']!='')
+                                                value="{{$_GET['main_order_id']}}"
                                             @endif>
                                             </div>
                                         </td>

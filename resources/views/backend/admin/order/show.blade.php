@@ -231,13 +231,20 @@
 										<!--begin::Buttons-->
 										<div class="card-footer printHide">
 											<div class="row">
-												<div class="col-lg-12 text-right">
+												<div class="col-lg-6 text-left">
+                                                    @if($order->status == 2)
+                                                        <span class="text-danger font-weight-bold">
+                                                            Decline Reason: {{ $order->remark ?? '' }}
+                                                        </span>
+                                                    @endif
+                                                </div>
+												<div class="col-lg-6 text-right">
 
-													{{-- @if (($order->status != 4) || ($order->stage != 5)) --}}
+													@if (($order->status != 2))
 														@can('manage_order_status')
 															<button type="button" class="btn btn-sm btn-success mb-4" data-toggle="modal" data-target="#manageOrderStatus">Manage Order Status</button>
 														@endcan
-													{{-- @endif --}}
+													@endif
 
 													{{-- <button type="button" class="btn btn-sm btn-primary mb-4" onclick="printDiv('printInvoice','invoice_{{$order->tracking_code}}')">Print Invoice</button> --}}
 

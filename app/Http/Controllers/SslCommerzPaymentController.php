@@ -366,6 +366,12 @@ class SslCommerzPaymentController extends Controller
                     // Cart::where('user_id', auth()->user()->id)->delete();
                     Cart::where('user_id', $user_id)->whereIn('id',explode(',',$cart_ids))->delete();
 
+                    if(auth()->user()->mobile != ''){
+                        $data['number'] = auth()->user()->mobile;
+                        $data['message'] = 'Your Order has been placed, Your Order Tracking ID: '.$order->transaction_id;
+                        app('App\Http\Controllers\FrontendController')->sms_send($data);
+                    }
+
                 });
 
                 return redirect()->route('account_orders')->with('success', "Transaction is successfully Completed");

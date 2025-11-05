@@ -135,11 +135,11 @@
                                                         @if (count($category->childTreeInfo) > 0)
                                                             <!-- Home Section -->
                                                             <li class="u-has-submenu u-header-collapse__submenu">
-                                                                <a class="u-header-collapse__nav-link u-header-collapse__nav-pointer" href="javascript:;" role="button" data-toggle="collapse" aria-expanded="false" aria-controls="headerSidebarHomeCollapse" data-target="#headerSidebarHomeCollapse">
+                                                                <a class="u-header-collapse__nav-link u-header-collapse__nav-pointer" href="javascript:;" role="button" data-toggle="collapse" aria-expanded="false" aria-controls="headerSidebarHomeCollapse_{{$category->id}}" data-target="#headerSidebarHomeCollapse_{{$category->id}}">
                                                                     {{$category->name}}
                                                                 </a>
 
-                                                                <div id="headerSidebarHomeCollapse" class="collapse" data-parent="#headerSidebarContent">
+                                                                <div id="headerSidebarHomeCollapse_{{$category->id}}" class="collapse" data-parent="#headerSidebarContent">
                                                                     <ul id="headerSidebarHomeMenu" class="u-header-collapse__nav-list">
                                                                         @foreach ($category->childTreeInfo as $childTreeInfo)
                                                                             <li><a class="u-header-collapse__submenu-nav-link" href="{{route('store.grid')}}?c[]={{$childTreeInfo->id}}">{{$childTreeInfo->name}}</a></li>

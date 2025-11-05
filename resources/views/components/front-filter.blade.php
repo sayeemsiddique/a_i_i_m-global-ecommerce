@@ -23,14 +23,26 @@
 
     }
 
-    
-    
+
+
 @endphp
+<style>
+    .dropdown-item label {
+        display: flex;
+        align-items: flex-start;
+        gap: 6px;
+        white-space: normal;
+        /* word-break: break-word; */
+    }
+    #sidebarNav1 label {
+        margin-bottom: 0 !important;
+    }
+</style>
 <form id="sidebar_form" action="" method="get">
     <input type="hidden" name="per_page" value="@if(isset($_GET['per_page']) and $_GET['per_page'] == 100) {{$_GET['per_page']}} @endif">
     <input type="hidden" name="sort_option" value="@if(isset($_GET['sort_option']) and $_GET['sort_option'] == 100) {{$_GET['sort_option']}} @endif">
     <input type="hidden" name="searchProduct" value="@if(isset($_GET['searchProduct'])) {{$_GET['searchProduct']}} @endif">
-    
+
     <div class="mb-8 border border-width-2 border-color-3 borders-radius-6">
         <!-- List -->
         <ul id="sidebarNav" class="list-unstyled mb-0 sidebar-navbar">
@@ -38,7 +50,7 @@
                 <a class="dropdown-toggle dropdown-toggle-collapse dropdown-title" href="javascript:;" role="button" data-toggle="collapse" aria-expanded="false" aria-controls="sidebarNav1Collapse" data-target="#sidebarNav1Collapse">
                     Show All Categories
                 </a>
-    
+
                 {{-- <div id="sidebarNav1Collapse" class="collapse show" data-parent="#sidebarNav"> --}}
                     <ul id="sidebarNav1" class="list-unstyled dropdown-list">
                         <!-- Menu List -->
@@ -63,18 +75,18 @@
                                         </label>
                                     </a>
                                 @endforeach
-                                
+
                                 @endif
-                                
+
                             @endforeach
-                            
+
                         </li>
-                        
+
                         <!-- End Menu List -->
                     </ul>
                 {{-- </div> --}}
             </li>
-            
+
         </ul>
         <!-- End List -->
     </div>
@@ -84,10 +96,10 @@
         </div>
         <div class="border-bottom pb-4 mb-4">
             <h4 class="font-size-14 mb-3 font-weight-bold">Brands</h4>
-    
+
             <!-- Checkboxes -->
-            
-                
+
+
             @foreach ($brands as $brand)
                 <div class="form-group d-flex align-items-center justify-content-between mb-2 pb-1">
                     <div class="custom-control custom-checkbox">
@@ -100,16 +112,16 @@
                     </div>
                 </div>
             @endforeach
-                
-            
+
+
         </div>
         <div class="border-bottom pb-4 mb-4">
-            
-    
+
+
             <!-- Checkboxes -->
             @foreach ($varient_datas as $varient_data)
                 <h4 class="font-size-14 mb-3 font-weight-bold">{{$varient_data->name}}</h4>
-    
+
                 @foreach ($varient_data->varientValues as $varientData)
                     <div class="form-group d-flex align-items-center justify-content-between mb-2 pb-1">
                         <div class="custom-control custom-checkbox">
@@ -121,9 +133,9 @@
                     </div>
                 @endforeach
             @endforeach
-            
-            
-           
+
+
+
         </div>
         <div class="range-slider">
             <h4 class="font-size-14 mb-3 font-weight-bold">Price</h4>

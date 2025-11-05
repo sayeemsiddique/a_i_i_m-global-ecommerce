@@ -184,7 +184,17 @@
                                                                                 <tbody>
                                                                                     @foreach ($orderReturn->orderDetails as $orderDetail)
                                                                                         <tr>
-                                                                                            <td class="text-left">{{ $orderDetail->productInfo->name ?? '' }}</td>
+                                                                                            <td class="text-left">
+                                                                                                {{ $orderDetail->productInfo->name ?? '' }} <br>
+                                                                                                @if ($orderDetail->varient_id > 0)
+                                                                                                    @foreach ($orderDetail->varientDataInfo as $varient)
+                                                                                                        <small class="text-info">
+                                                                                                            {{$varient->varientTypeInfo->name ?? ''}}: {{$varient->data_value}}
+                                                                                                            @if (!$loop->last) , @endif
+                                                                                                        </small>
+                                                                                                    @endforeach
+                                                                                                @endif
+                                                                                            </td>
                                                                                             <td>{{ number_format($orderDetail->quantity) }}</td>
                                                                                             <td>
                                                                                                 <input autocomplete="off" type="checkbox" @if($orderDetail->stock_status == 1) checked @endif name="return_to_stock[{{$orderDetail->id}}]" value="1">

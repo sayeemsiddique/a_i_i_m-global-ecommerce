@@ -74,7 +74,7 @@
 													</div>
 
 													<div class="col-md-7">
-														
+
 													</div>
 
 													<div class="col-md-3">
@@ -86,7 +86,7 @@
 											</div>
 										</div>
 									</div>
-									
+
 									<!--begin::Order details, User details-->
 									<div class="container mb-5">
 										<div class="row">
@@ -118,13 +118,13 @@
 												@if (($order->status == 4) || ($order->stage == 5))
 													<span class="font-weight-bold"><b>Order Cancel Reason:</b> {{$order->remark}}</span>
 												@endif
-												
+
 											</div>
 
 											<div class="col-md-5"></div>
 
 											<div class="col-md-3">
-												@if (isset($order->orderUserInfo) && ($order->orderUserInfo->type == 0))
+												{{-- @if (isset($order->orderUserInfo) && ($order->orderUserInfo->type == 0))
 													<span class="d-block" style="font-size: 15px;"><b>User Type :</b> System User</span>
 												@elseif(isset($order->orderUserInfo) && ($order->orderUserInfo->type == 1))
 													<span class="d-block" style="font-size: 15px;"><b>User Type :</b> Customer</span>
@@ -132,7 +132,7 @@
 													<span class="d-block" style="font-size: 15px;"><b>User Type :</b> Corporate Consumer</span>
 												@elseif(isset($order->orderUserInfo) && ($order->orderUserInfo->type == 3))
 													<span class="d-block" style="font-size: 15px;"><b>User Type :</b> Dealer</span>
-												@endif
+												@endif --}}
 
 												<span class="d-block" style="font-size: 15px;"><b>User Name :</b> {{ $order->orderUserInfo ? $order->orderUserInfo->first_name : ''}} {{ $order->orderUserInfo ? $order->orderUserInfo->last_name : ''}} </span>
 
@@ -145,7 +145,7 @@
 										</div>
 									</div>
 									<br> <br>
-									
+
 									<!--begin::Order details product list, all cost-->
 									<div class="position-relative">
 
@@ -219,7 +219,7 @@
 																@if ($order->discount_on_amount == 2)
 																	<tr>
 																		<th class="text-right" colspan="3">Order Commission ({{ $order->discount_percent_in_total ?? 0 }} %)</th>
-																		<th class="text-right">৳ {{ number_format($order->discount_amount_in_total ?? 0, 2, '.', '')}}</th>	
+																		<th class="text-right">৳ {{ number_format($order->discount_amount_in_total ?? 0, 2, '.', '')}}</th>
 																	</tr>
 																@endif
 
@@ -236,20 +236,20 @@
 
 																	<th class="text-right">৳ {{ number_format($order->courier_cost ?? 0, 2, '.', '') }}</th>
 																</tr>
-		
+
 																<!--Show total price-->
 																<tr style="border-top: 1px solid #000;">
 																	<th class="text-right" colspan="3">Total</th>
 																	<th class="text-right">৳ {{ number_format($order->grand_total_price, 2, ".", "") }}</th>
 																</tr>
-																
+
 															</tbody>
 														</table>
 													</div>
 												</div>
 											</div>
 										</div>
-										
+
 										<!--begin::Payment info-->
 										<div class="container">
 											<div class="row justify-content-center pb-10">
@@ -290,7 +290,7 @@
 																		</td>
 																	</tr>
 																</tbody>
-															</table>																	
+															</table>
 														@elseif($order->paymentInfo->payment_method == 2)
 															<table class="table">
 																<thead>
@@ -389,11 +389,11 @@
 														@endif
 
 													@endif
-													
+
 												</div>
 											</div>
 										</div>
-										
+
 										<!--begin::Buttons-->
 										<div class="card-footer printHide">
 											<div class="row">
@@ -427,7 +427,7 @@
 									</div>
 
 									<!--end::Invoice Body-->
-									
+
 								</div> {{-- Details tab end --}}
 							</div>
 							<!--end::Card-->
@@ -503,11 +503,11 @@
 						@if (($order->status == 4) || ($order->stage == 5))
 							<span class="font-weight-bold"><b>Order Cancel Reason:</b> {{$order->remark}}</span>
 						@endif
-						
+
 					</div>
 					<div class="col-md-5"></div>
 					<div class="col-md-3">
-						@if (isset($order->orderUserInfo) && ($order->orderUserInfo->type == 0))
+						{{-- @if (isset($order->orderUserInfo) && ($order->orderUserInfo->type == 0))
 							<span class="d-block" style="font-size: 15px;"><b>User Type :</b> System User</span>
 						@elseif(isset($order->orderUserInfo) && ($order->orderUserInfo->type == 1))
 							<span class="d-block" style="font-size: 15px;"><b>User Type :</b> Customer</span>
@@ -515,7 +515,7 @@
 							<span class="d-block" style="font-size: 15px;"><b>User Type :</b> Corporate Consumer</span>
 						@elseif(isset($order->orderUserInfo) && ($order->orderUserInfo->type == 3))
 							<span class="d-block" style="font-size: 15px;"><b>User Type :</b> Dealer</span>
-						@endif
+						@endif --}}
 
 						<span class="d-block" style="font-size: 15px;"><b>User Name :</b> {{ $order->orderUserInfo ? $order->orderUserInfo->first_name : ''}} {{ $order->orderUserInfo ? $order->orderUserInfo->last_name : ''}} </span>
 
@@ -599,7 +599,7 @@
 									@if ($order->discount_on_amount == 2)
 										<tr>
 											<th class="text-right" colspan="3">Order Commission ({{$order->discount_percent_in_total ?? 0}} %)</th>
-											<th class="text-right">৳ {{ number_format($order->discount_amount_in_total ?? 0, 2, '.', '') }}</th>	
+											<th class="text-right">৳ {{ number_format($order->discount_amount_in_total ?? 0, 2, '.', '') }}</th>
 										</tr>
 									@endif
 
@@ -618,12 +618,12 @@
 									</tr>
 
 									<!--Show total price-->
-									
+
 									<tr style="border-top: 1px solid #000;">
 										<th class="text-right" colspan="3">Total</th>
 										<th class="text-right">৳ {{ number_format($order->grand_total_price?? 0, 2, ".", "") }}</th>
 									</tr>
-									
+
 								</tbody>
 							</table>
 						</div>
@@ -637,7 +637,7 @@
 		<div id="printChalanOne" class="container" style="display: none;">
 			<div class="card card-custom m-9">
 				<div class="card-header mt-5" style="border-bottom: 1px solid #fff">
-					
+
 					<div class="col-md-6 offset-md-3 text-center mt-4" style="line-height: 100%">
 						<h3>চালান পত্র</h3>
 						<p class="font-weight-bold">[বিধি ৪০ এর উপ-বিধি (১) এর দফা (গ) ও দফা (চ) দ্রষ্টব্য]</p>
@@ -729,7 +729,7 @@
 									$allProductPrice = 0;
 									$productSdValue = 0;
 									$productVatValue = 0;
-									
+
 								@endphp
 								@foreach ($order->orderDetails as $od)
 
@@ -744,7 +744,7 @@
 											@elseif(isset($od->productInfo) && ($od->productInfo->unit == 2))
 												MT
 											@endif --}}
-											
+
 											pcs
 										</td>
 										<td style="border: 1px solid #000" align="middle">{{$qty = $od->quantity ?? 0}}</td>
@@ -791,7 +791,7 @@
 											@else
 												{{$productVatValue = ($productWithSdPrice * $od->productInfo->vat)/100}}
 											@endif
-											
+
 											@php
 											// store product price include sd value include vat value
 												$productWithSdPriceVatPrice = ($productWithSdPrice + $productVatValue) * $qty;
@@ -829,7 +829,7 @@
 									@if ($order->discount_on_amount == 2)
 										<tr>
 											<th class="text-right" colspan="9">ক্রয় কমিশন ({{ $order->discount_percent_in_total ?? 0 }} %)</th>
-											<th class="text-right">{{ number_format($order->discount_amount_in_total ?? 0, 2, '.', '')}}</th>	
+											<th class="text-right">{{ number_format($order->discount_amount_in_total ?? 0, 2, '.', '')}}</th>
 										</tr>
 									@endif
 
@@ -861,7 +861,7 @@
 							<p>{{$allProductPrice.' TK' ?? 'Undefined Product Price, SD or VAT'}}</p>
 							<p><span style="border-top: 1px solid #000"><b>সকল প্রকার কর ব্যতীত মূল্য</b></span></p>
 						</div>
-						
+
 						<div class="col-md-4 text-right mt-40">
 							<p>প্রস্তুতকারক</p>
 						</div>
@@ -875,7 +875,7 @@
 		<div id="printChalanTwo" class="container" style="display: none;">
 			<div class="card card-custom m-9">
 				<div class="card-header mt-5" style="border-bottom: 1px solid #fff">
-					
+
 					<div class="col-md-6 offset-md-3 text-center mt-4" style="line-height: 100%">
 						<h3>চালান পত্র</h3>
 						<p class="font-weight-bold">[বিধি ৪০ এর উপ-বিধি (১) এর দফা (গ) ও দফা (চ) দ্রষ্টব্য]</p>
@@ -967,7 +967,7 @@
 									$allProductPrice = 0;
 									$productSdValue = 0;
 									$productVatValue = 0;
-									
+
 								@endphp
 								@foreach ($order->orderDetails as $od)
 									<tr>
@@ -1054,7 +1054,7 @@
 									@if ($order->discount_on_amount == 2)
 										<tr>
 											<th class="text-right" colspan="9">ক্রয় কমিশন ({{ $order->discount_percent_in_total ?? 0 }} %)</th>
-											<th class="text-right">{{ number_format($order->discount_amount_in_total ?? 0, 2, '.', '')}}</th>	
+											<th class="text-right">{{ number_format($order->discount_amount_in_total ?? 0, 2, '.', '')}}</th>
 										</tr>
 									@endif
 
@@ -1086,7 +1086,7 @@
 							<p>{{$allProductPrice.' TK' ?? 'Undefined Product Price, SD or VAT'}}</p>
 							<p><span style="border-top: 1px solid #000"><b>সকল প্রকার কর ব্যতীত মূল্য</b></span></p>
 						</div>
-						
+
 						<div class="col-md-4 text-right mt-40">
 							<p>প্রস্তুতকারক</p>
 						</div>
@@ -1113,7 +1113,7 @@
 						<input type="hidden" name="orderId" value="{{$order->id}}" required>
 
 						<div class="form-group row">
-						  
+
 							@if(($order->stage === NULL))
 								<label for="stage" class="col-sm-4 col-form-label">Status</label>
 								<div class="col-sm-8">
@@ -1180,17 +1180,17 @@
 									</select>
 								</div>
 							@endif
-							
+
 						</div>
 
-						<div class="form-group row delivery_date_div" style="display: none;"> 
+						<div class="form-group row delivery_date_div" style="display: none;">
 							<label for="stage" class="col-sm-4 col-form-label">Delivery Date:<span class="text-danger">*</span></label>
 
 							<div class="col-sm-8">
 								<input type="date" class="form-control" name="delivery_date" id="delivery_date">
 							</div>
 						</div>
-						
+
 						<div class="row">
 							<div class="col-sm-8">
 								<button type="submit" class="btn btn-success float-right">Update</button>

@@ -547,6 +547,26 @@
                 }
             });
         });
+
+        $('#resend-otp').on('click', function() {
+            let phone_number = $('#phone_number').val();
+
+            $.ajax({
+                url: "{{route('resendOtp')}}",
+                method: 'POST',
+                data: {
+                    _token: "{{csrf_token()}}",
+                    phone_number: phone_number
+                },
+                success: function(response) {
+                    alertify.success(response.message);
+                    $('#otp_mobile_number').val(phone_number);
+                },
+                error: function(error) {
+                    alertify.error(error.responseJSON.message);
+                }
+            });
+        });
     </script>
     {{-- <script>
         function previewFile() {
@@ -597,25 +617,7 @@
         });
 
 
-        $('#resend-otp').on('click', function() {
-            let phone_number = $('#phone_number').val();
 
-            $.ajax({
-                url: "{{route('resendOtp')}}",
-                method: 'POST',
-                data: {
-                    _token: "{{csrf_token()}}",
-                    phone_number: phone_number
-                },
-                success: function(response) {
-                    alertify.success(response.message);
-                    $('#otp_mobile_number').val(phone_number);
-                },
-                error: function(error) {
-                    alertify.error(error.responseJSON.message);
-                }
-            });
-        });
 
 
 

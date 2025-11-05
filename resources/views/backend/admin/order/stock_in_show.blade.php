@@ -38,7 +38,7 @@
 													</div>
 
 													<div class="col-md-7">
-														
+
 													</div>
 
 													<div class="col-md-3">
@@ -50,12 +50,12 @@
 											</div>
 										</div>
 									</div>
-									
+
 									<!--begin::Order details, User details-->
 									<div class="container-fluid mb-5">
 										<div class="row">
 											<div class="col-md-4">
-												
+
 												<span class="font-weight-bold"><b>Invoice Date:</b> {{ date('d-M-Y', strtotime($order->created_at)) }}</span> <br> <br>
 
 												<span class="font-weight-bold"><b>Order ID:</b> {{ $order->tracking_code }}</span> <br>
@@ -63,15 +63,15 @@
 												@if ($order->document)
 												<span class="font-weight-bold"><b>Order Document:</b> <a download="" href="{{ asset('storage/document') }}/{{$order->document}}">Download</a></span>
 												@endif
-												
-												
-												
+
+
+
 											</div>
 
 											<div class="col-md-5"></div>
 
 											<div class="col-md-3">
-												@if (isset($order->orderUserInfo) && ($order->orderUserInfo->type == 0))
+												{{-- @if (isset($order->orderUserInfo) && ($order->orderUserInfo->type == 0))
 													<span class="d-block" style="font-size: 15px;"><b>User Type :</b> System User</span>
 												@elseif(isset($order->orderUserInfo) && ($order->orderUserInfo->type == 1))
 													<span class="d-block" style="font-size: 15px;"><b>User Type :</b> Customer</span>
@@ -79,13 +79,13 @@
 													<span class="d-block" style="font-size: 15px;"><b>User Type :</b> Corporate Consumer</span>
 												@elseif(isset($order->orderUserInfo) && ($order->orderUserInfo->type == 3))
 													<span class="d-block" style="font-size: 15px;"><b>User Type :</b> Dealer</span>
-												@endif
+												@endif --}}
 
 											</div>
 										</div>
 									</div>
 									<br> <br>
-									
+
 									<!--begin::Order details product list, all cost-->
 									<div class="position-relative">
 
@@ -101,11 +101,11 @@
 															<thead>
 																<tr>
 																	<th class="font-weight-bold text-muted text-uppercase text-left">Item Name</th>
-																	
-																	
+
+
 																	<th class="text-right font-weight-bold text-muted text-uppercase">Quantity (pcs)</th>
 																	{{-- <th class="text-right font-weight-bold text-muted text-uppercase">Weight (M.T)</th> --}}
-																	
+
 																</tr>
 															</thead>
 
@@ -123,17 +123,17 @@
 																			@if ($order_detail->varient_id > 0)
 																				<span class="text-success">
 																					<small>
-																						
+
 																							{{ $order_detail->varientDataInfo->varientTypeInfo->name ?? '' }}: {{ $order_detail->varientDataInfo->data_value ?? '' }}
 																					</small>
 																				</span>
 																			@endif
 																		</td>
-																		
+
 																		<td class="text-right align-middle">
 																			{{ number_format($order_detail->quantity) }}
 																		</td>
-																		
+
 																		{{-- <td class="text-right align-middle">
 																			@if ($order_detail->weight and $order_detail->unit)
 																				@if ($order_detail->unit == 1)
@@ -144,25 +144,25 @@
 																			@endif
 																		</td> --}}
 
-																		
 
-																		
+
+
 																	</tr>
 
 																@endforeach
 
 
-																
-																
+
+
 															</tbody>
 														</table>
 													</div>
 												</div>
 											</div>
 										</div>
-										
-										
-										
+
+
+
 										<!--begin::Buttons-->
 										<div class="card-footer printHide border-0">
 											<div class="row">
@@ -180,7 +180,7 @@
 									</div>
 
 									<!--end::Invoice Body-->
-									
+
 								</div> {{-- Details tab end --}}
 							</div>
 							<!--end::Card-->
@@ -224,21 +224,21 @@
 			<div class="container mb-5">
 				<div class="row">
 					<div class="col-md-4">
-						
+
 						<span class="font-weight-bold"><b>Invoice Date:</b> {{ date('d-M-Y', strtotime($order->created_at)) }}</span> <br> <br>
 
 						<span class="font-weight-bold"><b>Order ID:</b> {{ $order->tracking_code }}</span> <br>
 						<span class="font-weight-bold"><b>Order Date:</b> {{ date('d-M-Y', strtotime($order->created_at)) }}</span> <br>
-						
-						
+
+
 					</div>
 					<div class="col-md-5"></div>
 					<div class="col-md-3">
-						
+
 					</div>
 				</div>
 			</div>
-			
+
 			<br> <br>
 
 			<!--begin::Order details product list, all cost-->
@@ -253,11 +253,11 @@
 								<thead>
 									<tr>
 										<th class="font-weight-bold text-muted text-uppercase text-left" style="padding: 0 .75rem">Item Name</th>
-										
-										
+
+
 										<th class="text-right font-weight-bold text-muted text-uppercase" style="padding: 0 .75rem">Quantity (pcs)</th>
 										<th class="text-right font-weight-bold text-muted text-uppercase" style="padding: 0 .75rem">Weight</th>
-										
+
 									</tr>
 								</thead>
 
@@ -275,7 +275,7 @@
 												{{ $order_detail->productInfo->name ?? '' }}
 											</td>
 
-											
+
 											<td class="text-right pt-7 align-middle">
 												{{ number_format($order_detail->quantity) }}
 											</td>
@@ -288,13 +288,13 @@
 													@endif
 												@endif
 											</td>
-											
+
 										</tr>
 
-										
+
 									@endforeach
 
-									
+
 
 
 									@if ($order->other_categories_amount > 0)
@@ -314,7 +314,7 @@
 			</div>
 		</div>
 		<!--/Print invoice area-->
-		
+
 
 	@endsection
 
@@ -332,7 +332,7 @@
 			}
 		</script>
 
-		<script> 
+		<script>
 			$('#stage').on('change', function() {
 				let stage = $('#stage').val();
 

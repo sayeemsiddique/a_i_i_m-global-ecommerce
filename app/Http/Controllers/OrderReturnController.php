@@ -14,6 +14,7 @@ use App\Models\OrderDetail;
 use App\Models\Payment;
 use Auth;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
 
 class OrderReturnController extends Controller
 {
@@ -31,16 +32,21 @@ class OrderReturnController extends Controller
             $setting = Setting::oldest()->first();
 
             if (isset($request->order_id) and $request->order_id !="") {
-                $order = Order::where('type',2)->where('tracking_code',$request->order_id)->latest()->first();
-                if (!$order) {
-                    return redirect()->route('admin.order.order_return')->with('error','Order not found.');
-                }
+                // $order = Order::where('type',2)->where('tracking_code',$request->order_id)->latest()->first();
+                $order = Order::where([
+                    // 'user_id' => $user->id,
+                    'tracking_code' => $request->order_id,
+                    'status' => 1,
+                ])->whereIn('delivery_status',[2,3])->latest()->with('orderDetails.returnOrderInfo.orderDetails')->first();
+                // if (!$order) {
+                //     return redirect()->route('admin.order.order_return')->with('error','Order not found.');
+                // }
 
-                $return_status= $order->status;
+                // $return_status= $order->status;
 
-                if ($order->status == 5) {
-                    return redirect()->route("admin.order.order_return")->with('error','This order already returned.');
-                }
+                // if ($order->status == 5) {
+                //     return redirect()->route("admin.order.order_return")->with('error','This order already returned.');
+                // }
             }
 
             return view('backend.admin.order.order_return', compact('order','setting'));
@@ -54,160 +60,306 @@ class OrderReturnController extends Controller
 
     public function order_return_confirm(Request $request)
     {
+        // dd($request->all());
         $user = Auth::user();
 
         if(Gate::allows('order_return', $user))
         {
+            $request->validate([
+                'order_id' => 'required',
+                'reason' => 'required',
+            ]);
 
-            $order = Order::where('id',$request->order_id)->latest()->first();
-
-            dd($request->all());
-
-            if (!$order) {
-                return redirect()->route("admin.order.index")->with('error','Order not fount');
+            if (!isset($request->details_id) or count($request->details_id) == 0) {
+                return redirect()->back()->with('error', 'Please select at least one product to return.');
             }
-            // if ($order->status == 5) {
-            //     return redirect()->route("admin.order.index")->with('error','Order alredy returned');
+
+            $quantity_sum = array_sum($request->details_id);
+
+            if ($quantity_sum <= 0) {
+                return redirect()->back()->with('error', 'Please select at least one product to return.');
+            }
+
+            $order_id = Crypt::decryptString($request->order_id);
+
+            $order = Order::where('id', $order_id)->first();
+
+            if ($order->status != 1) {
+                return redirect()->back()->with('error', 'This order return not possible at this stage');
+            }
+
+            if ($order->delivery_status != 3) {
+                return redirect()->back()->with('error', 'This order return not possible at this stage');
+            }
+
+            foreach ($request->details_id as $detail_id => $quantity) {
+                if ($quantity > 0) {
+                    $detail_id = Crypt::decryptString($detail_id);
+                    $order_detail = OrderDetail::where([
+                        'id' => $detail_id,
+                    ])->first();
+
+                    if ($order_detail) {
+                        if ($order_detail->quantity < $quantity) {
+                            return redirect()->back()->with('error', 'Return quantity exceeds ordered quantity for the product.');
+                        }
+                        $check_already_returned = OrderReturnDetail::where([
+                            'order_id' => $order->id,
+                            'varient_id' => $order_detail->varient_id,
+                            'product_id' => $order_detail->product_id,
+                        ])->whereHas('orderReturnInfo', function($q) use ($order) {
+                            $q->whereIn('status', [0])->where('order_id', $order->id);
+                        })->sum('quantity');
+
+                        if (($check_already_returned + $quantity) > $order_detail->quantity) {
+                            return redirect()->back()->with('error', 'You have already requested return for this product. Return quantity exceeds ordered quantity.');
+                        }
+                    } else {
+                        return redirect()->back()->with('error', 'Order detail not found.');
+                    }
+                }
+            }
+
+            if (($order->status == 0) or $order->delivery_status != 3) {
+                return redirect()->back()->with('error', 'Order Return not possible at this stage!');
+            }
+
+            $orgin_order_details_quantity = OrderDetail::where([
+                'order_id' => $order_id,
+            ])->sum('quantity');
+
+            if ($orgin_order_details_quantity < $quantity_sum) {
+                return redirect()->back()->with('error', 'Product Return quantity mismatched.');
+            }
+
+            DB::transaction(function () use ($request,$order,$user) {
+
+                $tracking_code = date("yhis");
+                $data['tracking_code'] = $tracking_code;
+                $data['invoice_no'] = sprintf('%08d', $order->id);;
+                $data['order_id'] = $order->id;
+                $data['user_id'] = $order->user_id;
+                $data['remark'] = $request->reason;
+                $data['status'] = 1;
+                $data['payment_status'] = $request->payment_status;
+                $data['created_by'] = $user->id;
+                $return_order = OrderReturn::create($data);
+
+                $grand_total_price = 0;
+                foreach ($request->details_id as $detail_id => $quantity) {
+                    if ($quantity > 0) {
+
+                        $detail_id = Crypt::decryptString($detail_id);
+                        $order_detail = OrderDetail::where([
+                            'id' => $detail_id,
+                        ])->first();
+
+                        if ($order_detail) {
+                            $grand_total_price += ($order_detail->price * $quantity);
+                            $return_data['return_order_id'] = $return_order->id;
+                            $return_data['order_id'] = $order->id;
+                            $return_data['order_detail_id'] = $detail_id;
+                            $return_data['product_id'] = $order_detail->product_id;
+                            $return_data['varient_id'] = $order_detail->varient_id;
+                            $return_data['quantity'] = $quantity;
+                            $return_data['price'] = $order_detail->price;
+                            $return_data['f_price'] = $order_detail->f_price;
+                            $return_data['discount'] = $order_detail->discount;
+                            $return_data['discount_type'] = $order_detail->discount_type;
+                            $return_data['weight'] = $order_detail->weight;
+                            $return_data['unit'] = $order_detail->unit;
+                            $return_data['stock_status'] = 1;
+                            $return_data['created_by'] = $user->id;
+
+                            OrderReturnDetail::create($return_data);
+
+                            $inventory = new Inventory;
+                            $inventory->order_id = $return_order->id;
+                            $inventory->type = 6;
+                            $inventory->product_id = $order_detail->product_id;
+                            $inventory->varient_id = $order_detail->varient_id;
+                            $inventory->quantity = $quantity;
+                            $inventory->created_by = $user->id;
+                            $inventory->save();
+
+
+                            Stock::where([
+                                'varient_id' => $order_detail->varient_id,
+                                'product_id' => $order_detail->product_id,
+                            ])->increment('quantity', $quantity);
+
+                            // $order_detail->decrement('quantity', $quantity);
+
+                        }
+                    }
+                }
+
+                $payment['type'] = 2;
+                $payment['order_id'] = $return_order->id;
+                $payment['user_id'] = $order->user_id;
+                $payment['amount'] = $grand_total_price;
+                $payment['payment_method'] = 5;
+                $payment['status'] = $request->payment_status;
+                $payment['created_by'] = $user->id;
+                Payment::create($payment);
+
+                $return_order->grand_total_price = $grand_total_price;
+                $return_order->save();
+            });
+
+
+
+
+
+            return redirect()->back()->with('success', 'Order Return Submitted Successfully!');
+
+            // $order = Order::where('id',$request->order_id)->latest()->first();
+
+            // if (!$order) {
+            //     return redirect()->route("admin.order.index")->with('error','Order not fount');
             // }
+            // // if ($order->status == 5) {
+            // //     return redirect()->route("admin.order.index")->with('error','Order alredy returned');
+            // // }
 
-            if (isset($request->whole_return) and $request->whole_return == 1) {
-
-
-                $this->whole_order_return_confirm($request);
-
-                return redirect()->route("admin.order.index")->with('success','Whole order has been returned for order: '.$order->tracking_code);
-
-            } else {
-
-                if (isset($request->qty) and count($request->qty) == 0) {
-                    return redirect()->back()->with('error','Return quantity is required.');
-                }
-
-                foreach ($request->qty as $key => $qty) {
-                    $check_previous_returns_quantity = OrderReturnDetail::where([
-                        'order_id' => $order->id,
-                        'order_detail_id' => $key,
-                    ])->sum('quantity');
-
-                    if ($check_previous_returns_quantity > 0) {
-                        $order_detail = OrderDetail::where('id',$key)->latest()->first();
-
-                        if($order_detail) {
-                            $available_quantity = $order_detail->quantity - $check_previous_returns_quantity;
-
-                            if ($available_quantity < 0) {
-                                return redirect()->back()->with('error','No available quantity to return for product: '.$order_detail->productInfo->name);
-                            }
-                            if ($qty > $available_quantity) {
-                                return redirect()->back()->with('error','Return quantity can not be more than available quantity to return for product: '.$order_detail->productInfo->name);
-                            }
-                        } else {
-                            return redirect()->back()->with('error','Order detail not found.');
-                        }
-                    }
-
-                }
-
-                $order_return_data_detail = [];
-                $order_total_price = 0;
+            // if (isset($request->whole_return) and $request->whole_return == 1) {
 
 
+            //     $this->whole_order_return_confirm($request);
+
+            //     return redirect()->route("admin.order.index")->with('success','Whole order has been returned for order: '.$order->tracking_code);
+
+            // } else {
+
+            //     if (isset($request->qty) and count($request->qty) == 0) {
+            //         return redirect()->back()->with('error','Return quantity is required.');
+            //     }
+
+            //     foreach ($request->qty as $key => $qty) {
+            //         $check_previous_returns_quantity = OrderReturnDetail::where([
+            //             'order_id' => $order->id,
+            //             'order_detail_id' => $key,
+            //         ])->sum('quantity');
+
+            //         if ($check_previous_returns_quantity > 0) {
+            //             $order_detail = OrderDetail::where('id',$key)->latest()->first();
+
+            //             if($order_detail) {
+            //                 $available_quantity = $order_detail->quantity - $check_previous_returns_quantity;
+
+            //                 if ($available_quantity < 0) {
+            //                     return redirect()->back()->with('error','No available quantity to return for product: '.$order_detail->productInfo->name);
+            //                 }
+            //                 if ($qty > $available_quantity) {
+            //                     return redirect()->back()->with('error','Return quantity can not be more than available quantity to return for product: '.$order_detail->productInfo->name);
+            //                 }
+            //             } else {
+            //                 return redirect()->back()->with('error','Order detail not found.');
+            //             }
+            //         }
+
+            //     }
+
+            //     $order_return_data_detail = [];
+            //     $order_total_price = 0;
 
 
-                foreach ($request->product_id as $key => $product_id) {
-                    if ($request->qty[$key] > 0) {
-
-                        $order_detail = OrderDetail::where('id',$request->order_details_id[$key])->latest()->first();
-
-                        if($order_detail) {
-                            if($order_detail->quantity > 0) {
-                                $order_detail->quantity = $request->qty[$key];
-                                $order_total_price += $order_detail->price * $request->qty[$key];
-                                $order_return_data_detail[]  = $order_detail->toArray();
-                            }
-
-                        }
-                    }
-                }
-
-                $data["order_id"] = $order->id;
-                $data["type"] = 2;
-                $data["tracking_code"] = $order->tracking_code;
-                $data["status"] = 1;
-                $data["payment_status"] = 1;
-                $data["total_price"] = $order_total_price;
-                $data["grand_total_price"] = $order_total_price;
-                $data["user_type_discount"] = $order->user_type_discount;
-                $data["discount_amount"] = 0;
-                $data["shipping_cost"] = 0;
-                $data["packing_type"] = $order->packing_type;
-                $data["packing_amount"] = 0;
-                $data["courier_cost"] = 0;
-                $data["discount_percent_in_total"] = 0;
-                $data["discount_amount_in_total"] = 0;
-                $data["discount_on_amount"] = 0;
-                $data["remark"] = $request->remark;
-                $data["created_by"] = auth()->user()->id;
-                $data["user_id"] = $order->user_id;
-
-                DB::transaction(function () use ($request,$data) {
-
-                    $OrderReturn = OrderReturn::create($data);
-                    foreach ($order_return_data_detail as $key => $order_return_data_details) {
-                        unset($order_return_data_details['variation']);
-                        unset($order_return_data_details['update_by']);
-                        unset($order_return_data_details['id']);
-                        $order_return_data_details['order_id'] = $order->id;
-                        $order_return_data_details['return_order_id'] = $OrderReturn->id;
-                        OrderReturnDetail::create($order_return_data_details);
-
-                        Stock::where([
-                            'varient_id' => $order_return_data_details['varient_id'],
-                            'product_id' => $order_return_data_details['product_id'],
-                        ])->increment('quantity', $order_return_data_details['quantity']);
-                    }
-
-                    foreach ($request->product_id as $key => $product_id) {
-                        if ($request->qty[$key] > 0) {
-                            $order_details_datas = OrderDetail::where('id',$request->order_details_id[$key])->latest()->first();
-
-                            if($order_details_datas) {
-                                if($order_details_datas->quantity > 0) {
-                                    $order_detail_data['quantity'] = $order_details_datas->quantity - $request->qty[$key];
-
-                                    $order_details_datas->update($order_detail_data);
-                                }
-
-                            }
-                        }
-                    }
-
-                    $Return['invoice_no'] = sprintf('%08d', $OrderReturn->id);
-                    $OrderReturn->update($Return);
-
-                    $payment_data['amount'] = $order_total_price;
-                    $payment_data['type'] = 2;
-                    $payment_data['user_id'] = $order->user_id;
-                    $payment_data['order_id'] = $order->id;
-                    $payment_data['payment_approved'] = 1;
-                    $payment_data['status'] = 1;
-                    $payment_data['created_by'] = auth()->user()->id;
-
-                    Payment::create($payment_data);
-
-                    $update_order_data['return_status'] = 1;
-                    $update_order_data['return_amount'] = $order->return_amount + $order_total_price;
-                    $update_order_data['returned_amount'] = 0;
-                    $update_order_data['total_price'] = $order->total_price - $order_total_price;
-                    $update_order_data['grand_total_price'] = $order->grand_total_price - $order_total_price;
-
-                    $order->update($update_order_data);
-
-                });
 
 
-                return redirect()->route("admin.order.index")->with('success','Quantity has been returned for order: '.$order->tracking_code);
-            }
+            //     foreach ($request->product_id as $key => $product_id) {
+            //         if ($request->qty[$key] > 0) {
+
+            //             $order_detail = OrderDetail::where('id',$request->order_details_id[$key])->latest()->first();
+
+            //             if($order_detail) {
+            //                 if($order_detail->quantity > 0) {
+            //                     $order_detail->quantity = $request->qty[$key];
+            //                     $order_total_price += $order_detail->price * $request->qty[$key];
+            //                     $order_return_data_detail[]  = $order_detail->toArray();
+            //                 }
+
+            //             }
+            //         }
+            //     }
+
+            //     $data["order_id"] = $order->id;
+            //     $data["type"] = 2;
+            //     $data["tracking_code"] = $order->tracking_code;
+            //     $data["status"] = 1;
+            //     $data["payment_status"] = 1;
+            //     $data["total_price"] = $order_total_price;
+            //     $data["grand_total_price"] = $order_total_price;
+            //     $data["user_type_discount"] = $order->user_type_discount;
+            //     $data["discount_amount"] = 0;
+            //     $data["shipping_cost"] = 0;
+            //     $data["packing_type"] = $order->packing_type;
+            //     $data["packing_amount"] = 0;
+            //     $data["courier_cost"] = 0;
+            //     $data["discount_percent_in_total"] = 0;
+            //     $data["discount_amount_in_total"] = 0;
+            //     $data["discount_on_amount"] = 0;
+            //     $data["remark"] = $request->remark;
+            //     $data["created_by"] = auth()->user()->id;
+            //     $data["user_id"] = $order->user_id;
+
+            //     DB::transaction(function () use ($request,$data) {
+
+            //         $OrderReturn = OrderReturn::create($data);
+            //         foreach ($order_return_data_detail as $key => $order_return_data_details) {
+            //             unset($order_return_data_details['variation']);
+            //             unset($order_return_data_details['update_by']);
+            //             unset($order_return_data_details['id']);
+            //             $order_return_data_details['order_id'] = $order->id;
+            //             $order_return_data_details['return_order_id'] = $OrderReturn->id;
+            //             OrderReturnDetail::create($order_return_data_details);
+
+            //             Stock::where([
+            //                 'varient_id' => $order_return_data_details['varient_id'],
+            //                 'product_id' => $order_return_data_details['product_id'],
+            //             ])->increment('quantity', $order_return_data_details['quantity']);
+            //         }
+
+            //         foreach ($request->product_id as $key => $product_id) {
+            //             if ($request->qty[$key] > 0) {
+            //                 $order_details_datas = OrderDetail::where('id',$request->order_details_id[$key])->latest()->first();
+
+            //                 if($order_details_datas) {
+            //                     if($order_details_datas->quantity > 0) {
+            //                         $order_detail_data['quantity'] = $order_details_datas->quantity - $request->qty[$key];
+
+            //                         $order_details_datas->update($order_detail_data);
+            //                     }
+
+            //                 }
+            //             }
+            //         }
+
+            //         $Return['invoice_no'] = sprintf('%08d', $OrderReturn->id);
+            //         $OrderReturn->update($Return);
+
+            //         $payment_data['amount'] = $order_total_price;
+            //         $payment_data['type'] = 2;
+            //         $payment_data['user_id'] = $order->user_id;
+            //         $payment_data['order_id'] = $order->id;
+            //         $payment_data['payment_approved'] = 1;
+            //         $payment_data['status'] = 1;
+            //         $payment_data['created_by'] = auth()->user()->id;
+
+            //         Payment::create($payment_data);
+
+            //         $update_order_data['return_status'] = 1;
+            //         $update_order_data['return_amount'] = $order->return_amount + $order_total_price;
+            //         $update_order_data['returned_amount'] = 0;
+            //         $update_order_data['total_price'] = $order->total_price - $order_total_price;
+            //         $update_order_data['grand_total_price'] = $order->grand_total_price - $order_total_price;
+
+            //         $order->update($update_order_data);
+
+            //     });
+
+
+            //     return redirect()->route("admin.order.index")->with('success','Quantity has been returned for order: '.$order->tracking_code);
+            // }
 
         }
         else
@@ -355,6 +507,12 @@ class OrderReturnController extends Controller
                 $query->where('tracking_code', 'like','%'.$request->order_id.'%');
             }
 
+            if(isset($request->main_order_id) and $request->main_order_id != '') {
+                $query->whereHas('mainOrderInfo', function ($new_query) use ($request) {
+                    $new_query->where('tracking_code', 'like','%'.$request->main_order_id.'%');
+                });
+            }
+
             // if(isset($request->type) and $request->type != '') {
             //     $query->whereHas('userInfo',function ($new_query) use ($request) {
             //         $new_query->where('type',$request->type);
@@ -438,25 +596,25 @@ class OrderReturnController extends Controller
             if ($request->payment_status == 1) {
                 if ($get_main_order_payment) {
                     if ($previous_payment_status != 1) {
-                        $deducted_amount = $get_main_order_payment->amount - $get_payment->amount;
-                        $main_payment_update['amount'] = $deducted_amount;
-                        $get_main_order_payment->update($main_payment_update);
+                        // $deducted_amount = $get_main_order_payment->amount - $get_payment->amount;
+                        // $main_payment_update['amount'] = $deducted_amount;
+                        // $get_main_order_payment->update($main_payment_update);
 
-                        $main_order_amount_update['grand_total_price'] = $get_main_order->grand_total_price - $get_payment->amount;
-                        $main_order_amount_update['total_price'] = $get_main_order->total_price - $get_payment->amount;
-                        $get_main_order->update($main_order_amount_update);
+                        // $main_order_amount_update['grand_total_price'] = $get_main_order->grand_total_price - $get_payment->amount;
+                        // $main_order_amount_update['total_price'] = $get_main_order->total_price - $get_payment->amount;
+                        // $get_main_order->update($main_order_amount_update);
                     }
                 }
             } else {
                 if ($get_main_order_payment) {
                     if ($previous_payment_status == 1) {
-                        $added_amount = $get_main_order_payment->amount + $get_payment->amount;
-                        $main_payment_update['amount'] = $added_amount;
-                        $get_main_order_payment->update($main_payment_update);
+                        // $added_amount = $get_main_order_payment->amount + $get_payment->amount;
+                        // $main_payment_update['amount'] = $added_amount;
+                        // $get_main_order_payment->update($main_payment_update);
 
-                        $main_order_amount_update['grand_total_price'] = $get_main_order->grand_total_price + $get_payment->amount;
-                        $main_order_amount_update['total_price'] = $get_main_order->total_price + $get_payment->amount;
-                        $get_main_order->update($main_order_amount_update);
+                        // $main_order_amount_update['grand_total_price'] = $get_main_order->grand_total_price + $get_payment->amount;
+                        // $main_order_amount_update['total_price'] = $get_main_order->total_price + $get_payment->amount;
+                        // $get_main_order->update($main_order_amount_update);
                     }
                 }
             }
@@ -491,11 +649,11 @@ class OrderReturnController extends Controller
                                         'product_id' => $order_return_detail->product_id,
                                     ])->increment('quantity', $$difference);
 
-                                    OrderDetail::where('order_id', $orderReturn->order_id)
-                                        ->where('product_id', $order_return_detail->product_id)
-                                        ->where('varient_id', $order_return_detail->varient_id)
-                                        ->where('id', $order_return_detail->order_detail_id)
-                                        ->decrement('quantity', $difference);
+                                    // OrderDetail::where('order_id', $orderReturn->order_id)
+                                    //     ->where('product_id', $order_return_detail->product_id)
+                                    //     ->where('varient_id', $order_return_detail->varient_id)
+                                    //     ->where('id', $order_return_detail->order_detail_id)
+                                    //     ->decrement('quantity', $difference);
                                 } else if ($inventory->quantity < $order_return_detail->quantity) {
                                     $difference = $order_return_detail->quantity - $inventory->quantity;
 
@@ -517,11 +675,11 @@ class OrderReturnController extends Controller
                                         'product_id' => $order_return_detail->product_id,
                                     ])->decrement('quantity', $difference);
 
-                                    OrderDetail::where('order_id', $orderReturn->order_id)
-                                        ->where('product_id', $order_return_detail->product_id)
-                                        ->where('varient_id', $order_return_detail->varient_id)
-                                        ->where('id', $order_return_detail->order_detail_id)
-                                        ->increment('quantity', $difference);
+                                    // OrderDetail::where('order_id', $orderReturn->order_id)
+                                    //     ->where('product_id', $order_return_detail->product_id)
+                                    //     ->where('varient_id', $order_return_detail->varient_id)
+                                    //     ->where('id', $order_return_detail->order_detail_id)
+                                    //     ->increment('quantity', $difference);
                                 }
 
                             } else {
@@ -540,11 +698,11 @@ class OrderReturnController extends Controller
                                     'product_id' => $order_return_detail->product_id,
                                 ])->increment('quantity', $order_return_detail->quantity);
 
-                                OrderDetail::where('order_id', $orderReturn->order_id)
-                                    ->where('product_id', $order_return_detail->product_id)
-                                    ->where('varient_id', $order_return_detail->varient_id)
-                                    ->where('id', $order_return_detail->order_detail_id)
-                                    ->decrement('quantity', $order_return_detail->quantity);
+                                // OrderDetail::where('order_id', $orderReturn->order_id)
+                                //     ->where('product_id', $order_return_detail->product_id)
+                                //     ->where('varient_id', $order_return_detail->varient_id)
+                                //     ->where('id', $order_return_detail->order_detail_id)
+                                //     ->decrement('quantity', $order_return_detail->quantity);
 
                             }
                         }
@@ -584,11 +742,11 @@ class OrderReturnController extends Controller
                             'product_id' => $order_return_detail->product_id,
                         ])->decrement('quantity', $order_return_detail->quantity);
 
-                        OrderDetail::where('order_id', $orderReturn->order_id)
-                            ->where('product_id', $order_return_detail->product_id)
-                            ->where('varient_id', $order_return_detail->varient_id)
-                            ->where('id', $order_return_detail->order_detail_id)
-                            ->increment('quantity', $order_return_detail->quantity);
+                        // OrderDetail::where('order_id', $orderReturn->order_id)
+                        //     ->where('product_id', $order_return_detail->product_id)
+                        //     ->where('varient_id', $order_return_detail->varient_id)
+                        //     ->where('id', $order_return_detail->order_detail_id)
+                        //     ->increment('quantity', $order_return_detail->quantity);
 
                         $inventory->delete();
                     }
@@ -625,11 +783,11 @@ class OrderReturnController extends Controller
                             'product_id' => $order_return_detail->product_id,
                         ])->decrement('quantity', $order_return_detail->quantity);
 
-                        OrderDetail::where('order_id', $orderReturn->order_id)
-                            ->where('product_id', $order_return_detail->product_id)
-                            ->where('varient_id', $order_return_detail->varient_id)
-                            ->where('id', $order_return_detail->order_detail_id)
-                            ->increment('quantity', $order_return_detail->quantity);
+                        // OrderDetail::where('order_id', $orderReturn->order_id)
+                        //     ->where('product_id', $order_return_detail->product_id)
+                        //     ->where('varient_id', $order_return_detail->varient_id)
+                        //     ->where('id', $order_return_detail->order_detail_id)
+                        //     ->increment('quantity', $order_return_detail->quantity);
 
                         $inventory->delete();
                     }

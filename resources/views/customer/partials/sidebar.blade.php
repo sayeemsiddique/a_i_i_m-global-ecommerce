@@ -40,6 +40,14 @@
                         <span class="menu-text">Addresses</span>
                     </a>
                 </li>
+                <li class="menu-item {{ request()->routeIs('cart') ? 'menu-item-active' : '' }}" aria-haspopup="true">
+                    <a target="_blank" href="{{ route('cart') }}" class="menu-link">
+                        <span class="svg-icon menu-icon">
+                            <i style="text-shadow: 3px 3px #eaeaea;" class="fas fa-cart-plus"></i>
+                        </span>
+                        <span class="menu-text">My Cart</span>
+                    </a>
+                </li>
                 <li class="menu-item {{ request()->routeIs('accountDetails') ? 'menu-item-active' : '' }}" aria-haspopup="true">
                     <a href="{{ route('accountDetails') }}" class="menu-link">
                         <span class="svg-icon menu-icon">
