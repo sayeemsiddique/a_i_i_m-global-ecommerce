@@ -25,9 +25,9 @@ if ($other_categories != '') {
 }
 
 if(count($packing_types)) {
-        
+
     foreach ($packing_types as  $packingtype) {
-        
+
         if ($packingtype->category_id != '') {
             array_push($category_array,explode(",",$packingtype->category_id));
             $amount_for_packing = 0;
@@ -45,7 +45,7 @@ if(count($packing_types)) {
                 }
             }
             $packingtype->packing_amount = ($amount_for_packing * $packingtype->charge)/100;
-            
+
         }
     }
 }
@@ -147,14 +147,14 @@ if(count($packing_types)) {
                                                                 {{$cart->quantity}}
                                                             </td>
                                                             <td class="text-left" style="white-space: nowrap">
-                                                                ৳ @if ($cart->varient_id > 0)
+                                                                {{$global_setting->currency ?? ""}} @if ($cart->varient_id > 0)
                                                                     {{($cart->varientInfo->discount_price ?? '0.00')}}
                                                                 @else
                                                                     {{($cart->product->discount_price ?? '0.00')}}
                                                                 @endif
                                                             </td>
                                                             <td class="text-right" style="white-space: nowrap">
-                                                                ৳ @if ($cart->varient_id == 0)
+                                                                {{$global_setting->currency ?? ""}} @if ($cart->varient_id == 0)
                                                                 @php
                                                                     $product_total_price +=  ($cart->product->discount_price ?? 0)  * $cart->quantity;
                                                                     $product_factory_total_price +=  ($cart->product->price ?? 0)  * $cart->quantity;
@@ -169,20 +169,20 @@ if(count($packing_types)) {
                                                                 @endphp
                                                                     {{number_format(($cart->varientInfo->discount_price ?? 0)  * $cart->quantity,2,".","")}}
                                                                 @endif
-                                                                
+
                                                             </td>
                                                         </tr>
                                                     @endforeach
-                                                    
+
                                                 </tbody>
                                                 <tfoot class="mt-3 text-left">
-                                                    
-                                                    
-                                                    
+
+
+
                                                     <tr>
                                                         <th class="text-right" colspan="4">Sub-total: </th>
                                                         <td class="text-right">
-                                                            ৳ {{number_format($product_total_price,2,".","")}}
+                                                            {{$global_setting->currency ?? ""}} {{number_format($product_total_price,2,".","")}}
                                                         </td>
                                                     </tr>
                                                     <tr class="d-none">
@@ -195,55 +195,55 @@ if(count($packing_types)) {
                                                                     } else {
                                                                         $user_discount_percent = $global_setting->dealer_15plus_discount ?? 0;
                                                                     }
-                                                                    
-                                                                    
+
+
                                                                 } else {
                                                                     $user_discount_percent = $global_setting->consumer_discount_percent ?? 0;
                                                                 }
-            
-                                                                
+
+
                                                                 // $discount_amount = ($product_total_price * $user_discount_percent)/100;
                                                                 $discount_amount = ($product_factory_total_price * $user_discount_percent)/100;
                                                                 if ($tds_percent > 0) {
                                                                     $tds_amount = ($discount_amount * $tds_percent) / 100;
                                                                 }
                                                             @endphp
-                                                            ৳ {{number_format($discount_amount,2,".","")}} <small>({{$user_discount_percent}}%)</small>
+                                                            {{$global_setting->currency ?? ""}} {{number_format($discount_amount,2,".","")}} <small>({{$user_discount_percent}}%)</small>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <th colspan="4" class="text-right">After deducting TDS ({{$tds_percent}}%) on commission ({{$user_discount_percent}}%) </th>
                                                         <td class="text-right">
-                                                            
-                                                            ৳ {{number_format($discount_amount - $tds_amount,2,".","")}}
+
+                                                            {{$global_setting->currency ?? ""}} {{number_format($discount_amount - $tds_amount,2,".","")}}
                                                         </td>
                                                     </tr>
                                                     @if ($other_categories_amount > 0)
                                                         <tr>
                                                             <th class="text-right" colspan="4">Other Charge</th>
                                                             <td>
-                                                                ৳ {{number_format($other_categories_amount,2,".","")}}
+                                                                {{$global_setting->currency ?? ""}} {{number_format($other_categories_amount,2,".","")}}
                                                             </td>
                                                         </tr>
                                                     @endif
-                                                    
+
                                                     {{-- @endif --}}
                                                     @php
                                                         $in_total = $product_total_price;
                                                     @endphp
-                                                    
+
                                                     <tr class="d-none">
                                                         {{-- <th>Transportation Charge/Carrying Cost</th> --}}
                                                         <th class="text-right" colspan="4">After imposing VDS ({{$vds_percent}}%) on carrying cost</th>
-            
+
                                                         <td class="text-right">
-                                                            ৳ <span class="inside_outside_cost">0.00</span>
+                                                            {{$global_setting->currency ?? ""}} <span class="inside_outside_cost">0.00</span>
                                                         </td>
                                                     </tr>
                                                     <tr class="discount_on_amount d-none">
                                                         <th class="discount_on_amount_text text-right" colspan="4"></th>
                                                         <td class="text-right">
-                                                            ৳ <span class="discount_on_amount_number">0.00</span>
+                                                            {{$global_setting->currency ?? ""}} <span class="discount_on_amount_number">0.00</span>
                                                         </td>
                                                     </tr>
                                                     @if ($has_packing_types == 1)
@@ -257,16 +257,16 @@ if(count($packing_types)) {
                                                                     <option value="">Select</option>
                                                                     @foreach ($packing_types as $packing_type)
                                                                     @if ($packing_type->packing_amount > 0)
-                                                                    <option data-packing_amount="{{number_format($packing_type->packing_amount,2,".","")}}" value="{{$packing_type->id}}">{{$packing_type->name}} (৳ {{number_format($packing_type->packing_amount,2,".","")}})</option>
+                                                                    <option data-packing_amount="{{number_format($packing_type->packing_amount,2,".","")}}" value="{{$packing_type->id}}">{{$packing_type->name}} ({{$global_setting->currency ?? ""}} {{number_format($packing_type->packing_amount,2,".","")}})</option>
                                                                     @endif
-                                                                        
+
                                                                     @endforeach
                                                                 </select>
                                                             </td>
                                                         </tr>
                                                     @endif
-                                                    
-            
+
+
                                                     <tr>
                                                         <th class="text-right" colspan="4">Total</th>
                                                         <td class="text-right">
@@ -281,17 +281,17 @@ if(count($packing_types)) {
                                                             {{-- from settings table --}}
                                                             <input type="hidden" name="other_categories_amount" value="{{$other_categories_amount}}">
                                                             <input type="hidden" name="still_have_walet_amount" value="{{$still_have_walet_amount}}">
-            
+
                                                             <input type="hidden" class="grand_total_price" name="grand_total_price" value="{{number_format((($in_total + $other_categories_amount) - ($discount_amount - $tds_amount)),2,".","")}}">
-            
+
                                                             @if ($still_have_walet_amount >= (($in_total + $other_categories_amount) - ($discount_amount - $tds_amount)))
                                                                 <input type="hidden" class="paid_from_walet" name="paid_from_walet" value="0">
                                                             @else
                                                             <input type="hidden" class="paid_from_walet" name="paid_from_walet" value="{{number_format((($in_total + $other_categories_amount) - ($discount_amount - $tds_amount)) - $still_have_walet_amount,2,'.','')}}">
-                                                                
+
                                                             @endif
-            
-                                                            ৳ <span class="in_total @if ($still_have_walet_amount <= 0) font-weight-bold @endif" >{{number_format((($in_total + $other_categories_amount) - ($discount_amount - $tds_amount)),2,".","")}}</span>
+
+                                                            {{$global_setting->currency ?? ""}} <span class="in_total @if ($still_have_walet_amount <= 0) font-weight-bold @endif" >{{number_format((($in_total + $other_categories_amount) - ($discount_amount - $tds_amount)),2,".","")}}</span>
                                                         </td>
                                                     </tr>
                                                     @if ($still_have_walet_amount > 0)
@@ -300,7 +300,7 @@ if(count($packing_types)) {
                                                                 In my account
                                                             </th>
                                                             <td>
-                                                                ৳ <span class="still_have_walet_amount_text">{{number_format($still_have_walet_amount,2,'.','')}}</span>
+                                                                {{$global_setting->currency ?? ""}} <span class="still_have_walet_amount_text">{{number_format($still_have_walet_amount,2,'.','')}}</span>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -308,19 +308,19 @@ if(count($packing_types)) {
                                                                 You have to pay
                                                             </th>
                                                             <td>
-                                                                
-                                                                ৳ <strong class="have_to_pay_text">
+
+                                                                {{$global_setting->currency ?? ""}} <strong class="have_to_pay_text">
                                                                     @if ($still_have_walet_amount >= (($in_total + $other_categories_amount) - ($discount_amount - $tds_amount)))
                                                                         0.00
                                                                     @else
                                                                     {{number_format((($in_total + $other_categories_amount) - ($discount_amount - $tds_amount)) - $still_have_walet_amount,2,'.','')}}
                                                                     @endif
-                                                                    
+
                                                                 </strong>
                                                             </td>
                                                         </tr>
                                                     @endif
-                                                    
+
                                                 </tfoot>
                                             </table>
                                         </div>
@@ -353,7 +353,7 @@ if(count($packing_types)) {
                                                                 value="{{$customer->present_address}}">
                                                             </td>
                                                         </tr>
-                                                        
+
                                                         <tr>
                                                             <td>
                                                                 <label class="form-label">
@@ -383,8 +383,8 @@ if(count($packing_types)) {
                                                         </tr>
                                                     </tbody>
                                                 </table>
-                                                
-                                                
+
+
                                             </div>
 
 
@@ -482,7 +482,7 @@ if(count($packing_types)) {
                                         @endif
                                     </div>
 
-                                    
+
                                 </div>
                             </div>
 
@@ -542,7 +542,7 @@ if(count($packing_types)) {
                     var discount_percent = $('input[name="discount_on_amount"]:checked').attr('data-discount_percent');
                     discounted_amount = ((Number(factory_product_total_value) - Number(discount_amount) + Number(tds_amount)) * Number(discount_percent))/100;
                 }
-                
+
             }
 
             if (packing_type_length > 0) {
@@ -552,10 +552,10 @@ if(count($packing_types)) {
             $('.inside_outside_cost').text(Number(inside_outside_cost).toFixed(2));
             $('.discount_on_amount_number').text(Number(discounted_amount).toFixed(2));
             var in_total_text = Number($(".total_price").val()) - Number(discounted_amount) - Number(discount_amount) + Number(packing_amount) + Number(tds_amount) + Number(other_categories_amount);
-            
+
             $(".in_total").text(Number(in_total_text).toFixed(2));
             $(".grand_total_price").val(Number(in_total_text).toFixed(2));
-            
+
             if (Number(in_total_text) > Number(still_have_walet_amount)) {
                 $('.have_to_pay_text').text(Number( Number(in_total_text) - Number(still_have_walet_amount) ).toFixed(2));
                 $('.paid_from_walet').val(Number(still_have_walet_amount).toFixed(2));
@@ -602,21 +602,21 @@ if(count($packing_types)) {
                     var total_value = $(".total_price").val();
                     var product_factory_total_price = $(".product_factory_total_price").val();
                     var discount_percent = $('input[name="discount_on_amount"]:checked').attr('data-discount_percent');
-                    
-                    
+
+
                     var discounted_amount = ((Number(product_factory_total_price) - Number(hidden_discount_amount) + Number(tds_amount)) * Number(discount_percent))/100;
                     $('.discount_on_amount_number').text(Number(discounted_amount).toFixed(2));
                     discount_amount = Number(discounted_amount);
-                
+
                 }
-                
+
                 if ($('input[name="discount_on_amount"]:checked').val() == 1) {
                     cost = 0;
                 }
             }
-            
+
             if($(this).is(":checked")) {
-                
+
                 $(".inside_outside_cost").text(Number(cost).toFixed(2));
                 var in_total_text = Number(cost) + Number($(".total_price").val()) - Number(hidden_discount_amount) - Number(discount_amount) + Number(packing_amount) + Number(tds_amount) + Number(other_categories_amount);
                 $(".in_total").text(Number(in_total_text).toFixed(2));
@@ -650,10 +650,10 @@ if(count($packing_types)) {
     });
 
     $('#packing_type').on('change', function() {
-        
+
         var packing_type = $(this).find(':selected').val();
         if (packing_type) {
-            
+
             var discount_on_amount_length = $('input[name="discount_on_amount"]:checked').length;
             var shipping_area = $('input[name="shipping_area"]:checked').length;
             var shipping_area_cost = 0;
@@ -666,18 +666,18 @@ if(count($packing_types)) {
 
             if (shipping_area > 0) {
                 shipping_area_cost = $('input[name="shipping_area"]:checked').attr("data-cost");
-                
+
             }
 
             packing_amount = $('#packing_type').find(':selected').attr("data-packing_amount");
 
             if (discount_on_amount_length > 0) {
-                
+
                 if ($('input[name="discount_on_amount"]:checked').val() == 2) {
                     discount_on_amount_number = $('.discount_on_amount_number').text();
-                    
+
                 }
-                
+
             }
             var in_total_text = (Number($(".total_price").val()) + Number(shipping_area_cost) + Number(other_categories_amount) + Number(packing_amount)) - (Number(discount_on_amount_number) + (Number(discount_amount) - Number(tds_amount)));
             $(".in_total").text(Number(in_total_text).toFixed(2));
@@ -690,7 +690,7 @@ if(count($packing_types)) {
                 $('.have_to_pay_text').text("0.00");
                 $('.paid_from_walet').val(Number(in_total_text).toFixed(2));
             }
-            
+
         } else {
             var discount_on_amount_length = $('input[name="discount_on_amount"]:checked').length;
             var shipping_area = $('input[name="shipping_area"]:checked').length;
@@ -699,15 +699,15 @@ if(count($packing_types)) {
 
             if (shipping_area > 0) {
                 shipping_area_cost = $('input[name="shipping_area"]:checked').attr("data-cost");
-                
+
             }
 
             if (discount_on_amount_length > 0) {
                 if ($('input[name="discount_on_amount"]:checked').val() == 2) {
                     discount_on_amount_number = $('.discount_on_amount_number').text();
-                    
+
                 }
-                
+
             }
             var discount_amount = $('input[name="discount_amount"]').val();
 
@@ -715,7 +715,7 @@ if(count($packing_types)) {
             var tds_amount = $('input[name="tds_amount"]').val();
 
             var in_total_text = (Number($(".total_price").val()) + Number(shipping_area_cost) + Number(other_categories_amount)) - (Number(discount_on_amount_number) + (Number(discount_amount) - Number(tds_amount)));
-            
+
             $(".in_total").text(Number(in_total_text).toFixed(2));
             $(".grand_total_price").val(Number(in_total_text).toFixed(2));
 
@@ -726,14 +726,14 @@ if(count($packing_types)) {
                 $('.have_to_pay_text').text("0.00");
                 $('.paid_from_walet').val(Number(in_total_text).toFixed(2));
             }
-            
+
         }
     });
 
-    
+
     @if ($get_discount_after_amount <= $in_total)
         $('input[name="discount_on_amount"]').on('change', function() {
-            
+
             var discount_on_amount_length = $('input[name="discount_on_amount"]:checked').length;
             var shipping_area_length = $('input[name="shipping_area"]:checked').length;
             var packing_type_length = $("#packing_type>option:not([value='']):selected").length;
@@ -758,22 +758,22 @@ if(count($packing_types)) {
 
             if (discount_on_amount_length > 0) {
                 if ($('input[name="discount_on_amount"]:checked').val() == 2) {
-                    
-                    
+
+
                     $('.discount_on_amount').removeClass("d-none");
-                    
+
                     var discount_percent= $('input[name="discount_on_amount"]:checked').attr("data-discount_percent");
-                    
+
                     // var t_discount_amoun = ((Number($(".total_price").val()) - Number(discount_amount)) * discount_percent)/100;
                     var t_discount_amoun = ((Number($(".product_factory_total_price").val()) - Number(discount_amount) + Number(tds_amount)) * discount_percent)/100;
 
                     $('.discount_on_amount_number').text(Number(t_discount_amoun).toFixed(2));
                     discount_on_amount_number = t_discount_amoun;
 
-                    
+
                     $('.discount_on_amount_text').text("Get "+discount_percent+" % discount in total price");
 
-                    
+
 
                     var in_total_text = Number($(".total_price").val()) - Number(discount_on_amount_number) + Number(shipping_area_cost) + Number(packing_amount) - Number(discount_amount) + Number(tds_amount) + Number(other_categories_amount);
                     $(".in_total").text(Number(in_total_text).toFixed(2));
@@ -787,9 +787,9 @@ if(count($packing_types)) {
                         $('.paid_from_walet').val(Number(in_total_text).toFixed(2));
                     }
 
-                } 
+                }
                 if($('input[name="discount_on_amount"]:checked').val() == 1) {
-                    
+
                     shipping_area_cost = 0;
                     $('.discount_on_amount').addClass("d-none");
                     var in_total_text = Number($(".total_price").val()) + Number(packing_amount) - Number(discount_amount) + Number(shipping_area_cost) + Number(tds_amount) + Number(other_categories_amount);
@@ -820,14 +820,14 @@ if(count($packing_types)) {
                     $('.have_to_pay_text').text("0.00");
                     $('.paid_from_walet').val(Number(in_total_text).toFixed(2));
                 }
-                
+
             }
 
-            
+
 
             $(".inside_outside_cost").text(Number(shipping_area_cost).toFixed(2));
 
-            
+
         });
     @endif
     // $('input[name="shipping_area"]').on('click', function() {
@@ -840,7 +840,7 @@ if(count($packing_types)) {
 
     $('#save_checkout').on('submit',function(e){
         // e.preventDefault();
-        
+
         // var formData = new FormData(this);
 
         if ($('input#shippingdiffrentAddress').is(':checked')) {
@@ -852,11 +852,11 @@ if(count($packing_types)) {
         }
 
         // if (!$('input#defaultCheck10').is(':checked')) {
-            
+
         //     alertify.error("Please click website terms and conditions to agree");
         //     e.preventDefault();
         //     return false;
-        
+
         // }
 
         var still_have_walet_amount = $("input[name='still_have_walet_amount']").val();
@@ -870,7 +870,7 @@ if(count($packing_types)) {
                     e.preventDefault();
                     return false;
             }
-            
+
             if (discount_on_amount_length == 1) {
                 if ($('input[name="discount_on_amount"]:checked').val() == 1) {
                     if (personal_vehicle_length == 1) {
@@ -879,16 +879,16 @@ if(count($packing_types)) {
                         return false;
                     }
                 }
-                
+
             }
-            
+
         @endif
-        
+
         if ($('input[name="personal_vehicle"]').is(':checked')) {
-            
+
         } else {
             if($("input[name='shipping_area']").is(':checked')) {
-                
+
             } else {
                 alertify.error("Please choose your delivery area");
                 e.preventDefault();
@@ -929,18 +929,18 @@ if(count($packing_types)) {
             } else {
                 have_to_pay_text = $('.in_total').text();
             }
-            
+
         }
 
         if (Number(have_to_pay_text) > 0) {
             // if (payment_method == 1) {
-            
+
             //     if ($("#bank_id>option:selected").val() == "") {
             //         alertify.error("Please choose bank account");
             //         e.preventDefault();
             //         return false;
             //     }
-                
+
             //     if ($("input[name='document']").val() == "") {
             //         alertify.error("Bank info document is required");
             //         e.preventDefault();
@@ -949,28 +949,28 @@ if(count($packing_types)) {
             // }
 
             // if (payment_method == 2) {
-            
+
             //     if ($("input[name='factory_showroom']").val() == "") {
             //         alertify.error("Sender mobile no is required");
             //         e.preventDefault();
             //         return false;
             //     }
-                
+
             //     if ($("input[name='cash_payment_document']").val() == "") {
             //         alertify.error("Receiver mobile no is required");
             //         e.preventDefault();
             //         return false;
             //     }
             // }
-            
+
             // if (payment_method == 5) {
-            
+
             //     if ($("input[name='factory_showroom']").val() == "") {
             //         alertify.error("Factory Side/Showroom name is required");
             //         e.preventDefault();
             //         return false;
             //     }
-                
+
             //     if ($("input[name='cash_payment_document']").val() == "") {
             //         alertify.error("Document is required");
             //         e.preventDefault();
@@ -984,10 +984,10 @@ if(count($packing_types)) {
             //     return false;
             // }
         }
-        
-        
-        
-        
+
+
+
+
 
         @if ($has_packing_types == 1)
         var packing_type_length = $("#packing_type>option:not([value='']):selected").length;
@@ -998,7 +998,7 @@ if(count($packing_types)) {
         }
         @endif
     });
-    
+
 </script>
 
 

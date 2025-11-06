@@ -253,7 +253,7 @@
 
                                                             <th class="text-right" colspan="3">Shipping Charge</th>
                                                             <th class="text-right">
-                                                                ৳ <span>
+                                                                {{$global_setting->currency ?? ""}} <span>
                                                                     {{$order->shipping_cost}}
                                                                 </span>
                                                             </th>
@@ -266,7 +266,7 @@
 
                                                         <tr style="border-top: 1px solid #000;">
                                                             <th class="text-right" colspan="3">Total</th>
-                                                            <th class="text-right">৳ {{$order->grand_total_price}}</th>
+                                                            <th class="text-right">{{$global_setting->currency ?? ""}} {{$order->grand_total_price}}</th>
                                                         </tr>
 
                                                         <tr style="border-top: 1px solid #000;">

@@ -1,7 +1,7 @@
 @extends('backend.layout.master')
 
 @push('css')
-    <style> 
+    <style>
         @media print {
             #inventoryPrint{
                 width: 100%;
@@ -11,10 +11,10 @@
                 display: block;
                 width: auto;
                 height: auto;
-                overflow: visible;  
+                overflow: visible;
             }
         }
-        table{ 
+        table{
             white-space: nowrap;
         }
     </style>
@@ -44,7 +44,7 @@
                 'id' => 3,
                 'name' => 'Stock In',
                 'class' => 'label label-lg font-weight-bold label-success label-inline'
-                
+
             ],
             [
                 'id' => 4,
@@ -61,7 +61,7 @@
 
     <!--begin::Content-->
     <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
-        
+
 
         <div class="d-flex flex-column-fluid">
             <!--begin::Container-->
@@ -74,16 +74,16 @@
                         <div class="card card-custom example example-compact">
                             <div class="card-header">
                                 <h3 class="card-title">Stock Report</h3>
-                                <div class="d-flex align-items-center"> 
+                                <div class="d-flex align-items-center">
 
-                                                                
+
                                     {{-- <input type="text"data-url="{{ route('admin.searchAjax',['type'=> 'designation']) }}" class="form-control form-control-lg form-control-solid ajax-data-search" name="q" placeholder="Enter Designation, Description, Level"> --}}
                                 </div>
                             </div>
 
                             {{-- Advance filter --}}
                             <div class="form-group card-body mb-0 pb-0 row">
-                        
+
                                 <form class="form-inline" method="GET">
                                     <table>
                                         <tr>
@@ -108,7 +108,7 @@
                                                         <option value="">--Select a Category--</option>
 
                                                         @foreach ($product_category as $category)
-                                                            <option @if(isset($_GET['category_id']) and $_GET['category_id'] == $category->id) selected 
+                                                            <option @if(isset($_GET['category_id']) and $_GET['category_id'] == $category->id) selected
                                                             @php
                                                                 $filter_category_name = $category->name;
                                                             @endphp
@@ -161,13 +161,13 @@
                                             </td>
                                         </tr>
                                     </table>
-                                    
+
                                 </form>
                             </div>
                             {{-- End Filter --}}
 
                             <div class="card-body" id="inventoryPrint">
-                                
+
                                 <div class="table-responsive ajax-data-container pt-3 visible-print">
 
                                     <div class="title_area">
@@ -175,11 +175,11 @@
                                         <h4 class="text-center">
                                             {{ $global_setting->address ?? "" }}
                                         </h4>
-        
+
                                         <p class="text-center">
                                             <strong>Stock Report</strong>
                                         </p>
-                                        
+
                                         <p class="text-center">
                                             @if (isset($_GET['fromDate']) and $_GET['fromDate'] !='')
                                                 <strong>Date from:</strong> {{ date_format(date_create($_GET['fromDate']), 'd-m-Y') }}
@@ -187,7 +187,7 @@
 
                                             @if (isset($_GET['toDate']) and $_GET['toDate'] !='')
                                                 @if (isset($_GET['fromDate']) and $_GET['fromDate'] !='')
-                                                    , 
+                                                    ,
                                                 @endif
 
                                                 <strong>Date to:</strong> {{ date_format(date_create($_GET['toDate']), 'd-m-Y') }}
@@ -197,14 +197,14 @@
                                         @if (isset($_GET['category_id']) and $_GET['category_id'] !='')
                                             <p class="text-center"> <strong>Product Category:</strong> {{ $filter_category_name }}</p>
                                         @endif
-                                        
+
                                         @if (isset($_GET['product_id']) and $_GET['product_id'] !='')
                                             <p class="text-center"> <strong>Product:</strong> {{ $filter_product_name }}</p>
                                         @endif
 
                                         @if (isset($_GET['stockType']) and $_GET['stockType'] !='')
-                                            <p class="text-center"> 
-                                                <strong>Stock type:</strong> 
+                                            <p class="text-center">
+                                                <strong>Stock type:</strong>
                                                 @if($_GET['stockType'] == 1)
                                                     Stock In
                                                 @elseif($_GET['stockType'] == 2)
@@ -239,9 +239,9 @@
                                                         <td class="text-left">
                                                             {{ $inventory->productInfo->name ?? '' }}
                                                         </td>
-                                                        
+
                                                         <td>{{ $inventory->productInfo->code ?? '' }}</td>
-                                    
+
                                                         <td>{{ number_format($inventory->quantity ?? 0) }}</td>
 
                                                         <td>
@@ -251,7 +251,7 @@
                                                                 @endif
                                                             @endforeach
                                                         </td>
-                                    
+
                                                         <td>
                                                             @if (isset($inventory->updated_at))
                                                                 {{ $inventory->updated_at->format('d-M-Y') }}
@@ -261,7 +261,7 @@
                                                                 'N/A'
                                                             @endif
                                                         </td>
-                                    
+
                                                     {{--<td>
                                                             @if ($order->stage == 1)
                                                                 <span class="label label-lg font-weight-bold label-success label-inline">Accepted</span>
@@ -278,24 +278,24 @@
                                                             @else
                                                                 <span class="label label-lg font-weight-bold label-warning label-inline">Unknown Status</span>
                                                             @endif
-                                    
+
                                                         </td>
-                                    
-                                                        <td>৳ {{ $order->grand_total_price ?? 0 }}</td>
-                                    
+
+                                                        <td>{{$global_setting->currency ?? ""}} {{ $order->grand_total_price ?? 0 }}</td>
+
                                                         <td>
                                                             @can('view_order')
                                                                 <a href="{{route('admin.order.show', Crypt::encryptString($order->id))}}" class="btn btn-sm btn-clean btn-icon" title="view">
                                                                     <i class="la la-eye"></i>
                                                                 </a>
                                                             @endcan
-                                    
+
                                                             @can('delete_order')
                                                                 <button class="btn btn-sm btn-clean btn-icon delete" title="Delete" data-id="{{ $order->id }}">
                                                                     <i class="la la-trash"></i>
                                                                 </button>
                                                                 @if ($order->status == 1)
-                                                                    
+
                                                                     @elseif ($order->status == 0)
                                                                         <button class="btn btn-sm btn-clean btn-icon delete" title="Active" data-id="{{ $order->id }}">
                                                                             <i class="la la-check"></i>
@@ -323,7 +323,7 @@
                                 </div>
                             </div>
 
-                            <div class="card-footer"> 
+                            <div class="card-footer">
                                 <button class="btn btn-primary print_media" onclick="exportData()">Export</button>
                                 <button class="btn btn-primary print_media" onclick="printDiv('inventoryPrint')">Print</button>
                             </div>
@@ -342,17 +342,17 @@
             tfoot { display: none; }
         }
     </style>
-    
+
 @endsection
 
 @push('stackScript')
-    {{-- <script> 
+    {{-- <script>
         $(".delete").click(function(e) {
 
             var data_id = $(this).attr("data-id");
             var url =  '<a href="{{route("admin.order.delete", ":id")}}" class="swal2-confirm swal2-styled" title="Delete">Confirm</a>';
             url = url.replace(':id', data_id );
-            
+
             Swal.fire({
                 title: 'Are you sure ?',
                 icon: 'info',

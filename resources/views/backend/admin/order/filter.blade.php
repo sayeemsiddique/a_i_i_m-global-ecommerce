@@ -146,7 +146,7 @@
 
                                                     <td>{{ $order->created_at->format('d-M-Y') }}</td>
 
-                                                    <td>৳ {{ $order->grand_total_price ?? '0.00' }}</td>
+                                                    <td>{{$global_setting->currency ?? ""}} {{ $order->grand_total_price ?? '0.00' }}</td>
 
                                                     <td>
                                                         @if ($order->stage == 1)

@@ -51,7 +51,7 @@
                                     </div>
                                     <div class="flex-center-between mb-1">
                                         <div class="prodcut-price">
-                                            <div class="text-gray-100">৳
+                                            <div class="text-gray-100">{{$global_setting->currency ?? ""}}
                                                 @if ($product->has_varient == 1)
                                                         {{$product->productVarient->min('discount_price')}}
                                                     @else

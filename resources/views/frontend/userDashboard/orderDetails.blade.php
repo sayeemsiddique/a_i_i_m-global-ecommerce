@@ -36,7 +36,7 @@
                 {{-- @include('frontend.layout.accountMenu') --}}
 
                 <div class="tab-content mb-6" style="padding: 1rem;">
-                    
+
                     <div class="tab-pane mb-4 active in">
                         <div class="icon-box icon-box-side icon-box-light">
                             <span class="icon-box-icon icon-orders">
@@ -111,8 +111,8 @@
                                 @foreach ($orderDetails->orderDetails as $order)
                                     <tr>
                                         <td class="order-id">{{ $order->product ? $order->product->name : '' }}</td>
-                                        <td class="order-date">৳ {{ number_format($order->f_price, 2, '.', '') }}</td>
-                                        <td class="order-date">৳ {{ number_format($order->sd_total, 2, '.', '') }} & ৳ {{ number_format($order->vat_total, 2, '.', '') }}</td>
+                                        <td class="order-date">{{$global_setting->currency ?? ""}} {{ number_format($order->f_price, 2, '.', '') }}</td>
+                                        <td class="order-date">{{$global_setting->currency ?? ""}} {{ number_format($order->sd_total, 2, '.', '') }} & {{$global_setting->currency ?? ""}} {{ number_format($order->vat_total, 2, '.', '') }}</td>
                                         <td class="order-date">{{ number_format($order->quantity) ?? 0 }}</td>
                                         @php
                                             $sub_total = $order->price * $order->quantity;
@@ -126,7 +126,7 @@
                                                 @endif
                                             @endif
                                         </td>
-                                        <td class="text-right" style="min-width: 170px;">৳ {{ number_format($sub_total, 2, '.', '') }}</td>
+                                        <td class="text-right" style="min-width: 170px;">{{$global_setting->currency ?? ""}} {{ number_format($sub_total, 2, '.', '') }}</td>
                                     </tr>
 
                                     @php
@@ -137,7 +137,7 @@
                                 <!--Show sub-total/total product price-->
                                 <tr class="font-weight-bold text-right">
                                     <td colspan="5" class="order-date text-right">Subtotal</td>
-                                    <td class="order-date font-weight-bold">৳ {{ number_format($totalProductPrice, 2, '.', '') }}</td>
+                                    <td class="order-date font-weight-bold">{{$global_setting->currency ?? ""}} {{ number_format($totalProductPrice, 2, '.', '') }}</td>
                                 </tr>
 
                                 <!--Show user type discount-->
@@ -148,10 +148,10 @@
 
                                     @if ($userType == 3)
                                         <td colspan="5" class="order-date text-right">After Deducting TDS ({{ $orderDetails->tds }}%) on Commission ({{ $orderDetails->user_type_discount ?? 0 }} %)</td>
-                                        <td class="order-date">৳ {{ number_format($orderDetails->discount_amount ?? 0, 2,'.','') }}</td>
+                                        <td class="order-date">{{$global_setting->currency ?? ""}} {{ number_format($orderDetails->discount_amount ?? 0, 2,'.','') }}</td>
                                     @else
                                         <td colspan="5" class="order-date text-right">After Deducting TDS ({{ $orderDetails->tds }}%) on Commission ({{$orderDetails->user_type_discount ?? 0}} %)</td>
-                                        <td class="order-date">৳ {{ number_format($orderDetails->discount_amount ?? 0, 2,'.','') }}</td>
+                                        <td class="order-date">{{$global_setting->currency ?? ""}} {{ number_format($orderDetails->discount_amount ?? 0, 2,'.','') }}</td>
                                     @endif
                                 </tr>
 
@@ -159,35 +159,35 @@
                                 @if ($orderDetails->discount_on_amount == 2)
                                     <tr class="font-weight-bold text-right">
                                         <td colspan="5" class="order-date text-right">Order Commission ({{$orderDetails->discount_percent_in_total ?? 0}} %)</td>
-                                        <td class="order-date">৳ {{number_format($orderDetails->discount_amount_in_total ?? 0, 2,'.','')}}</td>	
+                                        <td class="order-date">{{$global_setting->currency ?? ""}} {{number_format($orderDetails->discount_amount_in_total ?? 0, 2,'.','')}}</td>
                                     </tr>
                                 @endif
 
                                 <!--Show packing charge-->
                                 <tr class="font-weight-bold text-right">
                                     <td colspan="5" class="order-date text-right">Packing Charge ({{$orderDetails->packType ? $orderDetails->packType->name : 'N/A'}})</td>
-                                    <td class="order-date">৳ {{number_format($orderDetails->packing_amount ?? 0, 2,'.','')}}</td>
+                                    <td class="order-date">{{$global_setting->currency ?? ""}} {{number_format($orderDetails->packing_amount ?? 0, 2,'.','')}}</td>
                                 </tr>
 
                                 <!--Show transportation charge-->
                                 <tr class="font-weight-bold text-right">
                                     {{-- <td class="order-date">Transportation Charge</td> --}}
                                     <td colspan="5" class="order-date text-right">After Imposing VDS ({{ $orderDetails->vds }}%) on Carrying Cost</td>
-                                    <td class="order-date">৳ {{number_format($orderDetails->courier_cost ?? 0, 2,'.','')}}</td>
+                                    <td class="order-date">{{$global_setting->currency ?? ""}} {{number_format($orderDetails->courier_cost ?? 0, 2,'.','')}}</td>
                                 </tr>
 
                                 <!--Show total price-->
                                 <tr class="font-weight-bold text-right" style="border-top: 1px solid #000;">
                                     <td colspan="5" class="order-date text-right">Total</td>
-                                    <td class="order-date">৳ {{ number_format($orderDetails->grand_total_price ?? 0, 2,'.','') }}</td>
+                                    <td class="order-date">{{$global_setting->currency ?? ""}} {{ number_format($orderDetails->grand_total_price ?? 0, 2,'.','') }}</td>
                                 </tr>
                             </tbody>
                         </table>
-                        
+
                     </div>
 
                 </div>
-                
+
             </div>
         </div>
     </main>

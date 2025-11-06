@@ -257,7 +257,7 @@
                                                 }
                                             }
                                             @endphp
-                                            ৳ <span class="cart_price_span custom_cart_price_span">{{number_format($cart_amount,2,".","")}}</span>
+                                            {{$global_setting->currency ?? ""}} <span class="cart_price_span custom_cart_price_span">{{number_format($cart_amount,2,".","")}}</span>
                                         </span>
                                     </a>
                                 </li>
@@ -276,7 +276,7 @@
                                         data-unfold-animation-out="fadeOut">
                                         <i class="font-size-22 ec ec-shopping-bag"></i>
                                         <span class="bg-lg-down-black width-22 height-22 bg-primary position-absolute d-flex align-items-center justify-content-center rounded-circle left-12 top-8 font-weight-bold font-size-12 custom_cart_quantity">{{count($carts)}}</span>
-                                        <span class="d-none d-xl-block font-weight-bold font-size-16 text-gray-90 ml-3">৳ <span class="custom_cart_price_span">{{number_format($cart_amount,2,".","")}}</span></span>
+                                        <span class="d-none d-xl-block font-weight-bold font-size-16 text-gray-90 ml-3">{{$global_setting->currency ?? ""}} <span class="custom_cart_price_span">{{number_format($cart_amount,2,".","")}}</span></span>
                                     </div>
                                     <div id="basicDropdownHover" class="cart-dropdown dropdown-menu dropdown-unfold border-top border-top-primary mt-3 border-width-2 border-left-0 border-right-0 border-bottom-0 left-auto right-0" aria-labelledby="basicDropdownHoverInvoker">
                                         <ul class="list-unstyled px-3 pt-3">
@@ -303,7 +303,7 @@
                                                                     </span> <br/>
                                                                 @endif
 
-                                                                <span class="font-size-14">{{$cart->quantity}} × ৳@if ($cart->variation_id == 0){{$cart->productInfo->discount_price ?? ''}} @else {{$cart->varientInfo->discount_price ?? 0}} @endif</span>
+                                                                <span class="font-size-14">{{$cart->quantity}} × {{$global_setting->currency ?? ""}} @if ($cart->variation_id == 0){{$cart->productInfo->discount_price ?? ''}} @else {{$cart->varientInfo->discount_price ?? 0}} @endif</span>
 
                                                             </li>
                                                             <li class="px-2 col-auto">

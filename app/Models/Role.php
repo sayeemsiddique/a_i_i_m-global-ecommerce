@@ -11,11 +11,11 @@ class Role extends Model
 
     public function user()
     {
-        return $this->belongsTo('App\Models\User','created_by');
+        return $this->belongsTo(User::class, 'created_by');
     }
 
     public function permissions()
-    {        
-        return $this->hasMany('App\Models\RolePermission','role_id','id');
+    {
+        return $this->hasMany(RolePermission::class, 'role_id','id');
     }
 }

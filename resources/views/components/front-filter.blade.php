@@ -155,10 +155,10 @@
             <!-- End Range Slider -->
             <div class="mt-1 text-gray-111 d-flex mb-4">
                 <span class="mr-0dot5">Price: </span>
-                <span>৳</span>
+                <span>{{$global_setting->currency ?? ""}}</span>
                 <span id="rangeSliderExample3MinResult" class=""></span>
                 <span class="mx-0dot5"> — </span>
-                <span>৳</span>
+                <span>{{$global_setting->currency ?? ""}}</span>
                 <span id="rangeSliderExample3MaxResult" class=""></span>
             </div>
             <button type="submit" class="btn px-4 btn-primary-dark-w py-2 rounded-lg">Filter</button>

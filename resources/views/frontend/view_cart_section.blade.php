@@ -94,12 +94,12 @@
                         </td>
 
                         <td data-title="Price" style="white-space: nowrap;" class="text-right">
-                            <span class="">৳ @if ($cart->variation_id == 0){{$cart->productInfo->discount_price ?? ''}} @else {{$cart->varientInfo->discount_price ?? 0}} @endif</span>
+                            <span class="">{{$global_setting->currency ?? ""}} @if ($cart->variation_id == 0){{$cart->productInfo->discount_price ?? ''}} @else {{$cart->varientInfo->discount_price ?? 0}} @endif</span>
                         </td>
 
                         <td data-title="Total" style="white-space: nowrap;">
                             <span class="total_amount d-block text-right">
-                                ৳ @if ($cart->variation_id == 0)
+                                {{$global_setting->currency ?? ""}} @if ($cart->variation_id == 0)
                                     @php
                                         $product_total_price +=  ($cart->productInfo->discount_price ?? 0)  * $cart->quantity;
                                     @endphp
@@ -180,12 +180,12 @@
                         </td>
 
                         <td data-title="Price" style="white-space: nowrap;" class="text-right">
-                            <span class="">৳ @if ($guest_cart->variation_id == 0){{$guest_cart->productInfo->discount_price ?? ''}} @else {{$guest_cart->varientInfo->discount_price ?? 0}} @endif</span>
+                            <span class="">{{$global_setting->currency ?? ""}} @if ($guest_cart->variation_id == 0){{$guest_cart->productInfo->discount_price ?? ''}} @else {{$guest_cart->varientInfo->discount_price ?? 0}} @endif</span>
                         </td>
 
                         <td data-title="Total" style="white-space: nowrap;">
                             <span class="total_amount d-block text-right">
-                                ৳ @if ($guest_cart->variation_id == 0)
+                                {{$global_setting->currency ?? ""}} @if ($guest_cart->variation_id == 0)
                                     @php
                                         $product_total_price +=  ($guest_cart->productInfo->discount_price ?? 0)  * $guest_cart->quantity;
                                     @endphp
@@ -217,7 +217,7 @@
                     <tr class="border-top space-top-2 justify-content-center">
                         <td class="text-right font-weight-bold" colspan="5">Total</td>
                         <td data-title="Total" colspan="2">
-                            <strong><span class="amount">৳
+                            <strong><span class="amount">{{$global_setting->currency ?? ""}}
                                 {{ number_format(($in_total + $total_tax + $total_vat),2,".","") }}
                             </span></strong>
                         </td>

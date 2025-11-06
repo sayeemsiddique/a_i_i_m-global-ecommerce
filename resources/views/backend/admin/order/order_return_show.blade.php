@@ -133,7 +133,7 @@
 																		@endphp
 
 																		<td class="text-primary pt-7 text-right align-middle">
-																			৳ {{ number_format($sub_total, 2, ".", "") }}
+																			{{$global_setting->currency ?? ""}} {{ number_format($sub_total, 2, ".", "") }}
 																		</td>
 																	</tr>
 
@@ -145,7 +145,7 @@
 																<!--Show sub-total/total product price-->
 																<tr>
 																	<th class="text-right" colspan="3">Total</th>
-																	<th class="text-right">৳ {{ number_format($totalProductPrice, 2, ".", "") }}</th>
+																	<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($totalProductPrice, 2, ".", "") }}</th>
 																</tr>
 
 															</tbody>

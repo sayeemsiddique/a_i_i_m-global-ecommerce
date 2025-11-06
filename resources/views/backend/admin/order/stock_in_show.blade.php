@@ -301,7 +301,7 @@
 									<tr>
 										<th class="text-right" colspan="6">Other Charge</th>
 
-										<th class="text-right">৳ {{ number_format($order->other_categories_amount ?? 0, 2, '.', '') }}</th>
+										<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->other_categories_amount ?? 0, 2, '.', '') }}</th>
 									</tr>
 									@endif
 

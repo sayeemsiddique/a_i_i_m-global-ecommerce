@@ -275,14 +275,14 @@
                             <div class="d-flex align-items-baseline">
                                 <ins class="font-size-36 text-decoration-none">
 
-                                    ৳ <span class="price_append_area">{{$sale_price}}</span>
+                                    {{$global_setting->currency ?? ""}} <span class="price_append_area">{{$sale_price}}</span>
                                     @if (($has_discount == 1) and ($sale_price_without_discount != $sale_price))
-                                        <del class="font-size-20 ml-2 text-danger">৳ {{$sale_price_without_discount}}</del>
+                                        <del class="font-size-20 ml-2 text-danger">{{$global_setting->currency ?? ""}} {{$sale_price_without_discount}}</del>
                                     @endif
 
                                 </ins>
 
-                                {{-- <del class="font-size-20 ml-2 text-gray-6">৳ 2,299.00</del> --}}
+                                {{-- <del class="font-size-20 ml-2 text-gray-6">{{$global_setting->currency ?? ""}} 2,299.00</del> --}}
                             </div>
                         </div>
                         @if ($product->has_varient == 1)
@@ -627,7 +627,7 @@
                                         </div>
                                         <div class="flex-center-between mb-3">
                                             <div class="prodcut-price">
-                                                <div class="text-gray-100">৳
+                                                <div class="text-gray-100">{{$global_setting->currency ?? ""}}
                                                     @if ($related_product->has_varient == 1)
                                                         {{$related_product->productVarient->min('discount_price')}}
                                                     @else

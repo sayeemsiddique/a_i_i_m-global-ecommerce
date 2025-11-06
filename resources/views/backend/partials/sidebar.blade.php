@@ -12,7 +12,7 @@
         <!--begin::Toggle-->
         {{-- <button class="brand-toggle btn btn-sm px-0" id="kt_aside_toggle">
             <span class="svg-icon svg-icon svg-icon-xl">
-                <i style="color: #6e3cbc;" class="fab fa-uncharted"></i>
+                <i  class="fab fa-uncharted"></i>
             </span>
         </button> --}}
         <!--end::Toolbar-->
@@ -27,7 +27,7 @@
                 <li class="menu-item {{ session('lsbm') == 'dashboard' ? ' menu-item-active ' : '' }} " aria-haspopup="true">
                     <a href="{{route('admin.index')}}" class="menu-link">
                         <span class="svg-icon menu-icon">
-                            <i style="color: #6e3cbc;" class="fas fa-th"></i>
+                            <i  class="fas fa-th"></i>
                         </span>
                         <span class="menu-text">Dashboard</span>
                     </a>
@@ -38,7 +38,7 @@
                     <li class="menu-item menu-item-submenu {{ session('lsbm') == 'manage_order' ? ' menu-item-open ' : '' }}" aria-haspopup="true" data-menu-toggle="hover">
                         <a href="javascript:;" class="menu-link menu-toggle">
                             <span class="svg-icon menu-icon">
-                                <i style="color: #6e3cbc;" class="fab fa-uncharted"></i>
+                                <i class="fas fa-cart-arrow-down"></i>
                             </span>
                             <span class="menu-text">Order Management</span>
                             <i class="menu-arrow"></i>
@@ -128,8 +128,7 @@
                     <li class="menu-item menu-item-submenu {{ session('lsbm') == 'inventory_management' ? ' menu-item-open ' : '' }}" aria-haspopup="true" data-menu-toggle="hover">
                         <a href="javascript:;" class="menu-link menu-toggle">
                             <span class="svg-icon menu-icon">
-                                <i style="color: #6e3cbc;" class="fab fa-uncharted"></i>
-
+                                <i class="fas fa-warehouse"></i>
                             </span>
                             <span class="menu-text">Inventory Management</span>
                             <i class="menu-arrow"></i>
@@ -198,7 +197,7 @@
                     aria-haspopup="true" data-menu-toggle="hover">
                     <a href="javascript:;" class="menu-link menu-toggle">
                         <span class="svg-icon menu-icon">
-                            <i style="color: #6e3cbc;" class="fab fa-uncharted"></i>
+                            <i  class="fab fa-uncharted"></i>
 
                         </span>
                         <span class="menu-text">Sales Center</span>
@@ -248,7 +247,7 @@
                     <li class="menu-item menu-item-submenu {{ session('lsbm') == 'manage_bank' ? ' menu-item-open ' : '' }}" aria-haspopup="true" data-menu-toggle="hover">
                         <a href="javascript:;" class="menu-link menu-toggle">
                             <span class="svg-icon menu-icon">
-                                <i style="color: #6e3cbc;" class="fab fa-uncharted"></i>
+                                <i  class="fab fa-uncharted"></i>
                             </span>
                             <span class="menu-text">Bank Management</span>
                             <i class="menu-arrow"></i>
@@ -296,7 +295,7 @@
                     <li class="menu-item menu-item-submenu {{ session('lsbm') == 'roles' ? ' menu-item-open ' : '' }}" aria-haspopup="true" data-menu-toggle="hover">
                         <a href="javascript:;" class="menu-link menu-toggle">
                             <span class="svg-icon menu-icon">
-                                <i style="color: #6e3cbc;" class="fab fa-uncharted"></i>
+                                <i class="fas fa-users"></i>
                             </span>
                             <span class="menu-text">User Management</span>
                             <i class="menu-arrow"></i>
@@ -398,7 +397,7 @@
                     <li class="menu-item menu-item-submenu {{ session('lsbm') == 'manage_location' ? ' menu-item-open ' : '' }}" aria-haspopup="true" data-menu-toggle="hover">
                         <a href="javascript:;" class="menu-link menu-toggle">
                             <span class="svg-icon menu-icon">
-                                <i style="color: #6e3cbc;" class="fab fa-uncharted"></i>
+                                <i class="fas fa-map-marker"></i>
                             </span>
                             <span class="menu-text">Manage Location</span>
                             <i class="menu-arrow"></i>
@@ -455,7 +454,7 @@
                     <li class="menu-item menu-item-submenu {{ session('lsbm') == 'manage_page' ? ' menu-item-open ' : '' }}" aria-haspopup="true" data-menu-toggle="hover">
                         <a href="javascript:;" class="menu-link menu-toggle">
                             <span class="svg-icon menu-icon">
-                                <i style="color: #6e3cbc;" class="fab fa-uncharted"></i>
+                                <i class="fas fa-pager"></i>
                             </span>
                             <span class="menu-text">Pages Management</span>
                             <i class="menu-arrow"></i>
@@ -490,7 +489,7 @@
                     <li class="menu-item menu-item-submenu {{ session('lsbm') == 'report_management' ? ' menu-item-open ' : '' }}" aria-haspopup="true" data-menu-toggle="hover">
                         <a href="javascript:;" class="menu-link menu-toggle">
                             <span class="svg-icon menu-icon">
-                                <i style="color: #6e3cbc;" class="fab fa-uncharted"></i>
+                                <i  class="fab fa-uncharted"></i>
                             </span>
                             <span class="menu-text">Report Management</span>
                             <i class="menu-arrow"></i>
@@ -646,7 +645,7 @@
                     <li class="menu-item menu-item-submenu {{ session('lsbm') == 'product_setting' ? ' menu-item-open ' : '' }}" aria-haspopup="true" data-menu-toggle="hover">
                         <a href="javascript:;" class="menu-link menu-toggle">
                             <span class="svg-icon menu-icon">
-                                <i style="color: #6e3cbc;" class="fab fa-uncharted"></i>
+                                <i  class="fab fa-uncharted"></i>
                             </span>
                             <span class="menu-text">Manage Product</span>
                             <i class="menu-arrow"></i>
@@ -790,7 +789,7 @@
                     <li class="menu-item menu-item-submenu {{ session('lsbm') == 'settings' ? ' menu-item-open ' : '' }}" aria-haspopup="true" data-menu-toggle="hover">
                         <a href="javascript:;" class="menu-link menu-toggle">
                             <span class="svg-icon menu-icon">
-                                <i style="color: #6e3cbc;" class="fab fa-uncharted"></i>
+                                <i  class="fab fa-uncharted"></i>
                             </span>
                             <span class="menu-text">Settings</span>
                             <i class="menu-arrow"></i>
@@ -824,7 +823,7 @@
                     <li class="menu-item menu-item-submenu {{ session('lsbm') == 'settings' ? ' menu-item-open ' : '' }}"  aria-haspopup="true" data-menu-toggle="hover">
                         <a href="javascript:;" class="menu-link menu-toggle">
                             <span class="svg-icon menu-icon">
-                                <i style="color: #6e3cbc;" class="fab fa-uncharted"></i>
+                                <i  class="fab fa-uncharted"></i>
                             </span>
                             <span class="menu-text">Settings</span>
                             <i class="menu-arrow"></i>
@@ -1175,7 +1174,7 @@
                 <li class="menu-item {{ session('lsbm') == 'setup' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
                     <a href="{{ route('admin.setting.edit', ['id'=>1]) }}" class="menu-link">
                         <span class="svg-icon menu-icon">
-                            <i style="color: #6e3cbc;" class="fab fa-uncharted"></i>
+                            <i  class="fas fa-cogs"></i>
                         </span>
                         <span class="menu-text">Website Settings</span>
                     </a>
@@ -1186,7 +1185,7 @@
                 <li class="menu-item {{ session('lsbm') == 'log_info' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
                     <a href="{{ route('admin.loginfo.index') }}" class="menu-link">
                         <span class="svg-icon menu-icon">
-                            <i style="color: #6e3cbc;" class="fab fa-uncharted"></i>
+                            <i  class="fab fa-uncharted"></i>
                         </span>
                         <span class="menu-text">Log Record</span>
                     </a>
@@ -1197,7 +1196,7 @@
                 <li class="menu-item {{ session('lsbm') == 'db_backup' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
                     <button class="menu-link" style="background: none; border: none;" onclick="backup()">
                         <span class="svg-icon menu-icon">
-                            <i style="color: #6e3cbc;" class="fab fa-uncharted"></i>
+                            <i  class="fab fa-uncharted"></i>
                         </span>
                         <span class="menu-text">Data Backup</span>
                     </button>
@@ -1209,7 +1208,7 @@
                     <a target="_blank" href="{{ route('logout') }}" class="menu-link" onclick="event.preventDefault();
                     document.getElementById('logout-form').submit();">
                         <span class="svg-icon menu-icon">
-                            <i style="color: #6e3cbc;" class="fab fa-uncharted"></i>
+                            <i  class="fas fa-sign-out-alt"></i>
                         </span>
                         <span class="menu-text">Logout</span>
 
@@ -1226,3 +1225,10 @@
     </div>
     <!--end::Aside Menu-->
 </div>
+
+<style>
+    .menu-icon i {
+        color: #bb212a;
+        font-size: 15px;
+    }
+</style>

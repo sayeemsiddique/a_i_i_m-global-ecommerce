@@ -99,7 +99,7 @@
         /* background-color: #0A50A0; */
     }
     .aside-menu {
-        background-color: #0A50A024;
+        background-color: #F2060624;
         border-right: 1px solid #E9EAF4;
     }
     .aside-menu .menu-nav {
@@ -117,10 +117,10 @@
         font-size: 15px
     }
     .aside-menu .menu-nav>.menu-item.menu-item-open>.menu-heading, .aside-menu .menu-nav>.menu-item.menu-item-open>.menu-link {
-        background-color: #0A50A024;
+        background-color: #F2060624;
     }
     .aside-menu .menu-nav>.menu-item .menu-submenu .menu-item.menu-item-active>.menu-heading, .aside-menu .menu-nav>.menu-item .menu-submenu .menu-item.menu-item-active>.menu-link {
-        background-color: #0A50A024;
+        background-color: #F2060624;
     }
     .aside-menu .menu-nav>.menu-item .menu-submenu .menu-item.menu-item-active>.menu-heading .menu-text, .aside-menu .menu-nav>.menu-item .menu-submenu .menu-item.menu-item-active>.menu-link .menu-text {
         color: #000;
@@ -167,7 +167,7 @@
         fill: #6E3CBC;
     }
     .aside-menu .menu-nav>.menu-item.menu-item-active>.menu-heading, .aside-menu .menu-nav>.menu-item.menu-item-active>.menu-link {
-        background-color: #0A50A024;
+        background-color: #F2060624;
     }
     .aside-menu .menu-nav>.menu-item.menu-item-active>.menu-heading .menu-text, .aside-menu .menu-nav>.menu-item.menu-item-active>.menu-link .menu-text {
         color: #000;
@@ -179,7 +179,7 @@
     }
 
     .header {
-        background-color: #0A50A0;
+        background-color: #BB212A;
     }
     li.menu-item.menu-item-open.menu-item-here.menu-item-submenu.menu-item-rel.menu-item-open.menu-item-here.menu-item-active a {
         color: #fff;
@@ -189,7 +189,7 @@
     }
     .header-fixed.subheader-fixed .subheader {
         height: 45px;
-        background-color: #0A50A024;
+        background-color: #F2060624;
     }
     .btn.btn-clean.focus:not(.btn-text), .btn.btn-clean:focus:not(.btn-text), .btn.btn-clean:hover:not(.btn-text):not(:disabled):not(.disabled) {
         background-color: #6E3CBC;

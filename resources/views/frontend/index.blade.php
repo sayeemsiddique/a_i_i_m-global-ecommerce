@@ -1,7 +1,7 @@
 @extends('frontend.layout.master')
 
 @push('css')
-    <style> 
+    <style>
         .product-item__inner {
             transition: 0.5s ease all;
             -webkit-transition: 0.5s ease all;
@@ -36,7 +36,7 @@
                                     {{-- <div class="mb-4" data-scs-animation-in="fadeInUp" data-scs-animation-delay="300">
                                         <span class="font-size-13">FROM</span>
                                         <div class="font-size-50 font-weight-bold text-lh-45">
-                                            <sup class="">৳ </sup>749<sup class="">99</sup>
+                                            <sup class="">{{$global_setting->currency ?? ""}} </sup>749<sup class="">99</sup>
                                         </div>
                                     </div> --}}
 
@@ -137,13 +137,13 @@
                                         </div>
                                         <div class="flex-center-between mb-3">
                                             <div class="prodcut-price">
-                                                <div class="text-gray-100">৳
+                                                <div class="text-gray-100">{{$global_setting->currency ?? ""}}
                                                     @if ($product->has_varient == 1)
                                                         {{$product->productVarient->min('discount_price')}}
                                                     @else
                                                         {{ $product->discount_price }}
                                                     @endif
-                                                    
+
                                                 </div>
                                             </div>
                                             {{-- <div class="d-none d-xl-block prodcut-add-cart">
@@ -163,15 +163,15 @@
                             </div>
                         </li>
                         @endforeach
-                        
+
                     </ul>
                 </div>
                 @endforeach
-               
+
             </div>
         </div>
         @endif
-        
+
         <!-- End Trending Products -->
 
 
@@ -180,7 +180,7 @@
         @if ($categories->sell_products_count > 0)
         <x-category-product :data="$categories"/>
         @endif
-        
+
         @endforeach
         <!-- main category products -->
 

@@ -68,7 +68,7 @@
 													</div>
 
 													<div class="col-md-7">
-														
+
 													</div>
 
 													<div class="col-md-3">
@@ -80,7 +80,7 @@
 											</div>
 										</div>
 									</div>
-									
+
 									<!--begin::Order details, User details-->
 									<div class="container mb-5">
 										<div class="row">
@@ -106,7 +106,7 @@
 												@if (($order->status == 4) || ($order->stage == 5))
 													<span class="font-weight-bold"><b>Order Cancel Reason:</b> {{$order->remark}}</span>
 												@endif
-												
+
 											</div>
 											<div class="col-md-5"></div>
 											<div class="col-md-3">
@@ -126,13 +126,13 @@
 													@if ($order->shipping_address)
 														<span class="d-block" style="font-size: 15px;"><b>Delivery Address :</b> {{ $order->shipping_address }} </span>
 													@endif
-                                                    
+
                                                 @endif
 											</div>
 										</div>
 									</div>
 									<br> <br>
-									
+
 									<!--begin::Order details product list, all cost-->
 									<div class="position-relative">
 
@@ -156,13 +156,13 @@
 																	<th class="text-right pr-0 font-weight-bold text-muted text-uppercase">Amount</th>
 																</tr>
 															</thead>
-															
+
 															<tbody>
 																@php
 																	$subTotal = 0;
 																	$totalProductPrice = 0;
 																@endphp
-																
+
 																@foreach ($order->orderDetails as $order_detail)
 																	<tr class="font-weight-boldest">
 																		<td class="pl-0 pt-7 d-flex align-items-center">
@@ -191,11 +191,11 @@
 																		<td class="pt-7 align-middle">
 																			{{ number_format($order_detail->vat_total, 2, ".", "") }}
 																		</td>
-																		
+
 																		<td class="pt-7 align-middle">
 																			{{ number_format($order_detail->quantity) }}
 																		</td>
-																		
+
 																		<td class="pt-7 align-middle">
 																			@if ($order_detail->weight and $order_detail->unit)
 																				@if ($order_detail->unit == 1)
@@ -211,7 +211,7 @@
 																		@endphp
 
 																		<td class="text-right text-primary pt-7">
-																			৳ {{ number_format($sub_total, 2, ".", "") }}
+																			{{$global_setting->currency ?? ""}} {{ number_format($sub_total, 2, ".", "") }}
 																		</td>
 																	</tr>
 
@@ -223,7 +223,7 @@
 																<!--Show sub-total/total product price-->
 																<tr>
 																	<th class="text-right" colspan="6">Subtotal</th>
-																	<th class="text-right">৳ {{ number_format($totalProductPrice, 2, ".", "") }}</th>
+																	<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($totalProductPrice, 2, ".", "") }}</th>
 																</tr>
 
 																<!--Show user type discount-->
@@ -232,46 +232,46 @@
 																		$userType = $order->user ? $order->user->type : 100;
 																	@endphp
 
-																	
+
 																		<th class="text-right" colspan="6">Discount ({{$order->user_type_discount ?? 0}} %)</th>
-																		<th class="text-right">৳ {{ number_format($order->discount_amount ?? 0, 2, '.', '') }}</th>
-																	
+																		<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->discount_amount ?? 0, 2, '.', '') }}</th>
+
 																</tr>
 
 																<!--Show order amount (1.5 lakh) commission-->
 																{{-- @if ($order->discount_on_amount == 2)
 																	<tr>
 																		<th class="text-right" colspan="6">Order Commission ({{ $order->discount_percent_in_total ?? 0 }} %)</th>
-																		<th class="text-right">৳ {{ number_format($order->discount_amount_in_total ?? 0, 2, '.', '')}}</th>	
+																		<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->discount_amount_in_total ?? 0, 2, '.', '')}}</th>
 																	</tr>
 																@endif --}}
 
 																<!--Show packing charge-->
 																<tr>
 																	<th class="text-right" colspan="6">Packing Charge ({{$order->packType ? $order->packType->name : 'N/A'}})</th>
-																	<th class="text-right">৳ {{ number_format($order->packing_amount ?? 0, 2, '.', '') }}</th>
+																	<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->packing_amount ?? 0, 2, '.', '') }}</th>
 																</tr>
 
 																<!--Show transportation charge-->
 																{{-- <tr>
 																	<th class="order-date text-right" colspan="6">Delivery Charge</th>
 
-																	<th class="text-right">৳ {{ number_format($order->courier_cost ?? 0, 2, '.', '') }}</th>
+																	<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->courier_cost ?? 0, 2, '.', '') }}</th>
 																</tr> --}}
-		
+
 																<!--Show total price-->
 																<tr style="border-top: 1px solid #000;">
 																	<th class="text-right" colspan="6">Total</th>
-																	<th class="text-right">৳ {{ number_format($order->grand_total_price, 2, ".", "") }}</th>
+																	<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->grand_total_price, 2, ".", "") }}</th>
 																</tr>
-																
+
 															</tbody>
 														</table>
 													</div>
 												</div>
 											</div>
 										</div>
-										
+
 										<!--begin::Buttons-->
 										<div class="card-footer printHide">
 											<div class="row">
@@ -286,7 +286,7 @@
 									</div>
 
 									<!--end::Invoice Body-->
-									
+
 								</div> {{-- Details tab end --}}
 							</div>
 							<!--end::Card-->
@@ -317,7 +317,7 @@
 							</div>
 
 							<div class="col-md-7">
-								
+
 							</div>
 
 							<div class="col-md-3">
@@ -356,7 +356,7 @@
 						@if (($order->status == 4) || ($order->stage == 5))
 							<span class="font-weight-bold"><b>Order Cancel Reason:</b> {{$order->remark}}</span>
 						@endif
-						
+
 					</div>
 
 					<div class="col-md-5"></div>
@@ -429,11 +429,11 @@
 											<td class="text-right pt-7 align-middle">
 												{{ number_format($order_detail->vat_total, 2, ".", "") }}
 											</td>
-											
+
 											<td class="text-right pt-7 align-middle">
 												{{ number_format($order_detail->quantity) }}
 											</td>
-											
+
 											<td class="text-right pt-7 align-middle">
 												@if ($order_detail->weight and $order_detail->unit)
 													@if ($order_detail->unit == 1)
@@ -449,7 +449,7 @@
 											@endphp
 
 											<td class="text-primary pt-7 text-right align-middle">
-												৳ {{ number_format($sub_total, 2, ".", "") }}
+												{{$global_setting->currency ?? ""}} {{ number_format($sub_total, 2, ".", "") }}
 											</td>
 										</tr>
 
@@ -461,7 +461,7 @@
 									<!--Show sub-total/total product price-->
 									<tr>
 										<th class="text-right" colspan="6">Subtotal</th>
-										<th class="text-right">৳ {{ number_format($totalProductPrice, 2, ".", "") }}</th>
+										<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($totalProductPrice, 2, ".", "") }}</th>
 									</tr>
 
 									<!--Show user type discount-->
@@ -470,24 +470,24 @@
 											$userType = $order->user ? $order->user->type : 100;
 										@endphp
 
-										
+
 											<th class="text-right" colspan="6">Discount ({{$order->user_type_discount ?? 0}} %)</th>
-											<th class="text-right">৳ {{ number_format($order->discount_amount ?? 0, 2, '.', '') }}</th>
-										
+											<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->discount_amount ?? 0, 2, '.', '') }}</th>
+
 									</tr>
 
 									<!--Show order amount (1.5 lakh) commission-->
 									@if ($order->discount_on_amount == 2)
 										<tr>
 											<th class="text-right" colspan="6">Order Commission ({{$order->discount_percent_in_total ?? 0}} %)</th>
-											<th class="text-right">৳ {{ number_format($order->discount_amount_in_total ?? 0, 2, '.', '') }}</th>	
+											<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->discount_amount_in_total ?? 0, 2, '.', '') }}</th>
 										</tr>
 									@endif
 
 									<!--Show packing charge-->
 									<tr>
 										<th class="text-right" colspan="6">Packing Charge ({{$order->packType ? $order->packType->name : 'N/A'}})</th>
-										<th class="text-right">৳ {{ number_format($order->packing_amount ?? 0, 2, '.', '') }}</th>
+										<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->packing_amount ?? 0, 2, '.', '') }}</th>
 									</tr>
 
 									<!--Show transportation charge-->
@@ -495,16 +495,16 @@
 										{{-- <th class="text-right" colspan="6">Transportation Charge</th> --}}
 										<th class="text-right" colspan="6">Delivery Charge</th>
 
-										<th class="text-right">৳ {{ number_format($order->courier_cost ?? 0, 2, '.', '') }}</th>
+										<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->courier_cost ?? 0, 2, '.', '') }}</th>
 									</tr>
 
 									<!--Show total price-->
-									
+
 									<tr style="border-top: 1px solid #000;">
 										<th class="text-right" colspan="6">Total</th>
-										<th class="text-right">৳ {{ number_format($order->grand_total_price?? 0, 2, ".", "") }}</th>
+										<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->grand_total_price?? 0, 2, ".", "") }}</th>
 									</tr>
-									
+
 								</tbody>
 							</table>
 						</div>
@@ -518,7 +518,7 @@
 		<div id="printChalanOne" class="container" style="display: none;">
 			<div class="card card-custom m-9">
 				<div class="card-header mt-5" style="border-bottom: 1px solid #fff">
-					
+
 					<div class="col-md-6 offset-md-3 text-center mt-4" style="line-height: 100%">
 						<h3>চালান পত্র</h3>
 						<p class="font-weight-bold">[বিধি ৪০ এর উপ-বিধি (১) এর দফা (গ) ও দফা (চ) দ্রষ্টব্য]</p>
@@ -611,14 +611,14 @@
 									$productSdValue = 0;
 									$productVatValue = 0;
 									$product_total_price = 0;
-									
+
 								@endphp
 								@foreach ($order->orderDetails as $od)
 									<tr>
 										<td style="border: 1px solid #000" align="middle">{{$i}}</td>
 										<td style="border: 1px solid #000" align="middle">{{$od->productInfo ? $od->productInfo->name : 'N/A'}}</td>
 										<td style="border: 1px solid #000" align="middle">
-											
+
 											@if($od->unit == 1)
 												KG
 											@elseif($od->unit == 2)
@@ -649,7 +649,7 @@
 										</td>
 										<td style="border: 1px solid #000" align="middle">
 											@if ($od->vat)
-												
+
 												{{$od->vat.' %'}}
 											@else
 												0.00
@@ -696,7 +696,7 @@
 									@if ($order->discount_on_amount == 2)
 										<tr>
 											<th class="text-right" colspan="9">ক্রয় কমিশন ({{ $order->discount_percent_in_total ?? 0 }} %)</th>
-											<th class="text-right">{{ number_format($order->discount_amount_in_total ?? 0, 2, '.', '')}}</th>	
+											<th class="text-right">{{ number_format($order->discount_amount_in_total ?? 0, 2, '.', '')}}</th>
 										</tr>
 									@endif
 
@@ -728,7 +728,7 @@
 							<p>{{$allProductPrice.' TK' ?? 'Undefined Product Price, SD or VAT'}}</p>
 							<p><span style="border-top: 1px solid #000"><b>সকল প্রকার কর ব্যতীত মূল্য</b></span></p>
 						</div>
-						
+
 						<div class="col-md-4 text-right mt-40">
 							<p>প্রস্তুতকারক</p>
 						</div>
@@ -742,7 +742,7 @@
 		<div id="printChalanTwo" class="container" style="display: none;">
 			<div class="card card-custom m-9">
 				<div class="card-header mt-5" style="border-bottom: 1px solid #fff">
-					
+
 					<div class="col-md-6 offset-md-3 text-center mt-4" style="line-height: 100%">
 						<h3>চালান পত্র</h3>
 						<p class="font-weight-bold">[বিধি ৪০ এর উপ-বিধি (১) এর দফা (গ) ও দফা (চ) দ্রষ্টব্য]</p>
@@ -835,14 +835,14 @@
 									$product_total_price = 0;
 									$productSdValue = 0;
 									$productVatValue = 0;
-									
+
 								@endphp
 								@foreach ($order->orderDetails as $od)
 									<tr>
 										<td style="border: 1px solid #000" align="middle">{{$i}}</td>
 										<td style="border: 1px solid #000" align="middle">{{$od->productInfo ? $od->productInfo->name : 'N/A'}}</td>
 										<td style="border: 1px solid #000" align="middle">
-											
+
 											@if($od->unit == 1)
 												KG
 											@elseif($od->unit == 2)
@@ -919,7 +919,7 @@
 									@if ($order->discount_on_amount == 2)
 										<tr>
 											<th class="text-right" colspan="9">ক্রয় কমিশন ({{ $order->discount_percent_in_total ?? 0 }} %)</th>
-											<th class="text-right">{{ number_format($order->discount_amount_in_total ?? 0, 2, '.', '')}}</th>	
+											<th class="text-right">{{ number_format($order->discount_amount_in_total ?? 0, 2, '.', '')}}</th>
 										</tr>
 									@endif
 
@@ -951,7 +951,7 @@
 							<p>{{$allProductPrice.' TK' ?? 'Undefined Product Price, SD or VAT'}}</p>
 							<p><span style="border-top: 1px solid #000"><b>সকল প্রকার কর ব্যতীত মূল্য</b></span></p>
 						</div>
-						
+
 						<div class="col-md-4 text-right mt-40">
 							<p>প্রস্তুতকারক</p>
 						</div>
@@ -977,7 +977,7 @@
 			}
 		</script>
 
-		<script> 
+		<script>
 			$('#stage').on('change', function() {
 				let stage = $('#stage').val();
 

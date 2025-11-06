@@ -129,7 +129,7 @@
             }
 
             .u-header-topbar{
-                background: #0A50A0;
+                background: #BB212A;
             }
             .topbar-left a {
                 color: #fff;

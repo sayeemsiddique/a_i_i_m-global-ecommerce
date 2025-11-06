@@ -1,7 +1,7 @@
 @extends('backend.layout.master')
 
 @push('css')
-    <style> 
+    <style>
         @media print {
             #inventoryPrint{
                 width: 100%;
@@ -11,10 +11,10 @@
                 display: block;
                 width: auto;
                 height: auto;
-                overflow: visible;  
+                overflow: visible;
             }
         }
-        table{ 
+        table{
             white-space: nowrap;
         }
     </style>
@@ -23,7 +23,7 @@
 @section('content')
 <!--begin::Content-->
 <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
-    
+
     <div class="d-flex flex-column-fluid">
         <!--begin::Container-->
         <div class="container-fluid">
@@ -34,16 +34,16 @@
                     <div class="card card-custom example example-compact">
                         <div class="card-header">
                             <h3 class="card-title">Stock Report</h3>
-                            <div class="d-flex align-items-center"> 
+                            <div class="d-flex align-items-center">
 
-                                                            
+
                                 {{-- <input type="text"data-url="{{ route('admin.searchAjax',['type'=> 'designation']) }}" class="form-control form-control-lg form-control-solid ajax-data-search" name="q" placeholder="Enter Designation, Description, Level"> --}}
                             </div>
                         </div>
 
                         {{-- Advance filter --}}
                         <div class="form-group card-body mb-0 pb-0 row">
-                    
+
                             <form class="form-inline" action="{{ route('admin.stockReport.filter',['type'=>$type]) }}" method="GET">
                                 <table>
                                     <tr>
@@ -92,16 +92,16 @@
                                                 <button type="submit" class="btn btn-success form-control">Search</button>
                                             </div>
                                         </td>
-                                        
+
                                     </tr>
                                 </table>
-                                
+
                             </form>
                         </div>
                         {{-- End Filter --}}
 
                         <div class="card-body" id="inventoryPrint">
-                            
+
                             <div class="table-responsive ajax-data-container pt-3 visible-print">
                                 <table class="table table-separate table-head-custom table-checkable table-striped" id="TableData">
                                     <thead>
@@ -127,9 +127,9 @@
                                                         {{-- <img width="80px" src="{{asset('storage/product/'.$inventory->product->image ?? '')}}" alt="{{$inventory->product->name ?? ''}}"> --}}
                                                         {{$inventory->product ? $inventory->product->name : 'N/A'}}
                                                     </td>
-                                                    
+
                                                     <td>{{$inventory->product ? $inventory->product->code : 'N/A'}}</td>
-                                
+
                                                     <td>{{ number_format($inventory->quantity) ?? 0 }}</td>
 
                                                     <td>
@@ -141,7 +141,7 @@
                                                             <span class="label label-lg font-weight-bold label-danger label-inline">Undefined Status</span>
                                                         @endif
                                                     </td>
-                                
+
                                                     <td>
                                                         @if (isset($inventory->updated_at))
                                                             {{ $inventory->updated_at->format('d-M-Y') }}
@@ -151,7 +151,7 @@
                                                             'N/A'
                                                         @endif
                                                     </td>
-                                
+
                                                 {{--<td>
                                                         @if ($order->stage == 1)
                                                             <span class="label label-lg font-weight-bold label-success label-inline">Accepted</span>
@@ -168,24 +168,24 @@
                                                         @else
                                                             <span class="label label-lg font-weight-bold label-warning label-inline">Unknown Status</span>
                                                         @endif
-                                
+
                                                     </td>
-                                
-                                                    <td>৳ {{ $order->grand_total_price ?? 0 }}</td>
-                                
+
+                                                    <td>{{$global_setting->currency ?? ""}} {{ $order->grand_total_price ?? 0 }}</td>
+
                                                     <td>
                                                         @can('view_order')
                                                             <a href="{{route('admin.order.show', Crypt::encryptString($order->id))}}" class="btn btn-sm btn-clean btn-icon" title="view">
                                                                 <i class="la la-eye"></i>
                                                             </a>
                                                         @endcan
-                                
+
                                                         @can('delete_order')
                                                             <button class="btn btn-sm btn-clean btn-icon delete" title="Delete" data-id="{{ $order->id }}">
                                                                 <i class="la la-trash"></i>
                                                             </button>
                                                             @if ($order->status == 1)
-                                                                
+
                                                                 @elseif ($order->status == 0)
                                                                     <button class="btn btn-sm btn-clean btn-icon delete" title="Active" data-id="{{ $order->id }}">
                                                                         <i class="la la-check"></i>
@@ -203,12 +203,12 @@
                                         @endif
                                     </tbody>
                                 </table>
-                                
+
                             </div>
-                            
+
                         </div>
 
-                        <div class="card-footer"> 
+                        <div class="card-footer">
                             <button class="btn btn-primary print_media" onclick="exportData()">Export</button>
                             <button class="btn btn-primary print_media" onclick="printDiv('inventoryPrint')">Print</button>
                         </div>
@@ -220,17 +220,17 @@
 </div>
 
 
-    
+
 @endsection
 
 @push('stackScript')
-    {{-- <script> 
+    {{-- <script>
         $(".delete").click(function(e) {
 
             var data_id = $(this).attr("data-id");
             var url =  '<a href="{{route("admin.order.delete", ":id")}}" class="swal2-confirm swal2-styled" title="Delete">Confirm</a>';
             url = url.replace(':id', data_id );
-            
+
             Swal.fire({
                 title: 'Are you sure ?',
                 icon: 'info',

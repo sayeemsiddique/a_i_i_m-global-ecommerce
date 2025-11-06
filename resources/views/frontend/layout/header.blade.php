@@ -33,7 +33,7 @@
         <!-- CSS Template -->
         <link rel="stylesheet" href="{{asset('frontend/assets/css/theme.css')}}">
 
-        <style> 
+        <style>
             .avatar-upload {
                 position: relative;
                 max-width: 130px;
@@ -65,7 +65,7 @@
                 background: #f1f1f1;
                 border-color: #d6d6d6;
             }
-    
+
             .avatar-upload .avatar-preview {
                 width: 192px;
                 height: 192px;
@@ -107,7 +107,7 @@
             }
 
             .u-header-topbar{
-                background: #0A50A0;
+                background: #BB212A;
             }
             .topbar-left a {
                 color: #fff;
@@ -134,14 +134,14 @@
                     display: none;
                 }
 		    }
-    
-        </style>    
+
+        </style>
 
         @stack('css')
 
     </head>
 
     <body>
-      
-         
+
+
    @include('frontend.partials.navbar')

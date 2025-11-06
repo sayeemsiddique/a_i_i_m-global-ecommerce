@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Mail\AuthorNewOrder;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
@@ -38,6 +39,7 @@ use App\Models\Otpvarification;
 use App\Models\ShippingAddress;
 use App\Models\OrderReturn;
 use App\Models\OrderReturnDetail;
+use App\Models\Permission;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
@@ -46,6 +48,8 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\SslCommerzPaymentController;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 class FrontendController extends Controller
 {
@@ -1172,6 +1176,26 @@ class FrontendController extends Controller
                     $data['message'] = 'Your Order has been placed, Your Order Tracking ID: '.$tracking_code;
 
                     $this->sms_send($data);
+                }
+
+                try {
+                    $mail_permission = Permission::where('name_en','author_get_new_order_mail')->first();
+
+                    if ($mail_permission) {
+                        $mail_users = User::whereHas('role', function ($query) use ($mail_permission) {
+                            $query->whereHas('permissions', function ($new_query) use ($mail_permission) {
+                                $new_query->where('permission_id', $mail_permission->id);
+                            });
+                        })->where('status',1)->get();
+
+                        foreach ($mail_users as $key => $mail_user) {
+                            Mail::to($mail_user->email)->send(new AuthorNewOrder($order,$mail_user));
+                        }
+                    }
+
+                } catch (\Throwable $e) {
+                    // Log::warning('Mail send failed: '.$e->getMessage());
+
                 }
 
             });

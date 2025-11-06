@@ -72,12 +72,12 @@
                                                 @endforeach
                                             @endif
                                         </td>
-                                        <td class="order-date">৳ {{ number_format($order->price, 2, '.', '') }}</td>
+                                        <td class="order-date">{{$global_setting->currency ?? ""}} {{ number_format($order->price, 2, '.', '') }}</td>
                                         <td class="order-date">{{ number_format($order->quantity) ?? 0 }}</td>
                                         @php
                                             $sub_total = $order->price * $order->quantity;
                                         @endphp
-                                        <td class="text-right" style="min-width: 170px;">৳ {{ number_format($sub_total, 2, '.', '') }}</td>
+                                        <td class="text-right" style="min-width: 170px;">{{$global_setting->currency ?? ""}} {{ number_format($sub_total, 2, '.', '') }}</td>
                                     </tr>
 
                                     @php
@@ -88,18 +88,18 @@
                                 <!--Show sub-total/total product price-->
                                 <tr class="font-weight-bold text-right">
                                     <td colspan="3" class="order-date text-right">Subtotal</td>
-                                    <td class="order-date font-weight-bold">৳ {{ number_format($orderDetails->total_price, 2, '.', '') }}</td>
+                                    <td class="order-date font-weight-bold">{{$global_setting->currency ?? ""}} {{ number_format($orderDetails->total_price, 2, '.', '') }}</td>
                                 </tr>
 
                                 <tr class="font-weight-bold text-right">
                                     <td colspan="3" class="order-date text-right">Shipping Cost</td>
-                                    <td class="order-date font-weight-bold">৳ {{ number_format($orderDetails->shipping_cost, 2, '.', '') }}</td>
+                                    <td class="order-date font-weight-bold">{{$global_setting->currency ?? ""}} {{ number_format($orderDetails->shipping_cost, 2, '.', '') }}</td>
                                 </tr>
 
                                 <!--Show total price-->
                                 <tr class="font-weight-bold text-right" style="border-top: 1px solid #000;">
                                     <td colspan="3" class="order-date text-right">Grand Total</td>
-                                    <td class="order-date">৳ {{ number_format($orderDetails->grand_total_price ?? 0, 2,'.','') }}</td>
+                                    <td class="order-date">{{$global_setting->currency ?? ""}} {{ number_format($orderDetails->grand_total_price ?? 0, 2,'.','') }}</td>
                                 </tr>
                             </tbody>
                         </table>

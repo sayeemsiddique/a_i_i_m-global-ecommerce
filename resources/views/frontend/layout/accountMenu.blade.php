@@ -25,7 +25,7 @@
 
 <style>
     .nav-custom-design .nav-link {
-        border-bottom: 1px solid #2aafe5 !important
+        border-bottom: 1px solid #f74953 !important
     }
     .nav-custom-design .nav-link.active {
         /* background-color: #b6bbc0ff;
@@ -33,7 +33,7 @@
         font-weight: bold; */
     }
     .nav-custom-design .nav-link:hover {
-        /* background-color: #2aafe5;
+        /* background-color: #f74953;
         color: #f8f9fa; */
     }
 </style>

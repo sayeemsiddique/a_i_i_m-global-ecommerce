@@ -186,7 +186,7 @@
 																			{{ number_format($order_detail->price, 2, ".", "") }}
 																		</td>
 																		<td class="text-primary pr-0 pt-7 text-right align-middle">
-																			৳ {{ number_format($subTotal = $order_detail->price * $order_detail->quantity, 2, ".", "") }}
+																			{{$global_setting->currency ?? ""}} {{ number_format($subTotal = $order_detail->price * $order_detail->quantity, 2, ".", "") }}
 																		</td>
 																	</tr>
 																	@php
@@ -197,7 +197,7 @@
 																<!--Show sub-total/total product price-->
 																<tr>
 																	<th class="text-right" colspan="3">Subtotal</th>
-																	<th class="text-right">৳ {{ number_format($totalProductPrice, 2, ".", "") }}</th>
+																	<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($totalProductPrice, 2, ".", "") }}</th>
 																</tr>
 
 																<!--Show user type discount-->
@@ -208,10 +208,10 @@
 
 																	@if (($userType == 2) || ($userType == 3))
 																		<th class="text-right" colspan="3">Discount ({{$order->user_type_discount ?? 0}} %)</th>
-																		<th class="text-right">৳ {{ number_format($order->discount_amount ?? 0, 2, '.', '') }}</th>
+																		<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->discount_amount ?? 0, 2, '.', '') }}</th>
 																	@else
 																		<th class="text-right" colspan="3">Discount ({{$order->user_type_discount ?? 0}} %)</th>
-																		<th class="text-right">৳ {{ number_format($order->discount_amount ?? 0, 2, '.', '') }}</th>
+																		<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->discount_amount ?? 0, 2, '.', '') }}</th>
 																	@endif
 																</tr>
 
@@ -219,14 +219,14 @@
 																@if ($order->discount_on_amount == 2)
 																	<tr>
 																		<th class="text-right" colspan="3">Order Commission ({{ $order->discount_percent_in_total ?? 0 }} %)</th>
-																		<th class="text-right">৳ {{ number_format($order->discount_amount_in_total ?? 0, 2, '.', '')}}</th>
+																		<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->discount_amount_in_total ?? 0, 2, '.', '')}}</th>
 																	</tr>
 																@endif
 
 																<!--Show packing charge-->
 																<tr>
 																	<th class="text-right" colspan="3">Packing Charge ({{$order->packType ? $order->packType->name : 'N/A'}})</th>
-																	<th class="text-right">৳ {{ number_format($order->packing_amount ?? 0, 2, '.', '') }}</th>
+																	<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->packing_amount ?? 0, 2, '.', '') }}</th>
 																</tr>
 
 																<!--Show transportation charge-->
@@ -234,13 +234,13 @@
 																	{{-- <th class="text-right" colspan="3">Transportation Charge</th> --}}
 																	<th class="text-right" colspan="3">Delivery Charge</th>
 
-																	<th class="text-right">৳ {{ number_format($order->courier_cost ?? 0, 2, '.', '') }}</th>
+																	<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->courier_cost ?? 0, 2, '.', '') }}</th>
 																</tr>
 
 																<!--Show total price-->
 																<tr style="border-top: 1px solid #000;">
 																	<th class="text-right" colspan="3">Total</th>
-																	<th class="text-right">৳ {{ number_format($order->grand_total_price, 2, ".", "") }}</th>
+																	<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->grand_total_price, 2, ".", "") }}</th>
 																</tr>
 
 															</tbody>
@@ -563,10 +563,10 @@
 												{{number_format($order_detail->quantity)}}
 											</td>
 											<td class="text-right pt-7 align-middle">
-												৳ {{ number_format($order_detail->price, 2, ".", "") }}
+												{{$global_setting->currency ?? ""}} {{ number_format($order_detail->price, 2, ".", "") }}
 											</td>
 											<td class="text-primary pr-0 pt-7 text-right align-middle">
-												৳ {{number_format($subTotal = $order_detail->price * $order_detail->quantity,2,".","")}}
+												{{$global_setting->currency ?? ""}} {{number_format($subTotal = $order_detail->price * $order_detail->quantity,2,".","")}}
 											</td>
 										</tr>
 										@php
@@ -577,7 +577,7 @@
 									<!--Show sub-total/total product price-->
 									<tr>
 										<th class="text-right" colspan="3">Subtotal</th>
-										<th class="text-right">৳ {{ number_format($totalProductPrice, 2, ".", "") }}</th>
+										<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($totalProductPrice, 2, ".", "") }}</th>
 									</tr>
 
 									<!--Show user type discount-->
@@ -588,10 +588,10 @@
 
 										@if (($userType == 2) || ($userType == 3))
 											<th class="text-right" colspan="3">Discount ({{$order->user_type_discount ?? 0}} %)</th>
-											<th class="text-right">৳ {{ number_format($order->discount_amount ?? 0, 2, '.', '') }}</th>
+											<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->discount_amount ?? 0, 2, '.', '') }}</th>
 										@else
 											<th class="text-right" colspan="3">Discount ({{$order->user_type_discount ?? 0}} %)</th>
-											<th class="text-right">৳ {{ number_format($order->discount_amount ?? 0, 2, '.', '') }}</th>
+											<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->discount_amount ?? 0, 2, '.', '') }}</th>
 										@endif
 									</tr>
 
@@ -599,14 +599,14 @@
 									@if ($order->discount_on_amount == 2)
 										<tr>
 											<th class="text-right" colspan="3">Order Commission ({{$order->discount_percent_in_total ?? 0}} %)</th>
-											<th class="text-right">৳ {{ number_format($order->discount_amount_in_total ?? 0, 2, '.', '') }}</th>
+											<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->discount_amount_in_total ?? 0, 2, '.', '') }}</th>
 										</tr>
 									@endif
 
 									<!--Show packing charge-->
 									<tr>
 										<th class="text-right" colspan="3">Packing Charge ({{$order->packType ? $order->packType->name : 'N/A'}})</th>
-										<th class="text-right">৳ {{ number_format($order->packing_amount ?? 0, 2, '.', '') }}</th>
+										<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->packing_amount ?? 0, 2, '.', '') }}</th>
 									</tr>
 
 									<!--Show transportation charge-->
@@ -614,14 +614,14 @@
 										{{-- <th class="text-right" colspan="3">Transportation Charge</th> --}}
 										<th class="text-right" colspan="3">Delivery Charge</th>
 
-										<th class="text-right">৳ {{ number_format($order->courier_cost ?? 0, 2, '.', '') }}</th>
+										<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->courier_cost ?? 0, 2, '.', '') }}</th>
 									</tr>
 
 									<!--Show total price-->
 
 									<tr style="border-top: 1px solid #000;">
 										<th class="text-right" colspan="3">Total</th>
-										<th class="text-right">৳ {{ number_format($order->grand_total_price?? 0, 2, ".", "") }}</th>
+										<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->grand_total_price?? 0, 2, ".", "") }}</th>
 									</tr>
 
 								</tbody>

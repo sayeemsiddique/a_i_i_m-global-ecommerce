@@ -62,7 +62,7 @@
 			}
 
             .header {
-                background: #0A50A0 !important;
+                background: #BB212A !important;
             }
 
 		</style>

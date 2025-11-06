@@ -40,16 +40,16 @@
                     <div class="card card-custom example example-compact">
                         <div class="card-header">
                             <h3 class="card-title">POS Order List</h3>
-                            <div class="d-flex align-items-center"> 
+                            <div class="d-flex align-items-center">
 
-                                                            
+
                                 {{-- <input type="text"data-url="{{ route('admin.searchAjax',['type'=> 'designation']) }}" class="form-control form-control-lg form-control-solid ajax-data-search" name="q" placeholder="Enter Designation, Description, Level"> --}}
                             </div>
                         </div>
 
                         {{-- Advance filter --}}
                         {{-- <div class="form-group card-body mb-0 pb-0 row">
-                    
+
                             <form class="form-inline" action="{{route('admin.order.filter')}}" method="GET">
                                 <table>
                                     <tr>
@@ -74,16 +74,16 @@
                                         <td>
                                             <button type="submit" class="btn btn-success mt-2 ml-2">Show</button>
                                         </td>
-                                        
+
                                     </tr>
                                 </table>
-                                
+
                             </form>
                         </div> --}}
                         {{-- End Filter --}}
 
                         <div class="card-body">
-                            
+
                             <div class="table-responsive ajax-data-container pt-3">
                                 <table class="table table-separate table-head-custom table-checkable table-striped">
                                     <thead>
@@ -93,7 +93,7 @@
                                             <th class="text-left">Name</th>
                                             <th>Date</th>
                                             <th>Amount</th>
-                                            <th>Status</th> 
+                                            <th>Status</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -107,14 +107,14 @@
                                                     <td>
                                                         {{ $i }}
                                                     </td>
-                                                    
+
                                                     <td>{{ $order->tracking_code }}</td>
                                                     <td align="left">{{ $order->user ? ($order->user->first_name.' '.$order->user->last_name) : 'Walk-in Customer' }}</td>
 
                                                     <td>{{ $order->created_at->format('d-M-Y') }}</td>
 
-                                                    <td>৳ {{ $order->grand_total_price }}</td>
-                                
+                                                    <td>{{$global_setting->currency ?? ""}} {{ $order->grand_total_price }}</td>
+
                                                     <td>
                                                         @if ($order->status == 1)
                                                             <span class="label label-lg font-weight-bold label-success label-inline">Approved</span>
@@ -128,20 +128,20 @@
                                                             <span class="label label-lg font-weight-bold label-danger label-inline">Invalid Status</span>
                                                         @endif
                                                     </td>
-                                
+
                                                     <td>
                                                         @can('view_order')
                                                             <a href="{{route('admin.pos.show', $order->id)}}" class="btn btn-sm btn-clean btn-icon" title="view">
                                                                 <i class="la la-eye"></i>
                                                             </a>
                                                         @endcan
-                                
+
                                                         {{-- @can('delete_order')
                                                             <button class="btn btn-sm btn-clean btn-icon delete" title="Delete" data-id="{{ $order->id }}">
                                                                 <i class="la la-trash"></i>
                                                             </button>
                                                             @if ($order->status == 1)
-                                                                
+
                                                                 @elseif ($order->status == 0)
                                                                     <button class="btn btn-sm btn-clean btn-icon delete" title="Active" data-id="{{ $order->id }}">
                                                                         <i class="la la-check"></i>
@@ -159,15 +159,15 @@
                                         @endif
                                     </tbody>
                                 </table>
-                                
+
                                 {{-- @push('stackScript')
-                                    <script> 
+                                    <script>
                                         $(".delete").click(function(e) {
-                                
+
                                             var data_id = $(this).attr("data-id");
                                             var url =  '<a href="{{route("admin.order.delete", ":id")}}" class="swal2-confirm swal2-styled" title="Delete">Confirm</a>';
                                             url = url.replace(':id', data_id );
-                                            
+
                                             Swal.fire({
                                                 title: 'Are you sure ?',
                                                 icon: 'info',
@@ -181,7 +181,7 @@
                                                 }
                                             })
                                         });
-                                
+
                                     </script>
                                 @endpush                                     --}}
                             </div>
@@ -201,5 +201,5 @@
 </div>
 
 
-    
+
 @endsection

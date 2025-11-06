@@ -69,7 +69,7 @@
 													@endforeach
                                             </td>
                                             <td class="order-total">
-                                                <span class="order-price">৳ {{$order->grand_total_price}}</span>
+                                                <span class="order-price">{{$global_setting->currency ?? ""}} {{$order->grand_total_price}}</span>
                                             </td>
                                             <td class="order-action">
                                                 <a href="{{route('returnOrderDetails', Crypt::encryptString($order->id))}}" class="mt-2 btn btn-outline btn-success btn-sm btn-rounded">View</a>

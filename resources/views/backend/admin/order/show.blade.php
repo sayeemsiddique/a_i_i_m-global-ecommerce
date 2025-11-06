@@ -195,7 +195,7 @@
 																		@endphp
 
 																		<td class="text-primary pt-7 text-right align-middle">
-																			৳ {{ number_format($sub_total, 2, ".", "") }}
+																			{{$global_setting->currency ?? ""}} {{ number_format($sub_total, 2, ".", "") }}
 																		</td>
 																	</tr>
 
@@ -207,18 +207,18 @@
 																<!--Show sub-total/total product price-->
 																<tr>
 																	<th class="text-right" colspan="2">Subtotal</th>
-																	<th class="text-right">৳ {{ number_format($order->total_price, 2, ".", "") }}</th>
+																	<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->total_price, 2, ".", "") }}</th>
 																</tr>
 
 																<tr>
 																	<th class="text-right" colspan="2">Shipping Cost</th>
-																	<th class="text-right">৳ {{ number_format($order->shipping_cost, 2, ".", "") }}</th>
+																	<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->shipping_cost, 2, ".", "") }}</th>
 																</tr>
 
 																<!--Show total price-->
 																<tr style="border-top: 1px solid #000;">
 																	<th class="text-right" colspan="2">Total</th>
-																	<th class="text-right">৳ {{ number_format($order->grand_total_price, 2, ".", "") }}</th>
+																	<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->grand_total_price, 2, ".", "") }}</th>
 																</tr>
 
 															</tbody>

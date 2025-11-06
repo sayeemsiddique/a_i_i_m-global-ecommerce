@@ -19,7 +19,7 @@
         }
 
         .address-option:hover {
-            border-color: #2aafe5;
+            border-color: #f74953;
             background-color: #f8f9fa;
         }
 
@@ -109,7 +109,7 @@
                                                         {{$cart->productInfo->name ?? ''}}<strong class="product-quantity">× {{$cart->quantity}}</strong>
                                                     </td>
                                                     <td>
-                                                        ৳   @if ($cart->variation_id == 0)
+                                                        {{$global_setting->currency ?? ""}}   @if ($cart->variation_id == 0)
                                                                 @php
                                                                     $product_total_price +=  ($cart->productInfo->discount_price ?? 0)  * $cart->quantity;
                                                                 @endphp
@@ -133,13 +133,13 @@
                                             <tr>
                                                 <th>Sub-total</th>
                                                 <td>
-                                                    ৳ {{number_format($product_total_price,2,".","")}}
+                                                    {{$global_setting->currency ?? ""}} {{number_format($product_total_price,2,".","")}}
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <th>Shipping Cost</th>
                                                 <td>
-                                                    ৳
+                                                    {{$global_setting->currency ?? ""}}
                                                     @if (count($shipping_addresses) == 1)
                                                         @php
                                                             $first_shipping = $shipping_addresses->first();
@@ -159,7 +159,7 @@
                                                 <td>
 
 
-                                                    ৳ <span class="in_total" >0</span>
+                                                    {{$global_setting->currency ?? ""}} <span class="in_total" >0</span>
                                                 </td>
                                             </tr>
 

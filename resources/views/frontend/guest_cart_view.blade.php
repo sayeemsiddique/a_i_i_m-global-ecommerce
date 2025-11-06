@@ -31,7 +31,7 @@
                                 </small>
                             </span> <br/>
                         @endif
-                        <span class="font-size-14">{{$cart->quantity}} × ৳@if ($cart->variation_id == 0){{$cart->productInfo->discount_price ?? ''}} @else {{$cart->varientInfo->discount_price ?? 0}} @endif</span>
+                        <span class="font-size-14">{{$cart->quantity}} × {{$global_setting->currency ?? ""}} @if ($cart->variation_id == 0){{$cart->productInfo->discount_price ?? ''}} @else {{$cart->varientInfo->discount_price ?? 0}} @endif</span>
                     </li>
                     <li class="px-2 col-auto">
                         <a href="#">

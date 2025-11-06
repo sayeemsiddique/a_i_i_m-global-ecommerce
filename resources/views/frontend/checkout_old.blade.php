@@ -157,7 +157,7 @@
                                                         {{$cart->productInfo->name ?? ''}}<strong class="product-quantity">× {{$cart->quantity}}</strong>
                                                     </td>
                                                     <td>
-                                                        ৳ @if ($cart->variation_id == 0)
+                                                        {{$global_setting->currency ?? ""}} @if ($cart->variation_id == 0)
                                                         @php
                                                             $product_total_price +=  ($cart->productInfo->discount_price ?? 0)  * $cart->quantity;
                                                             $product_factory_total_price +=  ($cart->productInfo->price ?? 0)  * $cart->quantity;
@@ -197,7 +197,7 @@
                                                                             $amount_for_packing = (($cart->productInfo->discount_price ?? 0) * $cart->quantity);
                                                                         }
                                                                     @endphp
-                                                                            <option data-packing_amount="{{number_format((($amount_for_packing * $packing_type->charge)/100),2,".","")}}" value="{{$packing_type->id}}">{{$packing_type->name}} (৳ {{number_format((($amount_for_packing * $packing_type->charge)/100),2,".","")}})
+                                                                            <option data-packing_amount="{{number_format((($amount_for_packing * $packing_type->charge)/100),2,".","")}}" value="{{$packing_type->id}}">{{$packing_type->name}} ({{$global_setting->currency ?? ""}} {{number_format((($amount_for_packing * $packing_type->charge)/100),2,".","")}})
                                                                             </option>
                                                                         @endif
                                                                     @endif
@@ -217,19 +217,19 @@
                                             <tr>
                                                 <th>SD</th>
                                                 <td>
-                                                    ৳ {{number_format($total_sd,2,".","")}}
+                                                    {{$global_setting->currency ?? ""}} {{number_format($total_sd,2,".","")}}
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <th>VAT</th>
                                                 <td>
-                                                    ৳ {{number_format($total_vat,2,".","")}}
+                                                    {{$global_setting->currency ?? ""}} {{number_format($total_vat,2,".","")}}
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <th>Sub-total</th>
                                                 <td>
-                                                    ৳ {{number_format($product_total_price,2,".","")}}
+                                                    {{$global_setting->currency ?? ""}} {{number_format($product_total_price,2,".","")}}
                                                 </td>
                                             </tr>
                                             {{-- @if (auth()->check() and in_array(auth()->user()->type,[2,3])) --}}
@@ -258,21 +258,21 @@
                                                             $tds_amount = ($discount_amount * $tds_percent) / 100;
                                                         }
                                                     @endphp
-                                                    ৳ {{number_format($discount_amount,2,".","")}} <small>({{$user_discount_percent}}%)</small>
+                                                    {{$global_setting->currency ?? ""}} {{number_format($discount_amount,2,".","")}} <small>({{$user_discount_percent}}%)</small>
                                                 </td>
                                             </tr>
                                             <tr @if(!in_array(auth()->user()->type,[2,3])) class="d-none" @endif>
                                                 <th>After deducting TDS ({{$tds_percent}}%) on commission ({{$user_discount_percent}}%) </th>
                                                 <td>
 
-                                                    ৳ {{number_format($discount_amount - $tds_amount,2,".","")}}
+                                                    {{$global_setting->currency ?? ""}} {{number_format($discount_amount - $tds_amount,2,".","")}}
                                                 </td>
                                             </tr>
                                             @if ($other_categories_amount > 0)
                                                 <tr>
                                                     <th>Other Charge</th>
                                                     <td>
-                                                        ৳ {{number_format($other_categories_amount,2,".","")}}
+                                                        {{$global_setting->currency ?? ""}} {{number_format($other_categories_amount,2,".","")}}
                                                     </td>
                                                 </tr>
                                             @endif
@@ -287,13 +287,13 @@
                                                 <th>After imposing VDS ({{$vds_percent}}%) on carrying cost</th>
 
                                                 <td>
-                                                    ৳ <span class="inside_outside_cost">0.00</span>
+                                                    {{$global_setting->currency ?? ""}} <span class="inside_outside_cost">0.00</span>
                                                 </td>
                                             </tr>
                                             <tr class="discount_on_amount d-none">
                                                 <th class="discount_on_amount_text"></th>
                                                 <td>
-                                                    ৳ <span class="discount_on_amount_number">0.00</span>
+                                                    {{$global_setting->currency ?? ""}} <span class="discount_on_amount_number">0.00</span>
                                                 </td>
                                             </tr>
                                             @if ($has_packing_types == 1)
@@ -307,7 +307,7 @@
                                                             <option value="">Select</option>
                                                             @foreach ($packing_types as $packing_type)
                                                             {{-- @if ($packing_type->packing_amount) --}}
-                                                            <option data-packing_amount="{{number_format($packing_type->packing_amount,2,".","")}}" value="{{$packing_type->id}}">{{$packing_type->name}} (৳ {{number_format($packing_type->packing_amount,2,".","")}})</option>
+                                                            <option data-packing_amount="{{number_format($packing_type->packing_amount,2,".","")}}" value="{{$packing_type->id}}">{{$packing_type->name}} ({{$global_setting->currency ?? ""}} {{number_format($packing_type->packing_amount,2,".","")}})</option>
                                                             {{-- @endif --}}
 
                                                             @endforeach
@@ -341,7 +341,7 @@
 
                                                     @endif
 
-                                                    ৳ <span class="in_total @if ($still_have_walet_amount <= 0) font-weight-bold @endif" >{{number_format((($in_total + $other_categories_amount) - ($discount_amount - $tds_amount)),2,".","")}}</span>
+                                                    {{$global_setting->currency ?? ""}} <span class="in_total @if ($still_have_walet_amount <= 0) font-weight-bold @endif" >{{number_format((($in_total + $other_categories_amount) - ($discount_amount - $tds_amount)),2,".","")}}</span>
                                                 </td>
                                             </tr>
                                             @if ($still_have_walet_amount > 0)
@@ -350,7 +350,7 @@
                                                         In my account
                                                     </th>
                                                     <td>
-                                                        ৳ <span class="still_have_walet_amount_text">{{number_format($still_have_walet_amount,2,'.','')}}</span>
+                                                        {{$global_setting->currency ?? ""}} <span class="still_have_walet_amount_text">{{number_format($still_have_walet_amount,2,'.','')}}</span>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -359,7 +359,7 @@
                                                     </th>
                                                     <td>
 
-                                                        ৳ <strong class="have_to_pay_text">
+                                                        {{$global_setting->currency ?? ""}} <strong class="have_to_pay_text">
                                                             @if ($still_have_walet_amount >= (($in_total + $other_categories_amount) - ($discount_amount - $tds_amount)))
                                                                 0.00
                                                             @else
@@ -695,7 +695,7 @@
                                                 <div>
                                                     <label for="free_shipment">
                                                         <h5>Get Discount</h5>
-                                                        <p class="mb-0">Get free delivery or 2% discount on ordering over ৳ {{$get_discount_after_amount}} or more </p>
+                                                        <p class="mb-0">Get free delivery or 2% discount on ordering over {{$global_setting->currency ?? ""}} {{$get_discount_after_amount}} or more </p>
                                                     </label>
                                                 </div>
                                             </div>

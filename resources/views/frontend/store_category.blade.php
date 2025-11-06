@@ -228,10 +228,10 @@
                         <!-- End Range Slider -->
                         <div class="mt-1 text-gray-111 d-flex mb-4">
                             <span class="mr-0dot5">Price: </span>
-                            <span>৳ </span>
+                            <span>{{$global_setting->currency ?? ""}} </span>
                             <span id="rangeSliderExample3MinResult" class=""></span>
                             <span class="mx-0dot5"> — </span>
-                            <span>৳ </span>
+                            <span>{{$global_setting->currency ?? ""}} </span>
                             <span id="rangeSliderExample3MaxResult" class=""></span>
                         </div>
                         <button type="submit" class="btn px-4 btn-primary-dark-w py-2 rounded-lg">Filter</button>
@@ -259,8 +259,8 @@
                                         <small class="far fa-star text-muted"></small>
                                     </div>
                                     <div class="font-weight-bold">
-                                        <del class="font-size-11 text-gray-9 d-block">৳ 2299.00</del>
-                                        <ins class="font-size-15 text-red text-decoration-none d-block">৳ 1999.00</ins>
+                                        <del class="font-size-11 text-gray-9 d-block">{{$global_setting->currency ?? ""}} 2299.00</del>
+                                        <ins class="font-size-15 text-red text-decoration-none d-block">{{$global_setting->currency ?? ""}} 1999.00</ins>
                                     </div>
                                 </div>
                             </div>
@@ -282,7 +282,7 @@
                                         <small class="far fa-star text-muted"></small>
                                     </div>
                                     <div class="font-weight-bold font-size-15">
-                                        ৳ 499.00
+                                        {{$global_setting->currency ?? ""}} 499.00
                                     </div>
                                 </div>
                             </div>
@@ -304,7 +304,7 @@
                                         <small class="far fa-star text-muted"></small>
                                     </div>
                                     <div class="font-weight-bold font-size-15">
-                                        ৳ 100.00
+                                        {{$global_setting->currency ?? ""}} 100.00
                                     </div>
                                 </div>
                             </div>
@@ -326,8 +326,8 @@
                                         <small class="far fa-star text-muted"></small>
                                     </div>
                                     <div class="font-weight-bold">
-                                        <del class="font-size-11 text-gray-9 d-block">৳ 2299.00</del>
-                                        <ins class="font-size-15 text-red text-decoration-none d-block">৳ 1999.00</ins>
+                                        <del class="font-size-11 text-gray-9 d-block">{{$global_setting->currency ?? ""}} 2299.00</del>
+                                        <ins class="font-size-15 text-red text-decoration-none d-block">{{$global_setting->currency ?? ""}} 1999.00</ins>
                                     </div>
                                 </div>
                             </div>
@@ -349,7 +349,7 @@
                                         <small class="far fa-star text-muted"></small>
                                     </div>
                                     <div class="font-weight-bold font-size-15">
-                                        ৳ 1200.00
+                                        {{$global_setting->currency ?? ""}} 1200.00
                                     </div>
                                 </div>
                             </div>
@@ -362,7 +362,7 @@
                 @php
                         $i = (($products->currentPage() - 1) * $products->perPage() + 1);
                     @endphp
-                    
+
 
                 <div class="d-block d-md-flex flex-center-between mb-3">
                     <h3 class="font-size-25 mb-2 mb-md-0">{{$category->name}}</h3>
@@ -397,8 +397,8 @@
                                     </div>
                                 </a>
                             </li>
-                            
-                            
+
+
                         </ul>
                     </div> -->
                     <div class="d-flex">
@@ -455,7 +455,7 @@
                                             </div>
                                             <div class="flex-center-between mb-1">
                                                 <div class="prodcut-price">
-                                                    <div class="text-gray-100">৳
+                                                    <div class="text-gray-100">{{$global_setting->currency ?? ""}}
                                                         @if ($product->has_varient == 1)
                                                             {{$product->productVarient->min('price')}}
                                                         @else
@@ -478,18 +478,18 @@
                                 </div>
                             </li>
                             @endforeach
-                            
+
                         </ul>
                     </div>
-                    
-                    
-                    
+
+
+
                 </div>
                 <!-- End Tab Content -->
                 <!-- End Shop Body -->
                 <!-- Shop Pagination -->
                 <nav class="d-md-flex justify-content-between align-items-center border-top pt-3" aria-label="Page navigation example">
-                    
+
                     <div class="text-center text-md-left mb-3 mb-md-0">Showing {{$i}}–{{$products->perPage() + ($i - 1)}} of {{$products->total()}} results</div>
                     {{$products->appends($_GET)->links()}}
                     {{-- <ul class="pagination mb-0 pagination-shop justify-content-center justify-content-md-start">
@@ -501,7 +501,7 @@
                 <!-- End Shop Pagination -->
             </div>
         </div>
-        
+
     </div>
 </main>
 <!-- ========== END MAIN CONTENT ========== -->

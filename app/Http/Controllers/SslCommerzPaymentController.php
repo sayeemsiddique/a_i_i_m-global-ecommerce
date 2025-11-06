@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\AuthorNewOrder;
 use DB;
 use Illuminate\Http\Request;
 use App\Library\SslCommerz\SslCommerzNotification;
@@ -10,6 +11,9 @@ use App\Models\Cart;
 use App\Models\ShippingAddress;
 use App\Models\OrderDetail;
 use App\Models\Payment;
+use App\Models\Permission;
+use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 
 class SslCommerzPaymentController extends Controller
 {
@@ -370,6 +374,20 @@ class SslCommerzPaymentController extends Controller
                         $data['number'] = auth()->user()->mobile;
                         $data['message'] = 'Your Order has been placed, Your Order Tracking ID: '.$order->transaction_id;
                         app('App\Http\Controllers\FrontendController')->sms_send($data);
+                    }
+
+                    $mail_permission = Permission::where('name_en','author_get_new_order_mail')->first();
+
+                    if ($mail_permission) {
+                        $mail_users = User::whereHas('role', function ($query) use ($mail_permission) {
+                            $query->whereHas('permissions', function ($new_query) use ($mail_permission) {
+                                $new_query->where('permission_id', $mail_permission->id);
+                            });
+                        })->where('status',1)->get();
+
+                        foreach ($mail_users as $key => $mail_user) {
+                            Mail::to($mail_user->email)->send(new AuthorNewOrder($order,$mail_user));
+                        }
                     }
 
                 });

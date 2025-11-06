@@ -11,7 +11,7 @@
         $showing_from = 1;
     }
 
-    
+
 
     if ($products->perPage() > count($products)) {
         $per_page = count($products) - 1;
@@ -48,14 +48,14 @@
     <div class="container">
         <div class="row mb-8">
             <div class="d-none d-xl-block col-xl-3 col-wd-2gdot5 mobile-display-option" >
-                
+
                 <x-front-filter/>
-                
+
             </div>
             <div class="col-xl-9 col-wd-9gdot5">
                 <!-- Shop-control-bar Title -->
                 <div class="d-block d-md-flex flex-center-between mb-3">
-                    
+
                     <p class="font-size-14 text-gray-90 mb-0">Showing {{$showing_from}}–{{$showing_to}} of {{$total_products}} results</p>
                 </div>
                 <!-- End shop-control-bar Title -->
@@ -88,8 +88,8 @@
                                     </div>
                                 </a>
                             </li>
-                            
-                            
+
+
                         </ul>
                     </div> -->
                     <div class="d-flex">
@@ -97,7 +97,7 @@
                             <!-- Select -->
                             <select class="sort_option form-control max-width-200 max-width-160-sm right-dropdown-0 px-2 px-xl-0"
                                 data-style="btn-sm bg-white font-weight-normal py-2 border text-gray-20 bg-lg-down-transparent border-lg-down-0">
-                                
+
                                 <option @if(isset($_GET['sort_option']) and $_GET['sort_option'] == 0) selected @endif value="0">Sort by latest</option>
                                 <option @if(isset($_GET['sort_option']) and $_GET['sort_option'] == 1) selected @endif value="1">Sort by price: low to high</option>
                                 <option @if(isset($_GET['sort_option']) and $_GET['sort_option'] == 2) selected @endif value="2">Sort by price: high to low</option>
@@ -144,9 +144,9 @@
                                                     <a href="{{route('product-detail',Crypt::encryptString($product->id))}}?slug={{$product->slug}}" class="d-block"><img loading="lazy" class="img-fluid" src="{{asset('storage/product')}}/{{$product->image}}" alt="{{$product->name}}"></a>
                                                 </div>
                                                 <div class="flex-center-between mb-1">
-                                                    
+
                                                     <div class="prodcut-price d-flex align-items-center position-relative">
-                                                        <ins class="font-size-20 text-red text-decoration-none">৳
+                                                        <ins class="font-size-20 text-red text-decoration-none">{{$global_setting->currency ?? ""}}
                                                             @if ($product->has_varient == 1)
                                                                 @if (isset($_GET['range']) and $_GET['range'] !='')
                                                                 @php
@@ -157,7 +157,7 @@
                                                                 @else
                                                                 {{$product->productVarient->min('discount_price')}}
                                                                 @endif
-                                                                
+
                                                             @else
                                                                 {{$product->discount_price}}
                                                             @endif
@@ -174,7 +174,7 @@
                                                             @endif
                                                         </del> --}}
                                                     </div>
-                                                    
+
                                                     {{-- <div class="d-none d-xl-block prodcut-add-cart">
                                                         <a href="{{route('product-detail',Crypt::encryptString($product->id))}}?slug={{$product->slug}}" class="btn-add-cart btn-primary transition-3d-hover"><i class="ec ec-add-to-cart"></i></a>
                                                     </div> --}}
@@ -190,13 +190,13 @@
                                     </div>
                                 </li>
                             @endforeach
-                            
-                            
+
+
                         </ul>
                     </div>
-                    
-                    
-                    
+
+
+
                 </div>
                 <!-- End Tab Content -->
                 <!-- End Shop Body -->
@@ -213,7 +213,7 @@
                 <!-- End Shop Pagination -->
             </div>
         </div>
-        
+
     </div>
 </main>
 <!-- ========== END MAIN CONTENT ========== -->
@@ -235,13 +235,13 @@
             $("input[name='per_page']").val(paginate_option);
             $("input[name='sort_option']").val(sort_option);
             $("#sidebar_form").submit();
-            
+
         });
-        
+
         $('#sidebarNavToggler1').click( function() {
             $('#sidebar_form').css('display','block');
         });
-        
+
     </script>
 
 @endpush

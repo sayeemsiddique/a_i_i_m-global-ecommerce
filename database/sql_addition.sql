@@ -7,3 +7,5 @@ ALTER TABLE `orders` ADD `currency` TEXT NULL AFTER `remark`;
 
 
 ALTER TABLE `order_return_details` ADD `stock_status` TINYINT NULL COMMENT '1=add to stock,0=no' AFTER `varient_id`;
+
+ALTER TABLE `settings` ADD `currency` TINYTEXT NULL AFTER `copyright`;
