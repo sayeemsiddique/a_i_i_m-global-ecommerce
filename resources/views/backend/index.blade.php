@@ -51,29 +51,6 @@
                         </div>
                     @endcan
 
-                    @can('total_complete_orders')
-                        <div class="col-lg-3 col-xxl-3">
-                            <!--begin::Stats Widget 12-->
-                            <div class="card card-custom gutter-b dash-count-card w3-green">
-                                <!--begin::Body-->
-                                <div class="card-body p-0 ">
-                                    <a href="{{ route('admin.order.completed_list') }}" class="dash-click-card">
-                                        <div class="d-flex align-items-center justify-content-between card-spacer flex-grow-1">
-                                            <i class="icon-xl fas fa-check-circle fa-4x mr-2 w3-text-white"></i>
-                                            <div class="d-flex flex-column text-right">
-                                                <span
-                                                    class="font-weight-bolder font-size-h2">{{ $total_complete_orders }}</span>
-                                                <span class="font-weight-bolder font-size-h6 mt-2 w3-text-white">Total Complete
-                                                    Orders</span>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                                <!--end::Body-->
-                            </div>
-                            <!--end::Stats Widget 12-->
-                        </div>
-                    @endcan
 
                     {{-- @can('total_pos_orders')
                         <div class="col-lg-3 col-xxl-3">
@@ -83,7 +60,7 @@
                                 <div class="card-body p-0 ">
                                     <a href="{{ route('admin.pos.orderList') }}" class="dash-click-card">
                                         <div class="d-flex align-items-center justify-content-between card-spacer flex-grow-1">
-                                            
+
 											<i class="icon-xl fas fa-store fa-4x mr-2 w3-text-white"></i>
 
                                             <div class="d-flex flex-column text-right">
@@ -111,8 +88,7 @@
                                             <i class="icon-xl fas fa-box fa-4x mr-2 w3-text-white"></i>
                                             <div class="d-flex flex-column text-right">
                                                 <span class="font-weight-bolder font-size-h2">{{ $total_products }}</span>
-                                                <span class="font-weight-bolder font-size-h6 mt-2 w3-text-white">Total Finish
-                                                    Products</span>
+                                                <span class="font-weight-bolder font-size-h6 mt-2 w3-text-white">Total Products</span>
                                             </div>
                                         </div>
                                     </a>
@@ -219,49 +195,81 @@
                 </div>
                 <!--end::row-->
 				<div class="row">
-					@can('total_online_money_earn')
-						<div class="col-md-6">
-							<!--begin::Mixed Widget 14-->
-							<div class="card card-custom card-stretch gutter-b">
-								<!--begin::Header-->
-								<div class="card-header">
-									<div class="card-title">
-										<a href="{{ route('admin.salesReport.index') }}"><h3 class="card-label">Today's Total Sales (Online)</h3></a>
-									</div>
-								</div>
-								<!--end::Header-->
-								<!--begin::Body-->
-								<div class="card-body d-flex flex-column">
-									<div class="flex-grow-1">
-										<div id="kt_mixed_widget_141_chart" style="height: 215px"
-											data-value="{{ $totalOnlineMoney ? number_format((float) $totalOnlineMoney, 2, '.', '') : '0' }}">
-										</div>
-									</div>
-								</div>
-								<!--end::Body-->
-							</div>
-							<!--end::Mixed Widget 14-->
-						</div>
-					@endcan
-
-					{{-- @can('total_money_earn_pos')
-						<div class="col-lg-6">
-							<!--begin::Mixed Widget 14-->
-							<div class="card card-custom card-stretch gutter-b">
-								<!--begin::Header-->
-								<div class="card-header">
-									<div class="card-title">
-										<a href="{{ route('admin.pos.orderList') }}"><h3 class="card-label">Today's Total Sales (Sale Center)</h3></a>
-									</div>
-								</div>
-								<div class="card-body d-flex flex-column">
-									<div class="flex-grow-1">
-										<div id="kt_mixed_widget_14_chart" style="height: 215px" data-value="{{ $totalPosMoney ? number_format((float)$totalPosMoney, 2, '.', '') : '0'}}"></div>
-									</div>
-								</div>
-							</div>
-						</div>
-					@endcan --}}
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="p-3">
+                                <h3>Low Stock Products</h3>
+                            </div>
+                            <div class="card-body p-3">
+                                <table class="table table-bordered table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-left">
+                                                Product Name
+                                            </th>
+                                            <th>
+                                                Quantity
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($low_stocks as $item)
+                                            <tr>
+                                                <td class="text-left">
+                                                    {{$item->product->name ?? ''}} <br>
+                                                    @if ($item->quantity > 0)
+                                                        <small>
+                                                            @foreach ($item->varientDataInfo as $varient)
+                                                                <small class="text-info">
+                                                                    {{$varient->varientTypeInfo->name ?? ''}}: {{$varient->data_value}}
+                                                                    @if (!$loop->last) , @endif
+                                                                </small>
+                                                            @endforeach
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    {{$item->quantity}}
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="p-3">
+                                <h3>Monthly Sells</h3>
+                            </div>
+                            <div class="card-body p-3">
+                                <table class="table table-bordered table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-left">
+                                                Month
+                                            </th>
+                                            <th class="text-right">
+                                                Amount
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($last_5_months_sells as $sell)
+                                            <tr>
+                                                <td class="text-left">
+                                                    {{$sell->month }}
+                                                </td>
+                                                <td class="text-right">
+                                                    {{$sell->net_amount}}
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
 				</div>
                 <!--end::Dashboard-->
             </div>

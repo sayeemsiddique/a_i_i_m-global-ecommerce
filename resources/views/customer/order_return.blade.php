@@ -27,7 +27,7 @@
                                     <div class="col-md-8">
                                         <div class="d-flex">
                                             <div class="">
-                                                <button type="submit" class="btn btn-primary">Submit</button>
+                                                <button type="submit" class="btn btn-primary">Search</button>
                                             </div>
                                         </div>
 

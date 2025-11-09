@@ -14,16 +14,16 @@
                     <div class="card card-custom example example-compact">
                         <div class="card-header">
                             <h3 class="card-title">All Orders</h3>
-                            <div class="d-flex align-items-center"> 
+                            <div class="d-flex align-items-center">
 
-                                                            
+
                                 {{-- <input type="text"data-url="{{ route('admin.searchAjax',['type'=> 'designation']) }}" class="form-control form-control-lg form-control-solid ajax-data-search" name="q" placeholder="Enter Designation, Description, Level"> --}}
                             </div>
                         </div>
 
                         {{-- Advance filter --}}
-                        <div class="form-group card-body mb-0 pb-0 row">
-                    
+                        <div class="form-group card-body mb-0 pb-0">
+
                             <form class="form-inline" method="GET">
                                 <table>
                                     <tr>
@@ -60,18 +60,18 @@
                                             <button type="submit" class="btn btn-success mt-2 ml-2 btn-sm">Search</button>
                                             <a href="{{route('admin.order.index')}}" class="btn btn-danger mt-2 ml-2 btn-sm">Reset Search</a>
                                         </td>
-                                        
+
                                     </tr>
                                 </table>
-                                
+
                             </form>
                         </div>
                         {{-- End Filter --}}
 
                         <div class="card-body">
-                            
+
                             <div class="table-responsive ajax-data-container pt-3">
-                                @include('backend.admin.order.ajax.tableBody')                                    
+                                @include('backend.admin.order.ajax.tableBody')
                             </div>
 
                             {{ $orders->appends($_GET)->links() }}
@@ -84,5 +84,5 @@
 </div>
 
 
-    
+
 @endsection

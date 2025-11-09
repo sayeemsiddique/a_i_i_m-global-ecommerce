@@ -109,7 +109,7 @@
     .aside-menu .menu-nav>.menu-item>.menu-heading .menu-text, .aside-menu .menu-nav>.menu-item>.menu-link .menu-text {
         color: #000;
         font-weight: 800;
-        font-size: 16px;
+        font-size: 15px;
     }
     .aside-menu .menu-nav>.menu-item .menu-submenu .menu-item>.menu-heading .menu-text, .aside-menu .menu-nav>.menu-item .menu-submenu .menu-item>.menu-link .menu-text {
         color: #000;
@@ -195,7 +195,7 @@
         background-color: #6E3CBC;
     }
     .aside-menu .menu-nav>.menu-item>.menu-submenu .menu-subnav>.menu-item>.menu-link {
-        padding-left: 60px;
+        padding-left: 48px;
     }
 
     label.checkbox, .service_item_list, .service_additional_item_list {

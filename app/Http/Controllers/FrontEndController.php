@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Mail\AuthorNewOrder;
+use App\Mail\AuthorOrderCancelation;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
@@ -1377,6 +1378,26 @@ class FrontendController extends Controller
         // $order->stage   = 5;
 
         $order->save();
+
+        try {
+            $mail_permission = Permission::where('name_en','author_get_new_order_mail')->first();
+
+            if ($mail_permission) {
+                $mail_users = User::whereHas('role', function ($query) use ($mail_permission) {
+                    $query->whereHas('permissions', function ($new_query) use ($mail_permission) {
+                        $new_query->where('permission_id', $mail_permission->id);
+                    });
+                })->where('status',1)->get();
+
+                foreach ($mail_users as $key => $mail_user) {
+                    Mail::to($mail_user->email)->send(new AuthorOrderCancelation($order,$mail_user));
+                }
+            }
+
+        } catch (\Throwable $e) {
+            // Log::warning('Mail send failed: '.$e->getMessage());
+        }
+
 
         return redirect()->back()->with('success', 'Order Canceled Successfully!');
     }

@@ -43,8 +43,8 @@
                         </div>
 
                         {{-- Advance filter --}}
-                        <div class="form-group card-body mb-0 pb-0 row">
-                    
+                        <div class="form-group card-body mb-0 pb-0">
+
                             <form class="form-inline" action="{{ route('admin.gatepass.report_filter') }}" method="GET">
                                 <table>
                                     <tr>
@@ -76,37 +76,37 @@
                                                 </select>
                                             </div>
                                         </td>
-                                        
+
                                         <td>
                                             <button type="submit" class="btn btn-success ml-2">Search</button>
                                         </td>
                                     </tr>
                                 </table>
-                                
+
                             </form>
                         </div>
                         {{-- End Filter --}}
 
                         <div class="card-body" id="stockPrint">
-                            
+
                             <div class="table-responsive ajax-data-container pt-3">
                                 <div class="title_area">
                                     <h3 class="text-center">{{$global_setting->sub_title ?? ""}}</h3>
                                     <h4 class="text-center">
                                         {{$global_setting->address ?? ""}}
                                     </h4>
-    
+
                                     <p class="text-center">
                                         <strong>Issue vs Delivered Gatepass Report</strong>
                                     </p>
-                                    
+
                                     <p class="text-center">
                                         @if (isset($_GET['fromDate']) and $_GET['fromDate'] !='')
                                             <strong>Date from:</strong> {{date_format(date_create($_GET['fromDate']), 'd-m-Y')}}
                                         @endif
                                         @if (isset($_GET['toDate']) and $_GET['toDate'] !='')
                                             @if (isset($_GET['fromDate']) and $_GET['fromDate'] !='')
-                                                , 
+                                                ,
                                             @endif
                                             <strong>Date to:</strong> {{date_format(date_create($_GET['toDate']), 'd-m-Y')}}
                                         @endif
@@ -117,10 +117,10 @@
                                             <strong>Order ID:</strong> {{$_GET['order_id']}}
                                         </p>
                                     @endif
-                                    
+
                                     @if(isset($_GET['status']) and $_GET['status'] !='')
                                         <p class="text-center">
-                                            <strong>Status:</strong> 
+                                            <strong>Status:</strong>
                                             @if ($_GET['status'] == 1)
                                                 Issued
                                             @elseif($_GET['status'] == 3)
@@ -128,14 +128,14 @@
                                             @endif
                                         </p>
                                     @endif
-                                    
-                                    
-                                    
+
+
+
                                 </div>
-                                @include('backend.admin.report.ajax.gatepass')                                    
+                                @include('backend.admin.report.ajax.gatepass')
                             </div>
                         </div>
-                        <div class="card-footer"> 
+                        <div class="card-footer">
                             {{-- <button class="btn btn-primary print_media" onclick="exportData()">Export</button> --}}
                             <button class="btn btn-primary print_media" onclick="printDiv('stockPrint')">Print</button>
                         </div>
@@ -154,17 +154,17 @@
     tfoot { display: none; }
 }
 </style>
-    
+
 @endsection
 
 @push('stackScript')
-    {{-- <script> 
+    {{-- <script>
         $(".delete").click(function(e) {
 
             var data_id = $(this).attr("data-id");
             var url =  '<a href="{{route("admin.order.delete", ":id")}}" class="swal2-confirm swal2-styled" title="Delete">Confirm</a>';
             url = url.replace(':id', data_id );
-            
+
             Swal.fire({
                 title: 'Are you sure ?',
                 icon: 'info',

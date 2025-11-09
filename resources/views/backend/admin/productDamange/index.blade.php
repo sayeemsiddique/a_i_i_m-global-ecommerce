@@ -6,7 +6,7 @@
 @endphp
 <!--begin::Content-->
 <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
-    
+
     <!--begin::Entry-->
     <div class="d-flex flex-column-fluid">
         <!--begin::Container-->
@@ -21,8 +21,8 @@
                         </div>
 
                         {{-- Advance filter --}}
-                        <div class="form-group card-body mb-0 pb-0 row">
-                    
+                        <div class="form-group card-body mb-0 pb-0">
+
                             <form class="" method="GET">
                                 <div class="row">
                                     <div class="col-md-2">
@@ -46,7 +46,7 @@
                                             <select class="form-control select2" name="category_id" id="category_id">
                                                 <option value="">--Select a Category--</option>
                                                 @foreach ($categories as $category)
-                                                    <option @if(isset($_GET['category_id']) and $_GET['category_id'] == $category->id) selected 
+                                                    <option @if(isset($_GET['category_id']) and $_GET['category_id'] == $category->id) selected
                                                     @php
                                                         $filter_category_name = $category->name;
                                                     @endphp
@@ -86,15 +86,15 @@
                                     </div>
 
                                 </div>
-                                
+
                             </form>
                         </div>
                         {{-- End Filter --}}
 
                         <div class="card-body">
-                            
+
                             <div class="table-responsive ajax-data-container pt-3">
-                                @include('backend.admin.productDamange.ajax.index')                                    
+                                @include('backend.admin.productDamange.ajax.index')
                             </div>
 
                             {{ $orders->appends($_GET)->links() }}
@@ -107,5 +107,5 @@
 </div>
 
 
-    
+
 @endsection

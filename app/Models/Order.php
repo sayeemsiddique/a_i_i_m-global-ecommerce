@@ -20,12 +20,12 @@ class Order extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
-    
+
     public function paymentInfo()
     {
         return $this->belongsTo(Payment::class, 'id', 'order_id');
     }
-    
+
     public function shippingAddressInfo()
     {
         return $this->belongsTo(ShippingAddress::class, 'shipping_address', 'id');
@@ -39,6 +39,11 @@ class Order extends Model
     public function inventoryDetails()
     {
         return $this->hasMany(Inventory::class, 'order_id', 'id');
+    }
+
+    public function orderReturnInfos()
+    {
+        return $this->hasMany(OrderReturn::class, 'order_id', 'id');
     }
 
 

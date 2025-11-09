@@ -65,6 +65,17 @@
                 box-shadow: 0 2px 1px 1px #1415152b;
             }
 
+            .aside-menu .menu-nav > .menu-item {
+                border-bottom: 1px solid beige;
+            }
+
+            .aside-menu .menu-nav .menu-subnav .menu-item > .menu-link i {
+                align-content: center;
+                font-size: 12px;
+                margin-right: 10px;
+                color: #e47b81;
+            }
+
 		</style>
 
 		<style>

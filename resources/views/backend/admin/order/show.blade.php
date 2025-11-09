@@ -129,6 +129,16 @@
 														@if(($order->paymentInfo->status ?? 0) == $key) {{$payment_status}} @endif
 													@endforeach
 
+                                                <br/>
+
+
+                                                    @if (count($order->orderReturnInfos->where('status',1)) > 0)
+                                                    <label class="">Return Status:</label>
+                                                        <a href="{{route('admin.order.order_return_list')}}?main_order_id={{$order->tracking_code}}" target="_blank" rel="noopener noreferrer">
+                                                            Check Return Status
+                                                        </a>
+                                                    @endif
+
 
 											</div>
 

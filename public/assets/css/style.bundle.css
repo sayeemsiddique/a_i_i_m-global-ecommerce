@@ -89255,7 +89255,7 @@ body {
 }
 
 .aside-menu .menu-nav>.menu-item>.menu-link {
-    padding: 9px 25px
+    padding: 9px 9px 9px 15px;
 }
 
 .aside-menu .menu-nav>.menu-item>.menu-submenu .menu-subnav .menu-content .menu-heading {

@@ -1,7 +1,7 @@
 @extends('backend.layout.master')
 
 @push('css')
-    <style> 
+    <style>
         @media print {
             #stockPrint{
                 width: 100%;
@@ -11,10 +11,10 @@
                 display: block;
                 width: auto;
                 height: auto;
-                overflow: visible;  
+                overflow: visible;
             }
         }
-        table{ 
+        table{
             white-space: nowrap;
         }
     </style>
@@ -23,7 +23,7 @@
 @section('content')
 <!--begin::Content-->
 <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
-    
+
     <div class="d-flex flex-column-fluid">
         <!--begin::Container-->
         <div class="container-fluid">
@@ -34,14 +34,14 @@
                     <div class="card card-custom example example-compact">
                         <div class="card-header">
                             <h3 class="card-title">Store Inventory</h3>
-                            <div class="d-flex align-items-center">    
+                            <div class="d-flex align-items-center">
                                 {{-- <input type="text"data-url="{{ route('admin.searchAjax',['type'=> 'designation']) }}" class="form-control form-control-lg form-control-solid ajax-data-search" name="q" placeholder="Enter Designation, Description, Level"> --}}
                             </div>
                         </div>
 
                         {{-- Advance filter --}}
-                        <div class="form-group card-body mb-0 pb-0 row">
-                    
+                        <div class="form-group card-body mb-0 pb-0">
+
                             <form class="form-inline" action="{{ route('admin.stockReport.filter') }}" method="GET">
                                 <table>
                                     <tr>
@@ -60,16 +60,16 @@
                                         <td>
                                             <button type="submit" class="btn btn-success ml-2">Search</button>
                                         </td>
-                                        
+
                                     </tr>
                                 </table>
-                                
+
                             </form>
                         </div>
                         {{-- End Filter --}}
 
                         <div class="card-body" id="stockPrint">
-                            
+
                             <div class="table-responsive ajax-data-container pt-3 visible-print">
                                 <table class="table table-separate table-head-custom table-checkable table-striped" id="TableData">
                                     <thead>
@@ -106,13 +106,13 @@
                                                         <img width="80px" src="{{asset('storage/product/'.$product->image ?? '')}}" alt="{{$product->name ?? ''}}">
                                                         <span>{{$product ? $product->name : 'N/A'}}</span>
                                                     </td>
-                                                    
+
                                                     <td>{{$product->code ?? 'N/A'}}</td>
-                                
+
                                                     <td>{{ $quantity = number_format($product->quantity) ?? 0 }}</td>
 
                                                     <td>{{ $weight = $product->weight ?? 0 }}</td>
-                                                    
+
                                                     <td>
                                                         @if ($product->unit == 1)
                                                             {{ $subWeight = $quantity * $weight }}
@@ -124,7 +124,7 @@
                                                     </td>
 
                                                     <td>{{$price = $product->discount_price ?? 0}}</td>
-                                                    
+
                                                     <td>{{$subPrice = $quantity * $price}}</td>
 
                                                     <td>
@@ -162,12 +162,12 @@
                                         <th></th>
                                     </tfoot>
                                 </table>
-                                
+
                             </div>
-                            
+
                         </div>
 
-                        <div class="card-footer"> 
+                        <div class="card-footer">
                             <button class="btn btn-primary print_media" onclick="exportData()">Export</button>
                             <button class="btn btn-primary print_media" onclick="printDiv('stockPrint')">Print</button>
                         </div>
@@ -179,17 +179,17 @@
 </div>
 
 
-    
+
 @endsection
 
 @push('stackScript')
-    {{-- <script> 
+    {{-- <script>
         $(".delete").click(function(e) {
 
             var data_id = $(this).attr("data-id");
             var url =  '<a href="{{route("admin.order.delete", ":id")}}" class="swal2-confirm swal2-styled" title="Delete">Confirm</a>';
             url = url.replace(':id', data_id );
-            
+
             Swal.fire({
                 title: 'Are you sure ?',
                 icon: 'info',

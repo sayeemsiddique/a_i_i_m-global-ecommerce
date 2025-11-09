@@ -1,7 +1,7 @@
 @extends('backend.layout.master')
 
 @push('css')
-    <style> 
+    <style>
         @media print {
             @page {
                 size: A4 landscape;
@@ -20,7 +20,7 @@
 @endphp
 <!--begin::Content-->
 <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
-    
+
     <div class="d-flex flex-column-fluid">
         <!--begin::Container-->
         <div class="container-fluid">
@@ -32,17 +32,17 @@
 
                         <div class="card-header">
                             <h3 class="card-title">Daily Sales Report</h3>
-                            <div class="d-flex align-items-center">             
+                            <div class="d-flex align-items-center">
                                 {{-- <input type="text"data-url="{{ route('admin.searchAjax',['type'=> 'designation']) }}" class="form-control form-control-lg form-control-solid ajax-data-search" name="q" placeholder="Enter Designation, Description, Level"> --}}
                             </div>
                         </div>
 
                         {{-- Advance filter --}}
-                        <div class="form-group card-body mb-0 pb-0 row">
-                    
+                        <div class="form-group card-body mb-0 pb-0">
+
                             <form class="form-inline" method="GET">
                                 <style>
-                                    table{ 
+                                    table{
                                         white-space: nowrap;
                                     }
                                 </style>
@@ -67,7 +67,7 @@
                                         {{-- <td>
                                             <div class="form-group">
                                                 <label class="pr-2 pl-2">Category :</label>
-                                                
+
                                                 <select name="category" class="form-control" id="category">
                                                     <option value="">--Select Category--</option>
                                                     @foreach ($categories as $category)
@@ -77,7 +77,7 @@
                                                         $filter_category_name = $category->name;
                                                     @endphp
                                                 @endif value="{{ $category->id }}">{{ ucfirst($category->name) }}</option>
-                                                        
+
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -105,10 +105,10 @@
                                             <button type="submit" class="btn btn-success ml-2">Search</button>
                                             {{-- <a class="btn btn-danger ml-2" href="{{route('admin.salesReport.index')}}">Reset Search</a> --}}
                                         </td>
-                                        
+
                                     </tr>
                                 </table>
-                                
+
                             </form>
                         </div>
                         {{-- End Filter --}}
@@ -117,28 +117,28 @@
                             @if (isset($_GET['fromDate']) and $_GET['fromDate'] !='')
                             <div class="table-responsive ajax-data-container pt-3" id="stockPrint">
                                 {{-- <p>Total Completed Orders: {{count($orders)}}</p> --}}
-                                
+
                                 <div class="title_area">
                                     <h3 class="text-center">{{$global_setting->sub_title ?? ""}}</h3>
                                     <h4 class="text-center">
                                         {{$global_setting->address ?? ""}}
                                     </h4>
-    
+
                                     <p class="text-center">
                                         <strong>Daily Sales Report</strong>
                                     </p>
-                                    
+
                                     <p class="text-center">
                                         @if (isset($_GET['fromDate']) and $_GET['fromDate'] !='')
                                             <strong>Sales Report of -</strong> {{date_format(date_create($_GET['fromDate']), 'd-m-Y')}}
                                         @endif
-                                        
+
                                     </p>
                                 </div>
-                                
+
                                     <table class="table table-separate table-head-custom table-bordered" id="TableData">
-                                        <thead> 
-                                                                                                
+                                        <thead>
+
                                             <tr>
                                                 <th>SL No.</th>
                                                 <th>Category Name</th>
@@ -148,9 +148,9 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            
+
                                             @if ($categories->count() > 0)
-                                                
+
                                                 @foreach ($categories as $key => $category)
                                                     <tr>
                                                         <td>{{++$key}}</td>
@@ -174,18 +174,18 @@
                                         <tfoot>
                                             <th style="text-align: left" colspan="100%">Printed by: {{auth()->user()->first_name}} {{auth()->user()->last_name}}</th>
                                         </tfoot>
-                                        
+
                                     </table>
-                                    
-                                
-                                
-                                
+
+
+
+
                             </div>
                             <button class="btn btn-primary print_media" onclick="exportData()">Export</button>
                             <button class="btn btn-primary print_media" onclick="printDiv('stockPrint')">Print</button>
                             @endif
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
@@ -201,17 +201,17 @@
     tfoot { display: none; }
 }
 </style>
-    
+
 @endsection
 
 @push('stackScript')
-    {{-- <script> 
+    {{-- <script>
         $(".delete").click(function(e) {
 
             var data_id = $(this).attr("data-id");
             var url =  '<a href="{{route("admin.order.delete", ":id")}}" class="swal2-confirm swal2-styled" title="Delete">Confirm</a>';
             url = url.replace(':id', data_id );
-            
+
             Swal.fire({
                 title: 'Are you sure ?',
                 icon: 'info',

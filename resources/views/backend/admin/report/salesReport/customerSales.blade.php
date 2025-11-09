@@ -1,7 +1,7 @@
 @extends('backend.layout.master')
 
 @push('css')
-    <style> 
+    <style>
         @media print {
             #stockPrint{
                 width: 100%;
@@ -11,10 +11,10 @@
                 display: block;
                 width: auto;
                 height: auto;
-                overflow: visible;  
+                overflow: visible;
             }
         }
-        table{ 
+        table{
             white-space: nowrap;
         }
     </style>
@@ -61,15 +61,15 @@
 
                         <div class="card-header">
                             <h3 class="card-title">Retail Customer Sales Report</h3>
-                            <div class="d-flex align-items-center">             
+                            <div class="d-flex align-items-center">
                                 {{-- <input type="text"data-url="{{ route('admin.searchAjax',['type'=> 'designation']) }}" class="form-control form-control-lg form-control-solid ajax-data-search" name="q" placeholder="Enter Designation, Description, Level"> --}}
                             </div>
                         </div>
 
                         {{-- Advance filter --}}
-                        <div class="form-group card-body mb-0 pb-0 row">
-                            
-                    
+                        <div class="form-group card-body mb-0 pb-0">
+
+
                             <form class="form-inline" action="{{ route('admin.salesReport.customerFilter') }}" method="GET">
                                 <table>
                                     <tr>
@@ -93,9 +93,9 @@
                                                     @foreach ($customers as $dealer)
                                                         <option  value="{{$dealer->id}}"
                                                             @if (isset($customer))
-                                                                
+
                                                             {{ ($dealer->id == $customer->id) ? 'selected' : '' }}
-                                                            @endif 
+                                                            @endif
                                                             >{{$dealer->first_name.' '.$dealer->last_name }}</option>
                                                     @endforeach
                                                 </select>
@@ -110,45 +110,45 @@
                                         <td>
                                             <button type="submit" class="btn btn-success ml-2">Search</button>
                                         </td>
-                                        
+
                                     </tr>
                                 </table>
-                                
+
                             </form>
                         </div>
                         {{-- End Filter --}}
 
-                        
+
                         <div class="card-body" id="stockPrint">
-                            
+
                             <div class="table-responsive ajax-data-container pt-3 visible-print">
                                 <div class="title_area">
                                     <h3 class="text-center">{{$global_setting->sub_title ?? ""}}</h3>
                                     <h4 class="text-center">
                                         {{$global_setting->address ?? ""}}
                                     </h4>
-    
+
                                     <p class="text-center">
                                         <strong>Retail Customer Sales Report</strong>
                                     </p>
 
-                                    
-                                    
+
+
                                     <p class="text-center">
                                         @if (isset($_GET['fromDate']) and $_GET['fromDate'] !='')
                                             <strong>Date from:</strong> {{date_format(date_create($_GET['fromDate']), 'd-m-Y')}}
                                         @endif
                                         @if (isset($_GET['toDate']) and $_GET['toDate'] !='')
                                             @if (isset($_GET['fromDate']) and $_GET['fromDate'] !='')
-                                                , 
+                                                ,
                                             @endif
                                             <strong>Date to:</strong> {{date_format(date_create($_GET['toDate']), 'd-m-Y')}}
                                         @endif
                                     </p>
-                                    
-                                    
-                                    
-                                    
+
+
+
+
                                     @if (isset($_GET['orderId']) and $_GET['orderId'] !='')
                                     <p class="text-center"> <strong>Order ID:</strong> {{$_GET['orderId']}}</p>
                                     @endif
@@ -156,14 +156,14 @@
 
                                 <table class="table table-separate table-head-custom table-bordered" id="TableData">
                                     <thead>
-                                        {{-- <th colspan="7"></th> 
+                                        {{-- <th colspan="7"></th>
                                         <th>
                                             @isset($dealr)
                                                 {{ ucfirst($dealr->first_name).' '.ucfirst($dealr->last_name) }} Sales Report {{ date('Y') }}
-                                            @else 
+                                            @else
                                                All Retail Customer Sales Report {{ date('Y') }}
-                                             
-                                             @endisset 
+
+                                             @endisset
                                         </th>                                               --}}
                                         {{-- <th colspan="7"></th> --}}
                                         <tr>
@@ -204,7 +204,7 @@
                                         @if ($orders->count() > 0)
                                             @php
                                                 $i = 1;
-                                                
+
                                             @endphp
                                             @foreach ($orders as $order)
                                                 <tr>
@@ -214,7 +214,7 @@
                                                     {{-- <td>{{$order->invoice_no ?? 'N/A'}}</td> --}}
                                                     <td>{{$order->created_at->format('d-M-Y')}}</td>
 
-                                                    
+
                                                     <td>
                                                         @php
                                                             $t_factory_price = 0;
@@ -227,13 +227,13 @@
                                                         {{number_format($t_factory_price, 2)}}
                                                     </td>
 
-                                                
+
                                                     <td>
                                                         {{ $order->orderDetails ? number_format($order->orderDetails->sum('sd_total'), 2) : '0.00' }} <br>
                                                         <small>({{($order->orderDetails->sum('sd')/count($order->orderDetails)) ?? "0.00"}} %)</small>
                                                     </td>
-                                                    
-                                                    
+
+
                                                     <td>
                                                         {{ $order->orderDetails ? number_format($order->orderDetails->sum('vat_total'), 2) : '0.00' }} <br>
                                                         <small>({{($order->orderDetails->sum('vat')/count($order->orderDetails)) ?? "0.00"}} %)</small>
@@ -252,23 +252,23 @@
                                                         @endphp
 
                                                         {{ number_format($salesGross, 2) }}
-                                                        
+
                                                         {{-- @endif     --}}
                                                     </td>
                                                     <td>{{ number_format($order->discount_amount,2)}}</td>
                                                     <td>{{ number_format(($order->courier_cost),2) }}</td>
                                                     <td>{{ number_format(($order->tds_amount ? $order->tds_amount: 0),2) }}</td>
                                                     <td>{{ number_format(($order->vds_amount ? $order->vds_amount : 0),2) }}</td>
-                                                    
+
                                                     <td>{{ number_format($salePrice = $order->grand_total_price, 2) ?? '0.00' }}</td>
                                                 </tr>
-                                                    
+
                                                 @php
                                                     $i++;
-                                                    
+
                                                         $sd += $order->orderDetails->sum('sd_total');
                                                         $vat += $order->orderDetail->sum('vat_total');
-                                                    
+
                                                     $fitting += $order->other_charge;
                                                     $discount += $order->discount_amount;
                                                     $packing += $order->packing_amount;
@@ -289,7 +289,7 @@
                                             <td></td>
                                             <td></td>
                                             <td><b>Total</b></td>
-                                            
+
                                             <td><b>{{ number_format($factoryPrice ?? '0.00',2,'.','') }}</b> </td>
                                             <td><b>{{ number_format($sd ?? '0.00',2,'.','') }}</b> </td>
                                             <td><b>{{ number_format($vat ?? '0.00',2,'.','') }}</b> </td>
@@ -309,15 +309,15 @@
                                             <th style="text-align: left" colspan="100%">Printed by: {{auth()->user()->first_name}} {{auth()->user()->last_name}}</th>
                                         </tr>
                                     </tfoot>
-                                    
+
                                 </table>
-                                
-                                
+
+
                             </div>
-                            
+
                         </div>
 
-                        <div class="card-footer"> 
+                        <div class="card-footer">
                             <button class="btn btn-primary " id="noprintbtn" onclick="exportData()">Export</button>
                             <button class="btn btn-primary " id="noprintbtn" onclick="printDiv('stockPrint')">Print</button>
                         </div>
@@ -336,17 +336,17 @@
     tfoot { display: none; }
 }
 </style>
-    
+
 @endsection
 
 @push('stackScript')
-    {{-- <script> 
+    {{-- <script>
         $(".delete").click(function(e) {
 
             var data_id = $(this).attr("data-id");
             var url =  '<a href="{{route("admin.order.delete", ":id")}}" class="swal2-confirm swal2-styled" title="Delete">Confirm</a>';
             url = url.replace(':id', data_id );
-            
+
             Swal.fire({
                 title: 'Are you sure ?',
                 icon: 'info',

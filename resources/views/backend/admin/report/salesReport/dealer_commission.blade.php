@@ -41,14 +41,14 @@
 
                         <div class="card-header">
                             <h3 class="card-title">Dealer Commission Report</h3>
-                            <div class="d-flex align-items-center">             
+                            <div class="d-flex align-items-center">
                                 {{-- <input type="text"data-url="{{ route('admin.searchAjax',['type'=> 'designation']) }}" class="form-control form-control-lg form-control-solid ajax-data-search" name="q" placeholder="Enter Designation, Description, Level"> --}}
                             </div>
                         </div>
 
                         {{-- Advance filter --}}
-                        <div class="form-group card-body mb-0 pb-0 row">
-                    
+                        <div class="form-group card-body mb-0 pb-0">
+
                             <form class="form-inline" method="GET">
                                 <table>
                                     <tr>
@@ -78,16 +78,16 @@
                                         <td>
                                             <button type="submit" class="btn btn-success ml-2">Search</button>
                                         </td>
-                                        
+
                                     </tr>
                                 </table>
-                                
+
                             </form>
                         </div>
                         {{-- End Filter --}}
 
                         <div class="card-body">
-                            
+
 
                             <h3 class="text-center">{{$global_setting->sub_title ?? ""}}</h3>
                                 <h4 class="text-center">
@@ -97,12 +97,12 @@
                                 <p class="text-center">
                                     <strong>Dealer Commission Report</strong>
                                 </p>
-                            
+
                                 @if (isset($_GET['user_id']) and $_GET['user_id'] != '')
-                                
+
                                 <div class="w-100" id="stockPrint">
-                                    
-                                    
+
+
                                     <div class="w-100 text-center">
                                         <p><strong>User:</strong> {{$user_data->first_name}} {{$user->last_name}}</p>
                                         <p><strong>Email:</strong> {{$user_data->email}}</p>
@@ -114,7 +114,7 @@
                                         @endif
                                         @if (isset($_GET['toDate']) and $_GET['toDate'] !='')
                                             @if (isset($_GET['fromDate']) and $_GET['fromDate'] !='')
-                                                , 
+                                                ,
                                             @endif
                                             <strong>Date to:</strong> {{date_format(date_create($_GET['toDate']), 'd-m-Y')}}
                                         @endif
@@ -136,12 +136,12 @@
                                                     <th>Commision (%)</th>
                                                     <th class="text-right">Commision (TK)</th>
                                                     {{-- <th>Grand total amount (TK)</th> --}}
-                                                    
+
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @if ($orders->count() > 0)
-                                                    
+
                                                     @foreach ($orders as $key => $order)
                                                         @php
                                                             // $orderDetails = App\Models\OrderDetail::where('order_id', $order->id)->get();
@@ -165,14 +165,14 @@
                                                                     @endphp
 
                                                                     {{ $order->total_price }}
-                                                                    
+
                                                                 </td>
                                                                 <td>
                                                                     {{ $order->user_type_discount }}
                                                                 </td>
                                                                 <td class="text-right">
                                                                     {{ $order->discount_amount }}
-                                                                    
+
                                                                 </td>
                                                                 {{-- <td>
                                                                     {{$order->grand_total_price}}
@@ -205,20 +205,20 @@
                                                 {{-- <th></th> --}}
                                             </tfoot>
                                         </table>
-                                        
-                                        
+
+
                                     </div>
                                 </div>
                                 <button class="btn btn-primary print_media" onclick="exportData()">Export</button>
                                 <button class="btn btn-primary print_media" onclick="printDiv('stockPrint')">Print</button>
                                 @endif
 
-                                
-                                
-                            
 
-                            
-                            
+
+
+
+
+
                         </div>
                     </div>
                 </div>
@@ -235,11 +235,11 @@
     tfoot { display: none; }
 }
 </style>
-    
+
 @endsection
 
 @push('stackScript')
-    
+
 
     <script>
         function exportData(){

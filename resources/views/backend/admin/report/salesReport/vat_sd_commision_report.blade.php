@@ -21,7 +21,7 @@
 
 <!--begin::Content-->
 <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
-    
+
     <div class="d-flex flex-column-fluid">
         <!--begin::Container-->
         <div class="container-fluid">
@@ -33,14 +33,14 @@
 
                         <div class="card-header">
                             <h3 class="card-title">VAT, SD, Commission and TDS Report</h3>
-                            <div class="d-flex align-items-center">             
+                            <div class="d-flex align-items-center">
                                 {{-- <input type="text"data-url="{{ route('admin.searchAjax',['type'=> 'designation']) }}" class="form-control form-control-lg form-control-solid ajax-data-search" name="q" placeholder="Enter Designation, Description, Level"> --}}
                             </div>
                         </div>
 
                         {{-- Advance filter --}}
-                        <div class="form-group card-body mb-0 pb-0 row">
-                    
+                        <div class="form-group card-body mb-0 pb-0">
+
                             <form class="form-inline" method="GET">
                                 <table>
                                     <tr>
@@ -83,16 +83,16 @@
                                             <button type="submit" class="btn btn-success ml-2">Show</button>
                                             <a href="{{route('admin.salesReport.vat_sd_cmmmission')}}" class="btn btn-primary ml-2">Reset</a>
                                         </td>
-                                        
+
                                     </tr>
                                 </table>
-                                
+
                             </form>
                         </div>
                         {{-- End Filter --}}
 
                         <div class="card-body">
-                            
+
                                 {{-- @if (isset($_GET['user_id']) and $_GET['user_id'] != '') --}}
                                 <div class="w-100" id="stockPrint">
                                     {{-- <h4 class="text-center">VAT, SD, Commission Report</h4> --}}
@@ -101,17 +101,17 @@
                                     <h4 class="text-center">
                                         {{$global_setting->address ?? ""}}
                                     </h4>
-    
+
                                     <p class="text-center">
                                         <strong>VAT, SD, Commission and TDS Report</strong>
                                     </p>
-                                    
+
                                     @if ($user_data)
-                                    
+
                                         <p><strong>User:</strong> {{$user_data->first_name}} {{$user->last_name}}</p>
                                         <p><strong>Email:</strong> {{$user_data->email}}</p>
                                         <p><strong>Phone:</strong> {{$user_data->mobile}}</p>
-                                        
+
                                     @endif
                                     @if (isset($_GET['type']) and $_GET['type'] != '')
                                         @foreach ($user_types as $user_type)
@@ -127,7 +127,7 @@
                                         @endif
                                         @if (isset($_GET['toDate']) and $_GET['toDate'] !='')
                                             @if (isset($_GET['fromDate']) and $_GET['fromDate'] !='')
-                                                , 
+                                                ,
                                             @endif
                                             <strong>Date to:</strong> {{date_format(date_create($_GET['toDate']), 'd-m-Y')}}
                                         @endif
@@ -138,7 +138,7 @@
                                             <strong>Order ID:</strong> {{$_GET['order_id']}}
                                         </p>
                                     @endif
-                                    
+
                                 </div>
                                 @php
                                     $i = 1;
@@ -166,12 +166,12 @@
                                                     <th class="text-right">User type Commission (TK)</th>
                                                     <th class="text-right">Other Commission (TK)</th>
                                                     {{-- <th>Grand total amount (TK)</th> --}}
-                                                    
+
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @if ($orders->count() > 0)
-                                                    
+
                                                     @foreach ($orders as $key => $order)
                                                         @php
                                                         $sd_amount = 0;
@@ -206,9 +206,9 @@
                                                                         $tds_amount = $order->tds_amount;
                                                                         $vds_amount = $order->vds_amount;
                                                                     @endphp
-                                                                    
+
                                                                     {{-- @foreach ($order->orderDetails as $orderDetails)
-                                                                        
+
                                                                         @php
                                                                             $included_sd_amount = 0; // sd amount added with product price
                                                                             $order_detail_total_amount = ($orderDetails->quantity * $orderDetails->price);
@@ -219,7 +219,7 @@
                                                                                     $sd_amount += ($order_detail_total_amount * $order_detail_sd_percent)/100;
                                                                                     $included_sd_amount = $order_detail_total_amount + (($order_detail_total_amount * $order_detail_sd_percent)/100);
                                                                                 }
-                                                                                
+
                                                                                 if ($included_sd_amount > 0) {
                                                                                     if ($order_detail_vat_percent > 0) {
                                                                                         $vat_amount += ($included_sd_amount * $order_detail_vat_percent)/100;
@@ -237,27 +237,27 @@
                                                                     {{number_format($sd_amount,2,'.','')}} <small>({{($order->orderDetails->sum('sd')/count($order->orderDetails)) ?? "0.00"}} %)</small>
                                                                 </td>
                                                                 <td class="text-right">
-                                                                    
-                                                                    
-                                                                    {{number_format($vat_amount,2,'.','')}} 
+
+
+                                                                    {{number_format($vat_amount,2,'.','')}}
                                                                     <small>({{($order->orderDetails->sum('vat')/count($order->orderDetails)) ?? "0.00"}} %)</small>
                                                                 </td>
 
                                                                 <td class="text-right">
-                                                                    
-                                                                    
+
+
                                                                     {{number_format($tds_amount, 2, '.', '')}}
                                                                 </td>
-                                                                
+
                                                                 <td class="text-right">
-                                                                    
-                                                                    
+
+
                                                                     {{number_format($vds_amount, 2, '.', '')}}
                                                                 </td>
 
                                                                 <td class="text-right">
-                                                                    
-                                                                    
+
+
                                                                     {{number_format($vds_amount, 2, '.', '')}}
                                                                 </td>
 
@@ -265,15 +265,15 @@
                                                                     @php
                                                                         $order_discount_amount += $order->discount_amount;
                                                                     @endphp
-                                                                    
+
                                                                     {{$order->discount_amount}}
                                                                     @if ($order->user_type_discount > 0)
                                                                      ({{$order->user_type_discount}} %)
                                                                     @endif
-                                                                    
-                                                                    
+
+
                                                                 </td>
-                                                                
+
                                                                 {{-- <td class="text-right">
                                                                     @php
                                                                         $order_discount_amount_in_total += $order->other_categories_amount;
@@ -283,11 +283,11 @@
                                                                     @if ($order->discount_on_amount == 2)
                                                                          ({{$order->discount_percent_in_total}} %)
                                                                     @endif
-                                                                    
+
                                                                 </td> --}}
-                                                                
+
                                                             </tr>
-                                                            
+
                                                         {{-- @endforeach --}}
                                                         {{-- @php
                                                             $i++;
@@ -308,23 +308,23 @@
                                                     <th class="text-right">{{number_format($total_vds_amount, 2, '.', '')}}</th>
                                                     <th class="text-right">{{number_format($order_discount_amount,2,'.','')}}</th>
                                                     <th class="text-right">{{number_format($order_discount_amount_in_total,2,'.','')}}</th>
-                                                
+
                                                 </tr>
                                             </tbody>
                                             <tfoot class="bg-light-success">
-                                                    
+
                                                 <th style="text-align: left" colspan="100%">Printed by: {{auth()->user()->first_name}} {{auth()->user()->last_name}}</th>
                                                 {{-- <th></th> --}}
                                             </tfoot>
                                         </table>
-                                        
-                                        
+
+
                                     </div>
                                 </div>
                                 <button class="btn btn-primary print_media" onclick="exportData()">Export</button>
                                 <button class="btn btn-primary print_media" onclick="printDiv('stockPrint')">Print</button>
                                 {{-- @endif --}}
-                            
+
                         </div>
                     </div>
                 </div>
@@ -341,11 +341,11 @@
     tfoot { display: none; }
 }
 </style>
-    
+
 @endsection
 
 @push('stackScript')
-    
+
 
     <script>
         function exportData(){
@@ -366,7 +366,7 @@
         }
 
         $(document).ready(function(){
-            $('[data-toggle="popover"]').popover();   
+            $('[data-toggle="popover"]').popover();
         });
     </script>
 
