@@ -14,6 +14,9 @@ use App\Models\Stock;
 use App\Models\Inventory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\CustomerOrderMail;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
@@ -311,130 +314,14 @@ class OrderController extends Controller
             }
 
 
-            // if($request->stage == 0) {
+            if(in_array($request->stage,[1,2])) {
+                try {
+                    Mail::to($order->orderUserInfo->email)->send(new CustomerOrderMail($order));
 
-                // $user = User::where('id', $order->user_id)->first();
-                // $msg = 'Order no: '.$order->tracking_code.' is now pending';
-
-                // $adminMail = 'actbisf.bcic@gmail.com';
-
-                // Mail::to($adminMail)->send(new OrderStatusMailTo($user, $adminMail, $msg));
-
-            // } elseif($request->stage == 1) {
-
-                // $setting = Setting::where('id', 1)->first();
-
-                // // Send Mail notification to user of order success
-                // $user = User::where('id', $order->user_id)->first();
-                // $msg = 'Your order no: '.$order->tracking_code.' has been accepted, <a href="'.route("download.invoice",[$order->id,$order->tracking_code]).'">Please click this link to download your invoice</a>';
-
-                // Mail::to($order->email)->send(new OrderFeedbackMail($user, $msg, $order, $setting));
-
-
-                // $msg = 'Order no: '.$order->tracking_code.' has been accepted';
-
-                // $adminMail = 'actbisf.bcic@gmail.com';
-
-                // Mail::to($adminMail)->send(new OrderStatusMailTo($user, $adminMail, $msg));
-            // } elseif($request->stage == 2) {
-
-                // $inventories = Inventory::where('order_id', $request->orderId)->get();
-
-                // if(count($inventories) > 0){
-                //     foreach($inventories as $inventory){
-                //         $stock = Stock::where('product_id', $inventory->product_id)->where('varient_id', $inventory->varient_id)->first();
-
-                //         $stock->quantity += $inventory->quantity;
-
-                //         $stock->save();
-                //         $inventory->delete();
-                //     }
-                // }
-
-                // $setting = Setting::where('id', 1)->first();
-
-                // // Send Mail notification to user of order fail
-                // $user = User::where('id', $order->user_id)->first();
-                // $msg = 'Your order no: '.$order->tracking_code.' Has been Rejected.';
-
-                // Mail::to($order->email)->send(new OrderFeedbackMail($user, $msg, $order,$setting ));
-
-                // $msg = 'Order no: '.$order->tracking_code.' Has been Rejected.';
-
-                // $adminMail = 'actbisf.bcic@gmail.com';
-
-                // Mail::to($adminMail)->send(new OrderStatusMailTo($user, $adminMail, $msg));
-            // }elseif($request->stage == 3){
-                // Check if enough stock available
-                // $products = OrderDetail::where('order_id', $request->orderId)->get();
-
-                // foreach($products as $product){
-                //     $stock = Stock::where('product_id', $product->product_id)->where('varient_id', $product->varient_id)->first();
-
-                //     if($product->quantity > $stock->quantity){
-                //         return redirect()->back()->with('error', 'Stock quantity is less then order quantity, Please update stock first.');
-                //     }
-                // }
-
-                // $products = OrderDetail::where('order_id', $request->orderId)->get();
-                // $inventories = Inventory::where('order_id', $request->orderId)->get();
-
-                // foreach($inventories as $inventory_data){
-                //     $stock = Stock::where('product_id', $inventory_data->product_id)->where('varient_id', $inventory_data->varient_id)->first();
-
-                //     $stock->quantity += $inventory_data->quantity;
-
-                //     $stock->save();
-                //     $inventory_data->delete();
-                // }
-
-                // foreach($products as $product){
-                //     // Manage stock
-                //     $stock = Stock::where('product_id', $product->product_id)->where('varient_id', $product->varient_id)->first();
-
-                //     $stock->quantity -= $product->quantity;
-
-                //     $stock->save();
-
-                //     // insert history into inventory table
-                //     $inventory = new Inventory;
-
-                //     $inventory->order_id = $request->orderId;
-                //     $inventory->type = 2;
-                //     $inventory->product_id = $product->product_id;
-                //     $inventory->varient_id = $product->varient_id;
-                //     $inventory->quantity = $product->quantity;
-                //     $inventory->created_by = Auth::user()->id;
-
-                //     $inventory->save();
-                // }
-
-                // $setting = Setting::where('id', 1)->first();
-                // $user = User::where('id', $order->user_id)->first();
-                // $msg = 'Your order no: '.$order->tracking_code.' is on delivery stage.';
-
-                // Mail::to($order->email)->send(new OrderFeedbackMail($user, $msg, $order,$setting ));
-
-                // $msg = 'Order no: '.$order->tracking_code.' is on delivery stage.';
-
-                // $adminMail = 'actbisf.bcic@gmail.com';
-
-                // Mail::to($adminMail)->send(new OrderStatusMailTo($user, $adminMail, $msg));
-            // }elseif($request->stage == 4){
-
-                // $setting = Setting::where('id', 1)->first();
-                // $user = User::where('id', $order->user_id)->first();
-
-                // $msg = 'Your order no: '.$order->tracking_code.' has been delivered.';
-
-                // Mail::to($order->email)->send(new OrderFeedbackMail($user, $msg, $order,$setting ));
-
-                // $msg = 'Order no: '.$order->tracking_code.' has been delivered.';
-
-                // $adminMail = 'actbisf.bcic@gmail.com';
-
-                // Mail::to($adminMail)->send(new OrderStatusMailTo($user, $adminMail, $msg));
-            // }
+                } catch (\Throwable $e) {
+                    Log::warning('Mail send failed: '.$e->getMessage());
+                }
+            }
         });
 
 

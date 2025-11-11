@@ -159,6 +159,16 @@ Route::middleware([SetLocale::class])->group(function () {
 
             });
 
+            Route::prefix('voucher')->as('voucher.')->group(function () {
+                Route::get('/index', [VoucherController::class, 'index'])->name('index');
+                Route::get('/create', [VoucherController::class, 'create'])->name('create');
+                Route::post('/store', [VoucherController::class, 'store'])->name('store');
+                Route::get('/show/{id}', [VoucherController::class, 'show'])->name('show');
+                Route::get('/edit/{id}', [VoucherController::class, 'edit'])->name('edit');
+                Route::post('/update/{id}', [VoucherController::class, 'update'])->name('update');
+                Route::get('/delete/{id}', [VoucherController::class, 'destroy'])->name('delete');
+            });
+
 
             Route::prefix('product')->as('product.')->group(function () {
 

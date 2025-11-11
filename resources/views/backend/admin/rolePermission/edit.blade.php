@@ -6,7 +6,7 @@
 
     <div class="d-flex flex-column-fluid">
         <!--begin::Container-->
-        <div class="container">
+        <div class="container-fluid">
             @include('alerts.alerts')
             <!--begin::Card-->
             <div class="row">
@@ -54,7 +54,7 @@
                                             <div class="row">
 
                                                 @foreach ($permissions as $permission)
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-4">
 
                                                         <div class="radio-inline ml-5">
                                                             <label class="radio radio-square">

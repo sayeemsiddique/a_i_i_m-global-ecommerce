@@ -27,7 +27,7 @@
                 <!--begin::Row-->
                 <div class="row">
 
-                    @can('total_pending_orders')
+                    {{-- @can('total_pending_orders') --}}
                         <div class="col-lg-3 col-xxl-3">
                             <!--begin::Stats Widget 12-->
                             <div class="card card-custom gutter-b dash-count-card w3-amber">
@@ -49,7 +49,7 @@
                             </div>
                             <!--end::Stats Widget 12-->
                         </div>
-                    @endcan
+                    {{-- @endcan --}}
 
 
                     {{-- @can('total_pos_orders')
@@ -77,7 +77,7 @@
                         </div>
                     @endcan --}}
 
-                    @can('total_products')
+                    {{-- @can('total_products') --}}
                         <div class="col-lg-3 col-xxl-3">
                             <!--begin::Stats Widget 12-->
                             <div class="card card-custom gutter-b dash-count-card w3-purple">
@@ -97,9 +97,9 @@
                             </div>
                             <!--end::Stats Widget 12-->
                         </div>
-                    @endcan
+                    {{-- @endcan --}}
 
-                    @can('total_users')
+                    {{-- @can('total_users') --}}
                         <div class="col-lg-3 col-xxl-3">
                             <!--begin::Stats Widget 12-->
                             <div class="card card-custom gutter-b dash-count-card w3-teal">
@@ -120,7 +120,7 @@
                             </div>
                             <!--end::Stats Widget 12-->
                         </div>
-                    @endcan
+                    {{-- @endcan --}}
 
                     {{-- @can('total_dealers')
                         <div class="col-lg-3 col-xxl-3">
@@ -169,7 +169,7 @@
                         </div>
                     @endcan --}}
 
-                    @can('total_customers')
+                    {{-- @can('total_customers') --}}
                         <div class="col-lg-3 col-xxl-3">
                             <!--begin::Stats Widget 12-->
                             <div class="card card-custom gutter-b dash-count-card w3-pink">
@@ -190,7 +190,7 @@
                             </div>
                             <!--end::Stats Widget 12-->
                         </div>
-                    @endcan
+                    {{-- @endcan --}}
 
                 </div>
                 <!--end::row-->
