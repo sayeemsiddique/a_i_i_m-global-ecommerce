@@ -261,7 +261,11 @@
                                 <!-- End Search -->
 
 
-                                <li class="col d-xl-none px-2 px-sm-3"><a href="{{route('account')}}" class="text-gray-90" data-toggle="tooltip" data-placement="top" title="My Account"><i class="font-size-22 ec ec-user"></i></a></li>
+                                <li class="col d-xl-none px-2 px-sm-3">
+                                    <a href="@if(auth()->check()) {{route('account')}} @else # @endif" class="text-gray-90" data-toggle="tooltip" data-placement="top" title="My Account b">
+                                        <i class="font-size-22 ec ec-user"></i>
+                                    </a>
+                                </li>
                                 <li class="col pr-xl-0 px-2 px-sm-3">
                                     <a href="{{route('cart')}}" class="text-gray-90 position-relative d-flex " data-toggle="tooltip" data-placement="top" title="Cart">
                                         <i class="font-size-22 ec ec-shopping-bag"></i>
@@ -422,7 +426,7 @@
                             <ul class="d-flex list-unstyled mb-0">
 
 
-                                <li class="col d-xl-none px-2 px-sm-3"><a href="{{route('account')}}" class="text-gray-90" data-toggle="tooltip" data-placement="top" title="My Account"><i class="font-size-22 ec ec-user"></i></a></li>
+                                <li class="col d-xl-none px-2 px-sm-3"><a href="@if(auth()->check()) {{route('account')}} @else # @endif" class="text-gray-90" data-toggle="tooltip" data-placement="top" title="My Account c"><i class="font-size-22 ec ec-user"></i></a></li>
                                 <li class="col pr-xl-0 px-2 px-sm-3 d-xl-none">
                                     <a href="{{ route('cart') }}" class="text-gray-90 position-relative d-flex " data-toggle="tooltip" data-placement="top" title="Cart">
                                         <i class="font-size-22 ec ec-shopping-bag"></i>

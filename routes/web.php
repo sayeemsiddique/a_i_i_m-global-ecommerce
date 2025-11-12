@@ -39,6 +39,7 @@ use App\Http\Controllers\{
     DivisionController,
     DistrictController,
     UpazilaController,
+    VoucherController,
 };
 
 use App\Http\Middleware\SetLocale;

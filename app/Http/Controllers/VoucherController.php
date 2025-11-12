@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Voucher;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class VoucherController extends Controller
 {
@@ -16,7 +18,7 @@ class VoucherController extends Controller
             menuSubmenu('settings', 'all_voucher');
 
             $vouchers = Voucher::latest()->paginate(10);
-            return view('admin.vouchers.index', compact('vouchers'));
+            return view('backend.admin.vouchers.index', compact('vouchers'));
 
         }
         else
@@ -64,7 +66,7 @@ class VoucherController extends Controller
     {
         if(Gate::allows('edit_voucher', $user))
         {
-            return view('admin.vouchers.edit', compact('voucher'));
+            return view('backend.admin.vouchers.edit', compact('voucher'));
         }
         else
         {

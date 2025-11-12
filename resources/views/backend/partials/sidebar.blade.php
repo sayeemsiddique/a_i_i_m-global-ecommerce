@@ -825,6 +825,17 @@
                                     </li>
                                 @endcan
 
+                                @can('all_voucher')
+                                    <li class="menu-item {{ session('lsbsm') == 'all_voucher' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
+                                        <a href="{{ route('admin.voucher.index') }}" class="menu-link">
+                                            <i class="far fa-dot-circle">
+                                                <span></span>
+                                            </i>
+                                            <span class="menu-text">Manage Voucher</span>
+                                        </a>
+                                    </li>
+                                @endcan
+
 
                             </ul>
                         </div>
