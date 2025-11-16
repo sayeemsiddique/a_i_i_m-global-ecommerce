@@ -94,7 +94,7 @@
                         </td>
 
                         <td data-title="Price" style="white-space: nowrap;" class="text-right">
-                            <span class="">{{$global_setting->currency ?? ""}} @if ($cart->variation_id == 0){{$cart->productInfo->discount_price ?? ''}} @else {{$cart->varientInfo->discount_price ?? 0}} @endif</span>
+                            <span class="">{{$global_setting->currency ?? ""}} @if ($cart->variation_id == 0){{round($cart->productInfo->discount_price ?? '')}} @else {{round($cart->varientInfo->discount_price ?? 0)}} @endif</span>
                         </td>
 
                         <td data-title="Total" style="white-space: nowrap;">
@@ -103,13 +103,13 @@
                                     @php
                                         $product_total_price +=  ($cart->productInfo->discount_price ?? 0)  * $cart->quantity;
                                     @endphp
-                                    {{number_format((($cart->productInfo->discount_price ?? 0)  * $cart->quantity),2,".","")}}
+                                    {{number_format((($cart->productInfo->discount_price ?? 0)  * $cart->quantity),0,".","")}}
 
                                 @else
                                     @php
                                         $product_total_price +=  ($cart->varientInfo->discount_price ?? 0)  * $cart->quantity;
                                     @endphp
-                                    {{number_format((($cart->varientInfo->discount_price ?? 0) * $cart->quantity),2,".","")}}
+                                    {{number_format((($cart->varientInfo->discount_price ?? 0) * $cart->quantity),0,".","")}}
 
                                 @endif
                             </span>
@@ -180,7 +180,7 @@
                         </td>
 
                         <td data-title="Price" style="white-space: nowrap;" class="text-right">
-                            <span class="">{{$global_setting->currency ?? ""}} @if ($guest_cart->variation_id == 0){{$guest_cart->productInfo->discount_price ?? ''}} @else {{$guest_cart->varientInfo->discount_price ?? 0}} @endif</span>
+                            <span class="">{{$global_setting->currency ?? ""}} @if ($guest_cart->variation_id == 0){{round($guest_cart->productInfo->discount_price ?? '')}} @else {{round($guest_cart->varientInfo->discount_price ?? 0)}} @endif</span>
                         </td>
 
                         <td data-title="Total" style="white-space: nowrap;">
@@ -189,13 +189,13 @@
                                     @php
                                         $product_total_price +=  ($guest_cart->productInfo->discount_price ?? 0)  * $guest_cart->quantity;
                                     @endphp
-                                    {{number_format((($guest_cart->productInfo->discount_price ?? 0)  * $guest_cart->quantity),2,".","")}}
+                                    {{number_format((($guest_cart->productInfo->discount_price ?? 0)  * $guest_cart->quantity),0,".","")}}
 
                                 @else
                                     @php
                                         $product_total_price +=  ($guest_cart->varientInfo->discount_price ?? 0)  * $guest_cart->quantity;
                                     @endphp
-                                    {{number_format((($guest_cart->varientInfo->discount_price ?? 0) * $guest_cart->quantity),2,".","")}}
+                                    {{number_format((($guest_cart->varientInfo->discount_price ?? 0) * $guest_cart->quantity),0,".","")}}
 
                                 @endif
                             </span>
@@ -218,7 +218,7 @@
                         <td class="text-right font-weight-bold" colspan="5">Total</td>
                         <td data-title="Total" colspan="2">
                             <strong><span class="amount">{{$global_setting->currency ?? ""}}
-                                {{ number_format(($in_total + $total_tax + $total_vat),2,".","") }}
+                                {{ number_format(($in_total + $total_tax + $total_vat),0,".","") }}
                             </span></strong>
                         </td>
                     </tr>

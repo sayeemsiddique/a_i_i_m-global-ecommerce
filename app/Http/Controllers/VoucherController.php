@@ -18,7 +18,7 @@ class VoucherController extends Controller
             menuSubmenu('settings', 'all_voucher');
 
             $vouchers = Voucher::latest()->paginate(10);
-            return view('backend.admin.vouchers.index', compact('vouchers'));
+            return view('backend.admin.voucher.index', compact('vouchers'));
 
         }
         else
@@ -33,7 +33,7 @@ class VoucherController extends Controller
 
         if(Gate::allows('add_voucher', $user))
         {
-            return view('admin.vouchers.create');
+            return view('admin.voucher.create');
         }
         else
         {
@@ -53,7 +53,7 @@ class VoucherController extends Controller
         if(Gate::allows('add_voucher', $user))
         {
             Voucher::create($request->all());
-            return redirect()->route('admin.vouchers.index')->with('success', 'Voucher created successfully!');
+            return redirect()->route('admin.voucher.index')->with('success', 'Voucher created successfully!');
         }
         else
         {
@@ -66,7 +66,7 @@ class VoucherController extends Controller
     {
         if(Gate::allows('edit_voucher', $user))
         {
-            return view('backend.admin.vouchers.edit', compact('voucher'));
+            return view('backend.admin.voucher.edit', compact('voucher'));
         }
         else
         {
@@ -81,10 +81,12 @@ class VoucherController extends Controller
             'value' => 'numeric|min:0',
         ]);
 
+        $user = Auth::user();
+
         if(Gate::allows('edit_voucher', $user))
         {
             $voucher->update($request->all());
-            return redirect()->route('admin.vouchers.index')->with('success', 'Voucher updated successfully!');
+            return redirect()->route('admin.voucher.index')->with('success', 'Voucher updated successfully!');
         }
         else
         {
@@ -94,6 +96,7 @@ class VoucherController extends Controller
 
     public function destroy(Voucher $voucher)
     {
+        $user = Auth::user();
         if(Gate::allows('delete_voucher', $user))
         {
             $voucher->delete();

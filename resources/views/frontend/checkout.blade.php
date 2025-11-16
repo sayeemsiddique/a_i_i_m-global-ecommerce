@@ -94,6 +94,13 @@
                                     </div>
                                     <!-- End Title -->
 
+                                    <div class="input-group mb-3">
+                                        <input autocomplete="off" type="text" class="form-control discount_code" placeholder="Discount code" aria-label="Apply Discount Code" aria-describedby="button-discount-code-addon" name="discount_code">
+                                        <div class="input-group-append">
+                                            <span class="btn btn-success" style="cursor: pointer;" onclick="applyVoucherDiscount(this)">Apply</span>
+                                        </div>
+                                    </div>
+
                                     <!-- Product Content -->
                                     <table class="table">
                                         <thead>
@@ -108,18 +115,18 @@
                                                     <td>
                                                         {{$cart->productInfo->name ?? ''}}<strong class="product-quantity">× {{$cart->quantity}}</strong>
                                                     </td>
-                                                    <td>
+                                                    <td style="min-width: 100px;">
                                                         {{$global_setting->currency ?? ""}}   @if ($cart->variation_id == 0)
                                                                 @php
                                                                     $product_total_price +=  ($cart->productInfo->discount_price ?? 0)  * $cart->quantity;
                                                                 @endphp
-                                                                {{number_format((($cart->productInfo->discount_price ?? 0)  * $cart->quantity),2,".","")}}
+                                                                {{number_format((($cart->productInfo->discount_price ?? 0)  * $cart->quantity),0,".","")}}
 
                                                             @else
                                                                 @php
                                                                     $product_total_price +=  ($cart->varientInfo->discount_price ?? 0)  * $cart->quantity;
                                                                 @endphp
-                                                                {{number_format((($cart->varientInfo->discount_price ?? 0) * $cart->quantity),2,".","")}}
+                                                                {{number_format((($cart->varientInfo->discount_price ?? 0) * $cart->quantity),0,".","")}}
 
                                                             @endif
 
@@ -133,7 +140,7 @@
                                             <tr>
                                                 <th>Sub-total</th>
                                                 <td>
-                                                    {{$global_setting->currency ?? ""}} {{number_format($product_total_price,2,".","")}}
+                                                    {{$global_setting->currency ?? ""}} {{number_format($product_total_price,0,".","")}}
                                                 </td>
                                             </tr>
                                             <tr>
@@ -144,7 +151,7 @@
                                                         @php
                                                             $first_shipping = $shipping_addresses->first();
                                                         @endphp
-                                                        <span class="shipping_cost" >{{$first_shipping->divisionInfo->shipping_cost ?? 0}}</span>
+                                                        <span class="shipping_cost" >{{round($first_shipping->divisionInfo->shipping_cost ?? 0)}}</span>
                                                     @else
                                                     <span class="shipping_cost" >0</span>
                                                     @endif
@@ -304,18 +311,20 @@
     {{-- <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script> --}}
 
     <script>
+
         $(document).ready(function(){
+
             function updateTotal(){
                 var product_total = {{$product_total_price}};
                 var shipping_cost = $('.shipping_cost').text();
                 var in_total = parseFloat(product_total) + parseFloat(shipping_cost);
-                $('.in_total').text(in_total.toFixed(2));
+                $('.in_total').text(in_total.toFixed(0));
             }
             updateTotal();
 
             $('input[name="shipping_address"]').on('change', function(){
                 var shipping_cost = $(this).data('shippingcost');
-                $('.shipping_cost').text(parseFloat(shipping_cost).toFixed(2));
+                $('.shipping_cost').text(parseFloat(shipping_cost).toFixed(0));
                 updateTotal();
             });
 
@@ -353,5 +362,36 @@
                 this.submit();
             });
         });
+
+        function applyVoucherDiscount(that){
+                var discount_code = $('.discount_code').val();
+                if(discount_code == ''){
+                    alertify.error('Please enter a discount code');
+                    return;
+                }
+                const customFormData = new FormData();
+                customFormData.append('discount_code', $('.discount_code').val());
+                customFormData.append('_token', $("input[name='_token']").val());
+                let cart_ids = [];
+                $('input[name^="cart_id"]').each(function() {
+                    cart_ids.push($(this).val()); // Get the value of each input
+                    console.log($(this).val());
+                });
+                customFormData.append('cart_id', cart_ids);
+
+                $.ajax({
+                    url: "{{ route('apply_discount_orrder') }}",
+                    data: customFormData,
+                    processData: false,
+                    contentType: false,
+                    method: 'POST',
+                    success: function(response){
+
+                    },
+                    error: function() {
+                        alertify.error('Failed to apply discount. Please try again.');
+                    }
+                });
+            }
     </script>
 @endpush

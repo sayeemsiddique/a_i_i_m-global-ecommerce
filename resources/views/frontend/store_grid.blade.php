@@ -153,13 +153,13 @@
                                                                     $range_data = explode('%3B', $_GET['range']);
                                                                     $product_min_price_from = explode(";",$range_data[0])[0];
                                                                 @endphp
-                                                                {{$product->productVarient->where("discount_price",'>=',$product_min_price_from)->min('discount_price')}}
+                                                                {{round($product->productVarient->where("discount_price",'>=',$product_min_price_from)->min('discount_price'))}}
                                                                 @else
-                                                                {{$product->productVarient->min('discount_price')}}
+                                                                {{round($product->productVarient->min('discount_price'))}}
                                                                 @endif
 
                                                             @else
-                                                                {{$product->discount_price}}
+                                                                {{round($product->discount_price)}}
                                                             @endif
                                                         </ins>
                                                         {{-- <del class="font-size-12 tex-gray-6 position-absolute bottom-100">

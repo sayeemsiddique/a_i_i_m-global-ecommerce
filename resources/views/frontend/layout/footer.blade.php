@@ -222,7 +222,7 @@ $('#log-pass-eye').on('click', function() {
         let guest_cart_amoutnt = $('.guest_cart_amount').val();
         let guest_cart_quantity = $('.guest_cart_quantity').val();
         let final_cart_amount = Number(cart_amoutnt) + Number(guest_cart_amoutnt);
-        $('.custom_cart_price_span').text(final_cart_amount.toFixed(2));
+        $('.custom_cart_price_span').text(Math.round(final_cart_amount.toFixed(2)));
         $('.custom_cart_quantity').text(Number(cart_quantity) + Number(guest_cart_quantity));
 
     }

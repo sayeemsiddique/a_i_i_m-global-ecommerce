@@ -136,17 +136,17 @@ class ProductController extends Controller
                 if (isset($request->discount) and $request->discount > 0) {
                     if (in_array(($request->discount_type ?? 0), [1,2])) {
                         if ($request->discount_type == 2) {
-                            $product['discount_price'] = ($request->price ?? 0) - ((($request->price ?? 0) * $request->discount) / 100);
+                            $product['discount_price'] = round(($request->price ?? 0) - ((($request->price ?? 0) * $request->discount) / 100));
                         } else {
-                            $product['discount_price'] = ($request->price ?? 0) - ($request->discount ?? 0);
+                            $product['discount_price'] = round(($request->price ?? 0) - ($request->discount ?? 0));
                         }
                     } else {
-                        $product['discount_price'] = ($request->price ?? 0);
+                        $product['discount_price'] = round($request->price ?? 0);
                     }
                 } else {
-                    $product['discount_price'] = $request->price ?? 0;
+                    $product['discount_price'] = round($request->price ?? 0);
                 }
-                $product['sl_price'] = $product['discount_price'];
+                $product['sl_price'] = round($product['discount_price']);
             }
 
 
@@ -241,13 +241,13 @@ class ProductController extends Controller
                     // if (($request->varient_discount[$key] ?? 0) > 0) {
                         if (in_array(($request->varient_discount_type[$key] ?? 0), [1,2])) {
                             if ($request->varient_discount_type[$key] == 2) {
-                                $varient['discount_price'] = ($sale_price) - ((($sale_price) * $request->varient_discount[$key]) / 100);
+                                $varient['discount_price'] = round(($sale_price) - ((($sale_price) * $request->varient_discount[$key]) / 100));
                             } else {
-                                $varient['discount_price'] = ($sale_price) - ($request->varient_discount[$key]);
+                                $varient['discount_price'] = round(($sale_price) - ($request->varient_discount[$key]));
                             }
 
                         } else {
-                            $varient['discount_price'] = $sale_price;
+                            $varient['discount_price'] = round($sale_price);
                         }
                     // } else {
                     //     $varient['discount_price'] = $sale_price;
@@ -434,16 +434,16 @@ class ProductController extends Controller
             if (isset($request->discount) and $request->discount > 0) {
                 if (isset($request->discount_type) and $request->discount_type != '') {
                     if ($request->discount_type == 2) {
-                        $product['discount_price'] = ($request->price ?? 0) - ((($request->price ?? 0) * $request->discount) / 100);
+                        $product['discount_price'] = round(($request->price ?? 0) - ((($request->price ?? 0) * $request->discount) / 100));
                     } else {
-                        $product['discount_price'] = ($request->price ?? 0) - ($request->discount ?? 0);
+                        $product['discount_price'] = round(($request->price ?? 0) - ($request->discount ?? 0));
                     }
 
                 } else {
-                    $product['discount_price'] = ($request->price ?? 0) - ($request->discount ?? 0);
+                    $product['discount_price'] = round(($request->price ?? 0) - ($request->discount ?? 0));
                 }
             } else {
-                $product['discount_price'] = $request->price ?? 0;
+                $product['discount_price'] = round($request->price ?? 0);
             }
 
             $product['sl_price'] = $product['discount_price'];
@@ -515,16 +515,16 @@ class ProductController extends Controller
                         if (($request->varient_discount[$key] ?? 0) > 0) {
                             if ($request->varient_discount_type[$key] != '') {
                                 if ($request->varient_discount_type[$key] == 2) {
-                                    $varient['discount_price'] = ($sale_price) - ((($sale_price) * $request->varient_discount[$key]) / 100);
+                                    $varient['discount_price'] = round(($sale_price) - ((($sale_price) * $request->varient_discount[$key]) / 100));
                                 } else {
-                                    $varient['discount_price'] = ($sale_price) - ($request->varient_discount[$key]);
+                                    $varient['discount_price'] = round(($sale_price) - ($request->varient_discount[$key]));
                                 }
 
                             } else {
-                                $varient['discount_price'] = ($sale_price) - ($request->varient_discount[$key]);
+                                $varient['discount_price'] = round(($sale_price) - ($request->varient_discount[$key]));
                             }
                         } else {
-                            $varient['discount_price'] = $sale_price;
+                            $varient['discount_price'] = round($sale_price);
                         }
 
                         if ($request->varient_id[$key] > 0) {

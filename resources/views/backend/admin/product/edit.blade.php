@@ -3,38 +3,7 @@
 @section('content')
 <!--begin::Content-->
 <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
-    <!--begin::Subheader-->
-    <div class="subheader py-2 py-lg-6 subheader-solid" id="kt_subheader">
-        <div class="container-fluid d-flex align-items-center justify-content-between flex-wrap flex-sm-nowrap">
-            <!--begin::Info-->
-            <div class="d-flex align-items-center flex-wrap mr-1">
-                <!--begin::Page Heading-->
-                <div class="d-flex align-items-baseline flex-wrap mr-5">
-                    <!--begin::Page Title-->
-                    <h5 class="text-dark font-weight-bold my-1 mr-5">Edit Product</h5>
-                    <!--end::Page Title-->
-                    <!--begin::Breadcrumb-->
-                    <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-2 font-size-sm">
-                        <li class="breadcrumb-item">
-                            <a href="{{route('admin.index')}}" class="text-muted">Dashboard</a>
-                        </li>
-                        @can('all_product')
-                        <li class="breadcrumb-item">
-                            <a href="{{route('admin.product.index')}}" class="text-muted">Manage Product</a>
-                        </li>
-                        @endcan
 
-                        <li class="breadcrumb-item active">
-                            <a class="text-muted">Edit Product</a>
-                        </li>
-                    </ul>
-                    <!--end::Breadcrumb-->
-                </div>
-                <!--end::Page Heading-->
-            </div>
-            <!--end::Info-->
-        </div>
-    </div>
     <!--end::Subheader-->
     <!--begin::Entry-->
     <div class="d-flex flex-column-fluid">
@@ -72,7 +41,7 @@
 											<div class="col-md-6">
 												<div class="form-group">
 													<label class="">Product Category: <span class="text-danger">*</span></label>
-													
+
 													<select class="form-control parent_category" name="category_id" required>
 														<option value="">Select</option>
 														@foreach ($categories as $categor)
@@ -85,7 +54,7 @@
 
 												{{-- <div class="form-group">
 													<label class="">Sub Product Category:</label>
-													
+
 													<select class="form-control sub_parent_category" name="sub_category_id">
 
 														<option value="">Select</option>
@@ -99,7 +68,7 @@
 
 												<div class="form-group conditional_area">
 													<label class="">Product Weight: </label>
-													
+
 													<input type="number" class="form-control" name="weight" placeholder="Weight" step="0.001"
 													value="{{$product->weight}}"
 													>
@@ -124,7 +93,7 @@
 													</select>
 												</div>
 
-												
+
 
 												<div class="form-group">
 													<label class="">Status:</label>
@@ -138,25 +107,25 @@
 													</div>
 												</div>
 
-												
+
 
 											</div>
 											<div class="col-md-6">
 												<div class="form-group">
 													<label class="">Product Brand: </label>
-													
+
 													<select class="form-control parent_category" name="brand_id">
 														<option value="">Select</option>
 														@foreach ($brands as $brand)
 															<option @if($product->brand_id == $brand->id) selected @endif value="{{$brand->id}}">{{$brand->name}}</option>
 														@endforeach
-														
+
 													</select>
 												</div>
 
 												<div class="form-group">
 													<label class="">Product Code: </label>
-													
+
 													<input type="text" class="form-control" name="code" placeholder="Code" value="{{$product->code}}">
 												</div>
 
@@ -167,7 +136,7 @@
 														<option @if($product->unit == 1) selected @endif value="1">KG</option>
 														<option @if($product->unit == 2) selected @endif value="2">MT</option>
 														<option @if($product->unit == 3) selected @endif value="3">Pcs</option>
-														
+
 													</select>
 												</div>
 
@@ -180,7 +149,7 @@
 													<label class="">Sale Price Price:</label>
 													<input onchange="calculate_val()" type="number" class="form-control" step="0.01" name="price" value="{{$product->price}}">
 												</div>
-												
+
 												<div class="form-group conditional_area">
 													<label class="">Discount:</label>
 													<input onchange="calculate_val()" type="number" class="form-control" name="discount" value="{{$product->discount}}">
@@ -205,29 +174,29 @@
 
 											</div>
 
-											
+
 
 										</div>
-										
+
 									</div>
 
 									<div class="col-md-6">
-										
+
 											<div class="form-group">
 												<label class="">Product Image: </label>
 
 												<div class="image-input image-input-empty image-input-outline" id="kt_image_5" style="">
 													<div class="image-input-wrapper" style="background-image: url({{asset('storage/product/' . $product->image )}})"></div>
-												
+
 													<label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow" data-action="change" data-toggle="tooltip" title="" data-original-title="Change Photo">
 														<i class="fa fa-pen icon-sm text-muted"></i>
 														<input type="file" name="image" accept=".png, .jpg, .jpeg"/>
 													</label>
-												
+
 													<span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow" data-action="cancel" data-toggle="tooltip" title="Cancel Photo">
 													<i class="ki ki-bold-close icon-xs text-muted"></i>
 													</span>
-												
+
 													<span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow" data-action="remove" data-toggle="tooltip" title="Remove Photo">
 													<i class="ki ki-bold-close icon-xs text-muted"></i>
 													</span>
@@ -239,7 +208,7 @@
 												<label class="">Multiple Product Image Upload</label>
 												<div class="">
 													<input type="file" name="gallery[]" class="form-control" multiple>
-													
+
 												</div>
 											</div>
 
@@ -247,13 +216,13 @@
 												<label class="">Description:</label>
 												<div class="">
 													<textarea class="summernote form-control" name="description" id="" cols="30" rows="10">{{$product->productInfo->description ?? ''}}</textarea>
-													
+
 												</div>
 											</div>
 
-											
-											
-										
+
+
+
 									</div>
 									@if($product->has_varient == 1)
 										<div class="col-md-12">
@@ -295,21 +264,21 @@
 															</label>
 														</li>
 													@endforeach
-												</ul> 
-														
+												</ul>
+
 												<table class="table table-bordered table-sm text-left">
 													<thead>
 													<tr>
 														<th>Image</th>
 														@foreach ($varienttypes as $varienttype)
-															<th 
+															<th
 															@if ( !in_array($varienttype->id,$type_ids))
-															style="display: none" 
+															style="display: none"
 																@endif
 															class="conditional_varient_td_{{$varienttype->id}}">{{$varienttype->name}}</th>
 														@endforeach
-														
-														
+
+
 														<th>Weight</th>
 														<th>Initial Quantity</th>
 														<th>Sale Price</th>
@@ -320,7 +289,7 @@
 													</tr>
 													</thead>
 													<tbody>
-													
+
 													@if (count($product->productVarient) > 0)
 														@foreach ($product->productVarient as $product_varient)
 														<tr>
@@ -329,11 +298,11 @@
 																<input type="file" name="varient_image[]" class="form-control">
 															</td>
 															@foreach ($varienttypes as $varienttype)
-															
+
 																<td
 
 																@if ( !in_array($varienttype->id,$type_ids))
-																style="display: none" 
+																style="display: none"
 																	@endif
 																class="conditional_varient_td_{{$varienttype->id}}">
 																	@php
@@ -357,7 +326,7 @@
 															<td>
 																<input type="number" class="form-control" name="sale_quantity[]" value="{{ $product_varient->quantity }}" step="0.001">
 															</td>
-															
+
 															<td>
 																<input onchange="calculate_values(this)" type="number" step="0.01" class="form-control varient_sale_price" name="sale_price[]" value="{{$product_varient->price}}">
 															</td>
@@ -393,11 +362,11 @@
 																	if ($sd) {
 																		$varient_discounted_price = $varient_discounted_price + (($varient_discounted_price * $sd) /100);
 																	}
-																	
+
 																	if ($vat) {
 																		$varient_discounted_price = $varient_discounted_price + (($varient_discounted_price * $vat) /100);
 																	}
-																	
+
 																@endphp
 																<input onchange="calculate_values(this)" type="number" step="0.01" class="form-control varient_discounted_price" value="{{$product_varient->discount_price}}">
 															</td>
@@ -414,14 +383,14 @@
 															<input type="file" name="varient_image[]" class="form-control">
 														</td>
 														@foreach ($varienttypes as $varienttype)
-														
+
 															<td
 
 															@if ( !in_array($varienttype->id,$type_ids))
-															style="display: none" 
+															style="display: none"
 																@endif
 															class="conditional_varient_td_{{$varienttype->id}}">
-																
+
 																<input class="form-control" list="browsers{{$varienttype->id}}" name="varient_name[{{$varienttype->id}}][]" id="browser{{$varienttype->id}}" autocomplete="off">
 																	<datalist id="browsers{{$varienttype->id}}">
 																		@foreach ($varienttype->varientValues as $varient_value)
@@ -436,7 +405,7 @@
 														<td>
 															<input type="number" class="form-control" name="sale_quantity[]">
 														</td>
-														
+
 														<td>
 															<input onchange="calculate_values(this)" type="number" step="0.01" class="form-control varient_sale_price" name="sale_price[]">
 														</td>
@@ -453,7 +422,7 @@
 															</div>
 														</td>
 														<td>
-															
+
 															<input onchange="calculate_values(this)" type="number" step="0.01" class="form-control varient_discounted_price">
 														</td>
 														<td>
@@ -529,7 +498,7 @@
 		}
 
 		var parent_category = $(".parent_category option:selected").val();
-		
+
 		if (!parent_category) {
 			Swal.fire(
 				'Error!',
@@ -540,7 +509,7 @@
 			$('.save_button').text('Save');
 			return false;
 		}
-		
+
 		if (!$("input[name=code]").val()) {
 			Swal.fire(
 				'Error!',
@@ -554,12 +523,12 @@
 
 		// var has_varient = $('input[name=has_varient]:checked');
 
-		
-		
+
+
 		if ($(".add_varient").is(':checked')) {
 			var type_length = $("input[name='varient_type_ids[]']:checked").length;
 
-			
+
 			if (type_length == 0) {
 				Swal.fire(
 				'Error!',
@@ -570,29 +539,29 @@
 				$('.save_button').text('Save');
 				return false;
 			}
-			
+
 			$("input[name='sale_quantity[]']").map(function(){
-				
+
 				if (!$(this).val()) {
 					can_submit = 0;
 				}
 			}).get();
-			
+
 			$("input[name='sale_price[]']").map(function(){
 				if (!$(this).val()) {
 					can_sale_submit = 0;
 				}
 			}).get();
 
-			
+
 
 				$('.table-area table > tbody  > tr').each(function(index, tr) {
 					has_varient_value = 0;
 					$("input[name='varient_type_ids[]']:checked").map(function(key, data){
 
-						
+
 						$(tr).find("td input[name='varient_name["+data.value+"][]']").map(function(){
-							
+
 							if ($(this).val()) {
 								has_varient_value = 1;
 							}
@@ -612,10 +581,10 @@
 			$('.save_button').text('Save');
 			return false;
 		}
-				
-			
+
+
 		} else {
-			
+
 			if (!$("input[name=price]").val()) {
 				Swal.fire(
 					'Error!',
@@ -626,7 +595,7 @@
 				$('.save_button').text('Save');
 				return false;
 			}
-			
+
 			if (!$("input[name=quantity]").val()) {
 				Swal.fire(
 					'Error!',
@@ -649,9 +618,9 @@
 			$('.save_button').text('Save');
 			return false;
 		}
-		
-		
-		
+
+
+
 		if (can_sale_submit == 0) {
 			Swal.fire(
 				'Error!',
@@ -663,7 +632,7 @@
 			return false;
 		}
 
-		
+
 		var formData = new FormData(this);
 			$.ajax({
 				url: "{{route('admin.product.update', $product->id)}}",
@@ -673,10 +642,10 @@
     			contentType: false,
 				success: function (response) {
 
-					window.location.href = "{{route('admin.product.index')}}/?complete=1";					
+					window.location.href = "{{route('admin.product.index')}}/?complete=1";
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
-					
+
 
 					var errors = $.parseJSON(jqXHR.responseText);
                     $.each(errors, function (key, val) {
@@ -693,13 +662,13 @@
                     });
 				$('.save_button').text('');
 				$('.save_button').text('Save');
-				
+
 				}
 			});
-		
+
 
 	});
-	
+
 	// $(".parent_category").change(function(){
 
 	// 	if(this.value){
@@ -713,13 +682,13 @@
 	// 				$('.sub_parent_category').append(response);
 	// 			},
 	// 			error: function(jqXHR, textStatus, errorThrown) {
-				
+
 	// 			}
 	// 		});
 	// 	}
 
 	// });
-	
+
 
 
 	function calculate_values(that){
@@ -736,7 +705,7 @@
 		if (!vat) {
 			vat = 0;
 		}
-		
+
 		if (!sd) {
 			sd = 0;
 		}
@@ -757,11 +726,11 @@
 			if (vat > 0) {
 				discount_price = Number(discount_price) + ((Number(discount_price) * Number(vat)) / 100);
 			}
-			
+
 		}
-		$(that).closest('tr').find('.varient_discounted_price').val(discount_price.toFixed(2));
+		$(that).closest('tr').find('.varient_discounted_price').val(Math.round(discount_price.toFixed(2)));
 	}
-	
+
 	function calculate_val(){
 
 		var varient_sale_price = $("input[name=price]").val();
@@ -778,7 +747,7 @@
 		if (!vat) {
 			vat = 0;
 		}
-		
+
 		if (!sd) {
 			sd = 0;
 		}
@@ -799,16 +768,16 @@
 			if (vat > 0) {
 				discount_price = Number(discount_price) + ((Number(discount_price) * Number(vat)) / 100);
 			}
-			
+
 		}
-		$("input[name=total_price]").val(discount_price.toFixed(2));
+		$("input[name=total_price]").val(Math.round(discount_price.toFixed(2)));
 	}
 
-		
 
-	
 
-	
+
+
+
 	// $(".table-area").hide();
 
 	$(document).ready(function(){
@@ -833,7 +802,7 @@
 		if (!vat) {
 			vat = 0;
 		}
-		
+
 		if (!sd) {
 			sd = 0;
 		}
@@ -851,9 +820,9 @@
 			if (vat > 0) {
 				discount_price = Number(discount_price) + ((Number(discount_price) * Number(vat)) / 100);
 			}
-			
+
 		}
-		$("input[name=total_price]").val(discount_price);
+		$("input[name=total_price]").val(Math.round(discount_price));
 
 	});
 
@@ -866,7 +835,7 @@
 			$(".conditional_area").show();
 		}
 	});
-	
+
 	$('.conditional_varient').click(function() {
 		if(this.checked && this.value) {
 			$(".conditional_varient_td_"+this.value).show();
@@ -874,19 +843,19 @@
 			$(".conditional_varient_td_"+this.value).hide();
 		}
 	});
-	
-	
+
+
 	$('.add_more').click(function() {
-		
+
 		var clone = $(".table-area tbody tr:first-child").clone();
 
 		$(".table-area tbody").append(clone);
 		$(".table-area tbody tr:last-child td").find('input').val('');
 	});
-	
+
 	function remove_tr(that) {
-		
-		
+
+
 		if (confirm('Are you sure to remove?')) {
 			var varient_id = $(that).closest("tr").find('td .varient_id').val();
 			var get_url = $(that).data("remove");
@@ -900,7 +869,7 @@
 							$(that).closest('tr').remove();
 						},
 						error: function(jqXHR, textStatus, errorThrown) {
-						
+
 						}
 					});
 				} else {
@@ -912,7 +881,7 @@
 		}
 	}
 
-	
+
 </script>
 @endpush
 

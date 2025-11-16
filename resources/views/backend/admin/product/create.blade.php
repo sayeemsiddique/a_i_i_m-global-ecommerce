@@ -3,7 +3,7 @@
 @section('content')
 	<!--begin::Content-->
 	<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
-		
+
 		<!--end::Subheader-->
 
 		<!--begin::Entry-->
@@ -40,7 +40,7 @@
 												<div class="col-md-6">
 													<div class="form-group">
 														<label class="">Product Category: <span class="text-danger">*</span></label>
-														
+
 														<select class="form-control parent_category" name="category_id" required>
 															<option value="">--Select Category--</option>
 
@@ -52,7 +52,7 @@
 
 													{{-- <div class="form-group">
 														<label class="">Sub Product Category:</label>
-														
+
 														<select class="form-control sub_parent_category" name="sub_category_id">
 															<option value="">Select</option>
 
@@ -61,7 +61,7 @@
 
 													<div class="form-group conditional_area">
 														<label class="">Product Weight: </label>
-														
+
 														<input type="number" class="form-control" name="weight" placeholder="Weight" step="0.01">
 													</div>
 
@@ -104,7 +104,7 @@
 												<div class="col-md-6">
 													<div class="form-group">
 														<label class="">Product Brand: </label>
-														
+
 														<select class="form-control parent_category" name="brand_id">
 															<option value="">--Select Brand--</option>
 
@@ -116,7 +116,7 @@
 
 													<div class="form-group">
 														<label class="">Product Code: <span class="text-danger">*</span> </label>
-														
+
 														<input type="text" class="form-control" name="code" placeholder="Code">
 													</div>
 
@@ -140,9 +140,9 @@
 													<div class="form-group conditional_area">
 														<label class="">Sale Price: <span class="text-danger">*</span></label>
 
-														<input onchange="calculate_val()" type="number" class="form-control" step="0.01" name="price">
+														<input onchange="calculate_val()" type="number" class="form-control" step="0.01" name="price" step="1">
 													</div>
-													
+
 													<div class="form-group conditional_area">
 														<label class="">Discount:</label>
 														<input onchange="calculate_val()" type="number" class="form-control" name="discount">
@@ -176,16 +176,16 @@
 
 												<div class="image-input image-input-empty image-input-outline" id="kt_image_5" style="">
 													<div class="image-input-wrapper"></div>
-													
+
 													<label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow" data-action="change" data-toggle="tooltip" title="" data-original-title="Change Photo">
 														<i class="fa fa-pen icon-sm text-muted"></i>
 														<input type="file" name="image" accept=".png, .jpg, .jpeg"/>
 													</label>
-													
+
 													<span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow" data-action="cancel" data-toggle="tooltip" title="Cancel Photo">
 														<i class="ki ki-bold-close icon-xs text-muted"></i>
 													</span>
-													
+
 													<span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow" data-action="remove" data-toggle="tooltip" title="Remove Photo">
 														<i class="ki ki-bold-close icon-xs text-muted"></i>
 													</span>
@@ -241,8 +241,8 @@
 																</label>
 															</li>
 														@endforeach
-													</ul> 
-															
+													</ul>
+
 													<table class="table table-bordered table-sm text-left">
 														<thead>
 															<tr>
@@ -251,7 +251,7 @@
 																@foreach ($varienttypes as $varienttype)
 																	<th style="display: none" class="conditional_varient_td_{{$varienttype->id}}">{{$varienttype->name}}</th>
 																@endforeach
-																
+
 																<th>Weight</th>
 																<th>Initial Quantity</th>
 																<th>Sale Price</th>
@@ -270,7 +270,7 @@
 
 																@foreach ($varienttypes as $varienttype)
 																	<td style="display: none" class="conditional_varient_td_{{ $varienttype->id }}">
-																		
+
 																		<input class="form-control" list="browsers{{ $varienttype->id }}" name="varient_name[{{ $varienttype->id }}][]" id="browser{{ $varienttype->id }}" autocomplete="off">
 
 																		<datalist id="browsers{{ $varienttype->id }}">
@@ -288,7 +288,7 @@
 																<td>
 																	<input type="number" class="form-control" name="sale_quantity[]">
 																</td>
-																
+
 																<td>
 																	<input onchange="calculate_values(this)" type="number" step="0.01" class="form-control varient_sale_price" name="sale_price[]" >
 																</td>
@@ -380,7 +380,7 @@
 			}
 
 			var parent_category = $(".parent_category option:selected").val();
-			
+
 			if (!parent_category) {
 				Swal.fire(
 					'Error!',
@@ -391,7 +391,7 @@
 				$('.save_button').text('Save');
 				return false;
 			}
-			
+
 			if (!$("input[name=code]").val()) {
 				Swal.fire(
 					'Error!',
@@ -404,11 +404,11 @@
 			}
 
 			// var has_varient = $('input[name=has_varient]:checked');
-			
+
 			if ($(".add_varient").is(':checked')) {
 				var type_length = $("input[name='varient_type_ids[]']:checked").length;
 
-				
+
 				if (type_length == 0) {
 					Swal.fire(
 					'Error!',
@@ -419,14 +419,14 @@
 					$('.save_button').text('Save');
 					return false;
 				}
-				
+
 				$("input[name='sale_quantity[]']").map(function(){
-					
+
 					if (!$(this).val()) {
 						can_submit = 0;
 					}
 				}).get();
-				
+
 				$("input[name='sale_price[]']").map(function(){
 					if (!$(this).val()) {
 						can_sale_submit = 0;
@@ -437,9 +437,9 @@
 					has_varient_value = 0;
 					$("input[name='varient_type_ids[]']:checked").map(function(key, data){
 
-						
+
 						$(tr).find("td input[name='varient_name["+data.value+"][]']").map(function(){
-							
+
 							if ($(this).val()) {
 								has_varient_value = 1;
 							}
@@ -457,10 +457,10 @@
 				$('.save_button').text('');
 				$('.save_button').text('Save');
 				return false;
-			}	
-				
+			}
+
 			} else {
-				
+
 				if (!$("input[name=price]").val()) {
 					Swal.fire(
 						'Error!',
@@ -471,7 +471,7 @@
 					$('.save_button').text('Save');
 					return false;
 				}
-				
+
 				if (!$("input[name=quantity]").val()) {
 					Swal.fire(
 						'Error!',
@@ -494,7 +494,7 @@
 				$('.save_button').text('Save');
 				return false;
 			}
-			
+
 			if (can_sale_submit == 0) {
 				Swal.fire(
 					'Error!',
@@ -517,10 +517,10 @@
 				success: function (response) {
 					$('.save_button').text('');
 					$('.save_button').text('Save');
-					window.location.href = "{{route('admin.product.index')}}/?complete=1";					
+					window.location.href = "{{route('admin.product.index')}}/?complete=1";
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
-					
+
 
 					var errors = $.parseJSON(jqXHR.responseText);
 					$.each(errors, function (key, val) {
@@ -537,11 +537,11 @@
 					});
 					$('.save_button').text('');
 					$('.save_button').text('Save');
-				
+
 				}
 			});
 		});
-		
+
 		// $(".parent_category").change(function(){
 
 		// 	if(this.value){
@@ -555,13 +555,13 @@
 		// 				$('.sub_parent_category').append(response);
 		// 			},
 		// 			error: function(jqXHR, textStatus, errorThrown) {
-					
+
 		// 			}
 		// 		});
 		// 	}
 
 		// });
-		
+
 		function calculate_values(that){
 
 			var varient_sale_price = $(that).closest('tr').find('.varient_sale_price').val();
@@ -577,7 +577,7 @@
 			if (!vat) {
 				vat = 0;
 			}
-			
+
 			if (!sd) {
 				sd = 0;
 			}
@@ -600,9 +600,9 @@
 				}
 			}
 
-			$(that).closest('tr').find('.varient_discounted_price').val(discount_price.toFixed(2));
+			$(that).closest('tr').find('.varient_discounted_price').val(Math.round(discount_price.toFixed(2)));
 		}
-		
+
 		function calculate_val(){
 
 			var varient_sale_price = $("input[name=price]").val();
@@ -618,7 +618,7 @@
 			if (!vat) {
 				vat = 0;
 			}
-			
+
 			if (!sd) {
 				sd = 0;
 			}
@@ -640,10 +640,10 @@
 					discount_price = Number(discount_price) + ((Number(discount_price) * Number(vat)) / 100);
 				}
 			}
-			
-			$("input[name=total_price]").val(discount_price.toFixed(2));
+
+			$("input[name=total_price]").val(Math.round(discount_price.toFixed(2)));
 		}
-		
+
 		// $(".table-area").hide();
 
 		$(document).ready(function(){
@@ -666,7 +666,7 @@
 				$(".conditional_area").show();
 			}
 		});
-		
+
 		$('.conditional_varient').click(function() {
 			if(this.checked && this.value) {
 				$(".conditional_varient_td_"+this.value).show();
@@ -674,21 +674,21 @@
 				$(".conditional_varient_td_"+this.value).hide();
 			}
 		});
-		
+
 		$('.add_more').click(function() {
-			
+
 			var clone = $(".table-area tbody tr:first-child").clone();
 
 			$(".table-area tbody").append(clone);
 			$(".table-area tbody tr:last-child td").find('input').val('');
 		});
-		
+
 		function remove_tr(that) {
 			$(that).closest('tr').remove();
 		}
 	</script>
 
-	<script> 
+	<script>
 		var avatar5 = new KTImageInput('kt_image_5');
 		var avatar6 = new KTImageInput('kt_image_6');
 

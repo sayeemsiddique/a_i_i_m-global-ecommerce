@@ -139,9 +139,9 @@
                                             <div class="prodcut-price">
                                                 <div class="text-gray-100">{{$global_setting->currency ?? ""}}
                                                     @if ($product->has_varient == 1)
-                                                        {{$product->productVarient->min('discount_price')}}
+                                                        {{round($product->productVarient->min('discount_price'))}}
                                                     @else
-                                                        {{ $product->discount_price }}
+                                                        {{ round($product->discount_price) }}
                                                     @endif
 
                                                 </div>

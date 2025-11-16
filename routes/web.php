@@ -102,6 +102,7 @@ Route::middleware([SetLocale::class])->group(function () {
 
         Route::post('/update-cart-data', [FrontendController::class, 'update_cart_data'])->name('update_cart_data');
         Route::post('/checkout-complete', [FrontendController::class, 'checkout_complete'])->name('checkout_complete');
+        Route::post('/apply-discount', [FrontendController::class, 'apply_discount_orrder'])->name('apply_discount_orrder');
         Route::get('/notification-redirect/{id}/{type}', [FrontendController::class, 'notificationRedirect'])->name('notificationRedirect');
         Route::get('/order-list', [FrontendController::class, 'account_orders'])->name('account_orders');
         // Route::get('/address', [FrontendController::class, 'account_address'])->name('account_address');
@@ -166,8 +167,8 @@ Route::middleware([SetLocale::class])->group(function () {
                 Route::post('/store', [VoucherController::class, 'store'])->name('store');
                 Route::get('/show/{id}', [VoucherController::class, 'show'])->name('show');
                 Route::get('/edit/{id}', [VoucherController::class, 'edit'])->name('edit');
-                Route::post('/update/{id}', [VoucherController::class, 'update'])->name('update');
-                Route::get('/delete/{id}', [VoucherController::class, 'destroy'])->name('delete');
+                Route::PATCH('/update/{voucher}', [VoucherController::class, 'update'])->name('update');
+                Route::DELETE('/delete/{voucher}', [VoucherController::class, 'destroy'])->name('delete');
             });
 
 

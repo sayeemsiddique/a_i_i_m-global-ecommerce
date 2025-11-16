@@ -1845,4 +1845,34 @@ class FrontendController extends Controller
         }
     }
 
+    function apply_discount_orrder(Request $request)
+    {
+        dd($request->all());
+        $code = trim($request->discount_code);
+        $orderTotal = $request->order_total;
+
+        $voucher = Voucher::where('code', $code)->first();
+
+        if (!$voucher || !$voucher->isValid($orderTotal)) {
+            return response()->json(['error' => 'Invalid or expired voucher'], 400);
+        }
+
+        $discount = $voucher->applyDiscount($orderTotal);
+        $newTotal = max($orderTotal - $discount, 0);
+
+        // optionally store in session
+        session([
+            'voucher_code' => $code,
+            'discount' => $discount,
+            'new_total' => $newTotal,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'voucher_code' => $code,
+            'discount' => $discount,
+            'new_total' => $newTotal
+        ]);
+    }
+
 }

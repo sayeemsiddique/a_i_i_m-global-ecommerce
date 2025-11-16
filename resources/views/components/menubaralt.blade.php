@@ -287,7 +287,7 @@
                                             }
                                             @endphp
 
-                                            {{$global_setting->currency ?? ""}} <span class="cart_price_span custom_cart_price_span">{{number_format($cart_amount,2,".","")}}</span>
+                                            {{$global_setting->currency ?? ""}} <span class="cart_price_span custom_cart_price_span">{{number_format($cart_amount,0,".","")}}</span>
                                         </span>
                                     </a>
                                 </li>
@@ -452,7 +452,7 @@
                                         <span class="d-none d-xl-block font-weight-bold font-size-16 text-gray-90 ml-3">
 
 
-                                            {{$global_setting->currency ?? ""}} <span class="custom_cart_price_span">{{number_format($cart_amount,2,".","")}}</span>
+                                            {{$global_setting->currency ?? ""}} <span class="custom_cart_price_span">{{number_format($cart_amount,0,".","")}}</span>
                                         </span>
                                     </div>
                                     <div id="basicDropdownHover" class="cart-dropdown dropdown-menu dropdown-unfold border-top border-top-primary mt-3 border-width-2 border-left-0 border-right-0 border-bottom-0 left-auto right-0" aria-labelledby="basicDropdownHoverInvoker">
@@ -479,7 +479,7 @@
                                                                         </small>
                                                                     </span> <br/>
                                                                 @endif
-                                                                <span class="font-size-14">{{$cart->quantity}} × {{$global_setting->currency ?? ""}} @if ($cart->variation_id == 0){{$cart->productInfo->discount_price ?? ''}} @else {{$cart->varientInfo->discount_price ?? 0}} @endif</span>
+                                                                <span class="font-size-14">{{$cart->quantity}} × {{$global_setting->currency ?? ""}} @if ($cart->variation_id == 0){{round($cart->productInfo->discount_price ?? '')}} @else {{round($cart->varientInfo->discount_price ?? 0)}} @endif</span>
                                                             </li>
                                                             <li class="px-2 col-auto">
                                                                 <a href="#" class="text-gray-90"><i data-cart_id="{{$cart->id}}" class="remove-cart ec ec-close-remove"></i></a>
