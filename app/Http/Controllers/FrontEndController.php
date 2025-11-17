@@ -41,6 +41,7 @@ use App\Models\ShippingAddress;
 use App\Models\OrderReturn;
 use App\Models\OrderReturnDetail;
 use App\Models\Permission;
+use App\Models\Voucher;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
@@ -424,7 +425,23 @@ class FrontendController extends Controller
         foreach ($request->cart_id as $key => $cart_id) {
             $data['quantity'] = $request->quantity[$key];
             $data['update_by'] = auth()->user()->id;
-            Cart::where('id',$cart_id)->update($data);
+
+
+            $get_cart = Cart::where([
+                'id' => $cart_id,
+                'user_id' => auth()->user()->id
+            ])->first();
+
+            $check_stock = Stock::where([
+                'product_id' => $get_cart->product_id,
+                'varient_id' => $get_cart->variation_id
+            ])->first();
+
+            if (($check_stock->quantity ?? 0) < 1) {
+                return redirect()->back()->with('error', 'Stock not avaiable'); 
+            }
+            
+            $get_cart->update($data);
         }
 
         if (($request->checkout ?? 0) == 1) {
@@ -835,7 +852,6 @@ class FrontendController extends Controller
 
         $quantity = $check_stock->quantity ?? 0;
 
-
         if ($check_cart and ($request->buy_now ?? 0) == 0) {
             if (($quantity - $pending_order_quantity) < ($check_cart->quantity + $request->quantity)) {
                 // if($request->ajax()){
@@ -931,8 +947,14 @@ class FrontendController extends Controller
             $q->whereIn('status', [0,1])->where('type',2)->whereIn('delivery_status',[0,1]);
         })->sum('quantity');
 
+        $check_cart = Cart::where([
+            'product_id' => $request->product_id,
+            'variation_id' => $request->varient,
+            'user_id' => auth()->user()->id,
+        ])->first();
 
-        if (($quantity - $pending_order_quantity) < $request->quantity) {
+
+        if (($quantity - $pending_order_quantity) < ($request->quantity + ($check_cart->quantity ?? 0))) {
             if($request->ajax()){
                 return response()->json([
                     'status' => 'error',
@@ -1051,6 +1073,16 @@ class FrontendController extends Controller
     {
         // dd($request->all());
         // dd(in_array($request->delivery_option, [1,2]));
+        $productIds = [];
+        foreach ($request->cart_id as $key => $cartId) {
+            $productIds[$key] = Crypt::decryptString($cartId);
+        }
+
+        // need to check product and varient status
+        // need to check stock
+        // need to check order
+        // need to check same product in cart
+
 
         if (!in_array($request->delivery_option, [1,2])) {
             return redirect()->back()->with('error', 'Please use proper delivery option.');
@@ -1847,30 +1879,48 @@ class FrontendController extends Controller
 
     function apply_discount_orrder(Request $request)
     {
-        dd($request->all());
+        // dd($request->all());
+        // dd(explode(',',$request->cart_id));
         $code = trim($request->discount_code);
-        $orderTotal = $request->order_total;
+
+        $productIds = [];
+        foreach (explode(',',$request->cart_id) as $key => $cartId) {
+            $productIds[$key] = Crypt::decryptString($cartId);
+        }
+
+        $carts = Cart::where('user_id', auth()->user()->id)->whereIn('id',$productIds)->with('productInfo','varientInfo')->latest()->get();
+        $orderTotal = 0;
+
+        foreach ($carts as $key => $cart) {
+            if ($cart->variation_id == 0) {
+                $orderTotal +=  round(($cart->productInfo->discount_price ?? 0)  * $cart->quantity);
+            } else {
+                $orderTotal +=  round(($cart->varientInfo->discount_price ?? 0)  * $cart->quantity);
+            }
+        }
+        
 
         $voucher = Voucher::where('code', $code)->first();
+        
 
         if (!$voucher || !$voucher->isValid($orderTotal)) {
             return response()->json(['error' => 'Invalid or expired voucher'], 400);
         }
 
         $discount = $voucher->applyDiscount($orderTotal);
-        $newTotal = max($orderTotal - $discount, 0);
+        $newTotal = max($orderTotal - round($discount), 0);
 
         // optionally store in session
-        session([
-            'voucher_code' => $code,
-            'discount' => $discount,
-            'new_total' => $newTotal,
-        ]);
+        // session([
+        //     'voucher_code' => $code,
+        //     'discount' => $discount,
+        //     'new_total' => $newTotal,
+        // ]);
 
         return response()->json([
             'success' => true,
             'voucher_code' => $code,
-            'discount' => $discount,
+            'discount' => round($discount),
             'new_total' => $newTotal
         ]);
     }

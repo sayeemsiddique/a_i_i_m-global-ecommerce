@@ -216,11 +216,12 @@
 
                     <tr class="border-top space-top-2 justify-content-center">
                         <td class="text-right font-weight-bold" colspan="5">Total</td>
-                        <td data-title="Total" colspan="2">
+                        <td class="text-right" data-title="Total" colspan="1">
                             <strong><span class="amount">{{$global_setting->currency ?? ""}}
                                 {{ number_format(($in_total + $total_tax + $total_vat),0,".","") }}
                             </span></strong>
                         </td>
+                        <td></td>
                     </tr>
 
                     <tr>

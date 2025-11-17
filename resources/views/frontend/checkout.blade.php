@@ -46,6 +46,10 @@
             font-size: 0.85rem;
             color: #6c757d;
         }
+
+        .voucher_section_area {
+            display: none;
+        }
     </style>
 @endpush
 
@@ -156,6 +160,12 @@
                                                     <span class="shipping_cost" >0</span>
                                                     @endif
 
+                                                </td>
+                                            </tr>
+                                            <tr class="voucher_section_area">
+                                                <th>Voucher Discount</th>
+                                                <td>
+                                                    {{$global_setting->currency ?? ""}} <span class="voucher_discount_amount">0</span>
                                                 </td>
                                             </tr>
 
@@ -314,12 +324,21 @@
 
         $(document).ready(function(){
 
-            function updateTotal(){
+            window.updateTotal = function() {
                 var product_total = {{$product_total_price}};
+                let voucher_discount = $('.voucher_discount_amount').text();
                 var shipping_cost = $('.shipping_cost').text();
-                var in_total = parseFloat(product_total) + parseFloat(shipping_cost);
+                var in_total = (parseFloat(product_total) + parseFloat(shipping_cost)) - Number(voucher_discount);
                 $('.in_total').text(in_total.toFixed(0));
             }
+
+            // function updateTotal(){
+            //     var product_total = {{$product_total_price}};
+            //     let voucher_discount = $('.voucher_discount_amount').text();
+            //     var shipping_cost = $('.shipping_cost').text();
+            //     var in_total = (parseFloat(product_total) + parseFloat(shipping_cost)) - Number(voucher_discount);
+            //     $('.in_total').text(in_total.toFixed(0));
+            // }
             updateTotal();
 
             $('input[name="shipping_address"]').on('change', function(){
@@ -386,9 +405,17 @@
                     contentType: false,
                     method: 'POST',
                     success: function(response){
-
+                        $('.voucher_section_area').css('display','revert');
+                        if (response.success) {
+                            $('.voucher_discount_amount').text(response.discount);
+                            // $('.in_total').text(response.new_total);
+                        }
+                        updateTotal();
                     },
                     error: function() {
+                        $('.voucher_section_area').css('display','none');
+                        $('.voucher_discount_amount').text('0');
+                        updateTotal();
                         alertify.error('Failed to apply discount. Please try again.');
                     }
                 });
