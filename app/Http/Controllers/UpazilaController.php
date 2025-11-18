@@ -42,9 +42,8 @@ class UpazilaController extends Controller
     {
         $user = Auth::user();
         if(Gate::allows('add_upazila', $user)){
-            $menu_expand = route('admin.upazila.index');
             $districts = District::where('status',1)->with('divisionInfo')->latest()->get();
-            return view('backend.admin.upazila.create', compact("districts", 'menu_expand'));
+            return view('backend.admin.upazila.create', compact("districts"));
         }else{
             return abort(403, "You don't have permission..!");
         }
@@ -59,7 +58,7 @@ class UpazilaController extends Controller
                 'name' => 'required|unique:upazilas',
             ]);
             $data = $request->all();
-            $data['created_by'] = auth()->user()->id;
+            // $data['created_by'] = auth()->user()->id;
             Upazila::create($data);
 
             return back()->with('success', 'New Upazila added successfully..!');
@@ -74,8 +73,7 @@ class UpazilaController extends Controller
         $user = Auth::user();
         if(Gate::allows('view_upazila', $user)){
             $upazila = Upazila::findOrFail($id);
-            $menu_expand = route('admin.upazila.index');
-            return view('backend.admin.upazila.view', compact("upazila","menu_expand"));
+            return view('backend.admin.upazila.view', compact("upazila"));
         }else{
             return abort(403, "You don't have permission..!");
         }
@@ -86,10 +84,9 @@ class UpazilaController extends Controller
     {
         $user = Auth::user();
         if(Gate::allows('edit_upazila', $user)){
-            $menu_expand = route('admin.upazila.index');
             $upazila = Upazila::with('districtInfo.divisionInfo')->where('id', $id)->first();
             $districts = District::where('status',1)->with('divisionInfo')->latest()->get();
-            return view('backend.admin.upazila.edit', compact("districts", 'menu_expand', 'upazila'));
+            return view('backend.admin.upazila.edit', compact("districts", 'upazila'));
         }else{
             return abort(403, "You don't have permission..!");
         }
@@ -105,7 +102,7 @@ class UpazilaController extends Controller
 
             $data = $request->all();
             $data['status'] = $request->status ?? 0;
-            $data['updated_by'] = auth()->user()->id;
+            // $data['updated_by'] = auth()->user()->id;
             Upazila::find($id)->update($data);
 
             return back()->with('success', 'Upazila updated successfully..!');

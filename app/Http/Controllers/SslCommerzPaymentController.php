@@ -13,6 +13,7 @@ use App\Models\OrderDetail;
 use App\Models\Payment;
 use App\Models\Permission;
 use App\Models\User;
+use App\Models\Voucher;
 use Illuminate\Support\Facades\Mail;
 
 class SslCommerzPaymentController extends Controller
@@ -36,6 +37,8 @@ class SslCommerzPaymentController extends Controller
         $tracking_code = date("yhis");
 
 
+
+
         if (count($request->cart_id) == 0) {
             return back()->with('error', "Your cart is empty");
         }
@@ -57,7 +60,6 @@ class SslCommerzPaymentController extends Controller
             return back()->with('error', "Shipping address not found");
         }
 
-
         $product_total_price = 0; // total sale price
         $product_before_discount = 0;
         foreach ($carts as $key => $cart) {
@@ -70,6 +72,11 @@ class SslCommerzPaymentController extends Controller
             }
         }
 
+        $voucher = Voucher::where('code', $request->voucher_discount_amount_code)->first();
+
+        $voucher_discount = round($voucher->applyDiscount($product_total_price) ?? 0);
+
+
         if (!auth()->user()->email) {
             return back()->with('error', "Please set your email address before Pay With SSLCOMMERZ Gateway");
         }
@@ -79,10 +86,10 @@ class SslCommerzPaymentController extends Controller
         $order_data['user_id'] = auth()->user()->id;
         $order_data['status'] = 3;
         $order_data['payment_status'] = 1;
-        $order_data['total_price'] = $product_total_price;
-        $order_data['grand_total_price'] = $product_total_price + ($shipping_address->divisionInfo->shipping_cost ?? 0);
+        $order_data['total_price'] = $product_total_price - $voucher_discount;
+        $order_data['grand_total_price'] = $product_total_price + ($shipping_address->divisionInfo->shipping_cost ?? 0) - $voucher_discount;
         $order_data['discount_amount'] = 0;
-        $order_data['coupon_discount'] = 0;
+        // $order_data['coupon_discount'] = 0;
         $order_data['shipping_cost'] = $shipping_address->divisionInfo->shipping_cost ?? 0;
         $order_data['type'] = 2;
         $order_data['vat'] = $request->vat ?? 0;
@@ -91,7 +98,7 @@ class SslCommerzPaymentController extends Controller
         $order_data['ship_different_address'] = 0;
         $order_data['delivery_status'] = 0;
         $order_data['shipping_area'] = $request->shipping_area ?? 0;
-        $order_data['personal_vehicle'] = $request->personal_vehicle ?? 0;
+        // $order_data['personal_vehicle'] = $request->personal_vehicle ?? 0;
         $order_data['delivery_option'] = $request->delivery_option ?? 0;
 
 
@@ -138,6 +145,11 @@ class SslCommerzPaymentController extends Controller
         $order_data['created_at'] = now();
         $order_data['updated_at'] = now();
         $order_data['update_by'] = auth()->user()->id;
+        $order_data['voucher_type'] = $voucher->type ?? '';
+        $order_data['voucher_value'] = $voucher->value ?? '';
+        $order_data['voucher_discount'] = $voucher_discount;
+        $order_data['voucher_id'] = $voucher->id ?? '';
+        $order_data['voucher_code'] = $voucher->code ?? '';
 
 
         #Before  going to initiate the payment order status need to insert or update as Pending.

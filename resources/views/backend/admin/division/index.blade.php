@@ -56,7 +56,6 @@
                                                                 <div class="col-lg-12">
                                                                     <div class="hstack gap-2 justify-content-end">
                                                                         <button type="submit" class="btn btn-primary">{{__('Save')}}</button>
-
                                                                     </div>
                                                                 </div><!--end col-->
                                                             </div><!--end row-->

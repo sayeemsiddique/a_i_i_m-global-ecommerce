@@ -391,8 +391,8 @@ class OrderReturnController extends Controller
                 unset($data['phone']);
                 unset($data['ship_different_address']);
                 unset($data['delivery_status']);
-                unset($data['coupon_discount']);
-                unset($data['personal_vehicle']);
+                // unset($data['coupon_discount']);
+                // unset($data['personal_vehicle']);
                 unset($data['code']);
                 unset($data['stage']);
                 unset($data['return_status']);

@@ -166,6 +166,7 @@
                                                 <th>Voucher Discount</th>
                                                 <td>
                                                     {{$global_setting->currency ?? ""}} <span class="voucher_discount_amount">0</span>
+                                                    <input type="text" class="d-none" name="voucher_discount_amount_code" value="">
                                                 </td>
                                             </tr>
 
@@ -408,6 +409,7 @@
                         $('.voucher_section_area').css('display','revert');
                         if (response.success) {
                             $('.voucher_discount_amount').text(response.discount);
+                            $("input[name='voucher_discount_amount_code']").val(response.voucher_code);
                             // $('.in_total').text(response.new_total);
                         }
                         updateTotal();
@@ -415,6 +417,7 @@
                     error: function() {
                         $('.voucher_section_area').css('display','none');
                         $('.voucher_discount_amount').text('0');
+                        $("input[name='voucher_discount_amount_code']").val('')
                         updateTotal();
                         alertify.error('Failed to apply discount. Please try again.');
                     }

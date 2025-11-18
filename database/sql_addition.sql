@@ -9,3 +9,11 @@ ALTER TABLE `orders` ADD `currency` TEXT NULL AFTER `remark`;
 ALTER TABLE `order_return_details` ADD `stock_status` TINYINT NULL COMMENT '1=add to stock,0=no' AFTER `varient_id`;
 
 ALTER TABLE `settings` ADD `currency` TINYTEXT NULL AFTER `copyright`;
+
+
+ALTER TABLE `orders` CHANGE `tds_amount` `voucher_type` TINYTEXT NULL DEFAULT NULL;
+ALTER TABLE `orders` CHANGE `tds` `voucher_value` DECIMAL(18,2) NULL DEFAULT NULL COMMENT '%';
+ALTER TABLE `orders` CHANGE `coupon_discount` `voucher_discount` DECIMAL(18,2) NULL DEFAULT NULL;
+ALTER TABLE `orders` CHANGE `coupon_code_id` `voucher_id` INT(11) NULL DEFAULT NULL COMMENT 'voucher_id';
+ALTER TABLE `orders` CHANGE `vds` `voucher_code` TINYTEXT NULL DEFAULT NULL COMMENT '%';
+ALTER TABLE `orders` CHANGE `voucher_code` `voucher_code` TINYTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;

@@ -438,9 +438,9 @@ class FrontendController extends Controller
             ])->first();
 
             if (($check_stock->quantity ?? 0) < 1) {
-                return redirect()->back()->with('error', 'Stock not avaiable'); 
+                return redirect()->back()->with('error', 'Stock not avaiable');
             }
-            
+
             $get_cart->update($data);
         }
 
@@ -1082,12 +1082,38 @@ class FrontendController extends Controller
         // need to check stock
         // need to check order
         // need to check same product in cart
+        $carts = Cart::where('user_id', auth()->user()->id)->whereIn('id',$productIds)->with('productInfo','varientInfo')->latest()->get();
+
+        if (count($carts) == 0) {
+            return back()->with('error', "Your cart is empty");
+        }
+
+        $product_total_price = 0; // total sale price
+        $product_before_discount = 0;
+        foreach ($carts as $key => $cart) {
+            if ($cart->variation_id == 0) {
+                $product_total_price +=  ($cart->productInfo->discount_price ?? 0)  * $cart->quantity;
+                $product_before_discount +=  ($cart->productInfo->price ?? 0)  * $cart->quantity;
+            } else {
+                $product_total_price +=  ($cart->varientInfo->discount_price ?? 0)  * $cart->quantity;
+                $product_before_discount +=  ($cart->varientInfo->price ?? 0)  * $cart->quantity;
+            }
+        }
+
+        if ($request->voucher_discount_amount_code != '') {
+            $voucher = Voucher::where('code', $request->voucher_discount_amount_code)->first();
+            if (!$voucher || !$voucher->isValid($product_total_price)) {
+                return redirect()->back()->with('error', 'Invalid or expired voucher');
+            }
+        } else {
+            $voucher = null;
+        }
 
 
         if (!in_array($request->delivery_option, [1,2])) {
             return redirect()->back()->with('error', 'Please use proper delivery option.');
         }
-
+// dd($request->all());
         if ($request->delivery_option == 2) {
 
             $sslCommerz = new SslCommerzPaymentController();
@@ -1095,49 +1121,32 @@ class FrontendController extends Controller
 
         } else if ($request->delivery_option == 1) {
 
-            DB::transaction(function () use ($request) {
+            DB::transaction(function () use ($request,$carts,$product_total_price,$product_before_discount,$voucher,$productIds) {
                 $data = $request->all();
                 // dd($data);
 
+                $voucher_discount = round($voucher->applyDiscount($product_total_price) ?? 0);
 
-                $productIds = [];
-                foreach ($request->cart_id as $key => $cartId) {
-                    $productIds[$key] = Crypt::decryptString($cartId);
-                }
                 // shipping_area  = 1 = inside dhaka
                 // shipping_area  = 2 = outside dhaka
-                $carts = Cart::where('user_id', auth()->user()->id)->whereIn('id',$productIds)->with('productInfo','varientInfo')->latest()->get();
+
 
                 $shipping_address = ShippingAddress::where('id', $request->shipping_address)->where('user_id', auth()->user()->id)->latest()->first();
                 if (!$shipping_address) {
                     return back()->with('error', "Shipping address not found");
                 }
 
-                if (count($carts) == 0) {
-                    return back()->with('error', "Your cart is empty");
-                }
 
-                $product_total_price = 0; // total sale price
-                $product_before_discount = 0;
-                foreach ($carts as $key => $cart) {
-                    if ($cart->variation_id == 0) {
-                        $product_total_price +=  ($cart->productInfo->discount_price ?? 0)  * $cart->quantity;
-                        $product_before_discount +=  ($cart->productInfo->price ?? 0)  * $cart->quantity;
-                    } else {
-                        $product_total_price +=  ($cart->varientInfo->discount_price ?? 0)  * $cart->quantity;
-                        $product_before_discount +=  ($cart->varientInfo->price ?? 0)  * $cart->quantity;
-                    }
-                }
 
                 $tracking_code = date("yhis");
                 $order_data['tracking_code'] = $tracking_code;
                 $order_data['user_id'] = auth()->user()->id;
                 $order_data['status'] = 0;
                 $order_data['payment_status'] = 1; // 1 means pending helper function check
-                $order_data['total_price'] = $product_total_price;
-                $order_data['grand_total_price'] = $product_total_price + ($shipping_address->divisionInfo->shipping_cost ?? 0);
+                $order_data['total_price'] = $product_total_price - $voucher_discount;
+                $order_data['grand_total_price'] = $product_total_price + ($shipping_address->divisionInfo->shipping_cost ?? 0) - $voucher_discount;
                 $order_data['discount_amount'] = 0;
-                $order_data['coupon_discount'] = 0;
+                // $order_data['coupon_discount'] = 0;
                 $order_data['shipping_cost'] = $shipping_address->divisionInfo->shipping_cost ?? 0;
                 $order_data['type'] = 2;
                 $order_data['vat'] = $request->vat ?? 0;
@@ -1146,9 +1155,14 @@ class FrontendController extends Controller
                 $order_data['ship_different_address'] = 0;
                 $order_data['delivery_status'] = 0;
                 $order_data['shipping_area'] = $request->shipping_area ?? 0;
-                $order_data['personal_vehicle'] = $request->personal_vehicle ?? 0;
+                // $order_data['personal_vehicle'] = $request->personal_vehicle ?? 0;
                 $order_data['delivery_option'] = $request->delivery_option ?? 0;
                 $order_data['transaction_id'] = $tracking_code;
+                $order_data['voucher_type'] = $voucher->type ?? '';
+                $order_data['voucher_value'] = $voucher->value ?? '';
+                $order_data['voucher_discount'] = $voucher_discount;
+                $order_data['voucher_id'] = $voucher->id ?? '';
+                $order_data['voucher_code'] = $voucher->code ?? '';
 
 
 
@@ -1898,10 +1912,10 @@ class FrontendController extends Controller
                 $orderTotal +=  round(($cart->varientInfo->discount_price ?? 0)  * $cart->quantity);
             }
         }
-        
+
 
         $voucher = Voucher::where('code', $code)->first();
-        
+
 
         if (!$voucher || !$voucher->isValid($orderTotal)) {
             return response()->json(['error' => 'Invalid or expired voucher'], 400);

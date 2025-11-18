@@ -205,7 +205,7 @@
 																		@endphp
 
 																		<td class="text-primary pt-7 text-right align-middle">
-																			{{$global_setting->currency ?? ""}} {{ number_format($sub_total, 2, ".", "") }}
+																			{{$global_setting->currency ?? ""}} {{ number_format($sub_total, 0, ".", "") }}
 																		</td>
 																	</tr>
 
@@ -217,18 +217,25 @@
 																<!--Show sub-total/total product price-->
 																<tr>
 																	<th class="text-right" colspan="2">Subtotal</th>
-																	<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->total_price, 2, ".", "") }}</th>
+																	<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->total_price, 0, ".", "") }}</th>
 																</tr>
 
 																<tr>
 																	<th class="text-right" colspan="2">Shipping Cost</th>
-																	<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->shipping_cost, 2, ".", "") }}</th>
+																	<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->shipping_cost, 0, ".", "") }}</th>
 																</tr>
+
+                                                                @if ($order->voucher_id > 0 and $order->voucher_discount > 0)
+                                                                    <tr>
+                                                                        <td colspan="2" class="text-right"><strong>Voucher Discount</strong></td>
+                                                                        <td colspan="1" class="text-right">{{ number_format($order->voucher_discount, 0, '.', '') }}</td>
+                                                                    </tr>
+                                                                @endif
 
 																<!--Show total price-->
 																<tr style="border-top: 1px solid #000;">
 																	<th class="text-right" colspan="2">Total</th>
-																	<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->grand_total_price, 2, ".", "") }}</th>
+																	<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->grand_total_price, 0, ".", "") }}</th>
 																</tr>
 
 															</tbody>
@@ -403,14 +410,14 @@
 										<td style="border: 1px solid #000" align="middle">
 											@if ($od->weight and $od->unit)
 												@if ($od->unit == 1)
-													{{number_format((($od->quantity * $od->weight)),2,'.','')}} কেজি
+													{{number_format((($od->quantity * $od->weight)),0,'.','')}} কেজি
 												@elseif ($od->unit == 2)
-													{{number_format(($od->quantity * $od->weight),2,'.','')}} মেট্রিক টন
+													{{number_format(($od->quantity * $od->weight),0,'.','')}} মেট্রিক টন
 												@endif
 											@endif
 										</td>
 
-										<td style="border: 1px solid #000" align="middle">{{ number_format($od->f_price, 2, '.', '') }}</td>
+										<td style="border: 1px solid #000" align="middle">{{ number_format($od->f_price, 0, '.', '') }}</td>
 
 										{{-- @if ($od->productInfo->has_varient == 1)
 											<td style="border: 1px solid #000" align="middle">{{ $singlePrice = $od->varient->price ?? 0 }}</td>
@@ -418,7 +425,7 @@
 											<td style="border: 1px solid #000" align="middle">{{ $singlePrice = $od->productInfo->price ?? 0 }}</td>
 										@endif --}}
 
-										<td style="border: 1px solid #000" align="middle">{{ number_format(($totalQtyPrice = $qty * $od->f_price), 2, '.', '') }}</td>
+										<td style="border: 1px solid #000" align="middle">{{ number_format(($totalQtyPrice = $qty * $od->f_price), 0, '.', '') }}</td>
 
 										@php
 											// store all product price
@@ -438,7 +445,7 @@
 												$productWithSdPrice = $totalQtyPrice + $productSdValue;
 											@endphp --}}
 
-											{{  number_format($od->sd_total, 2, '.', '') }}
+											{{  number_format($od->sd_total, 0, '.', '') }}
 										</td>
 
 										<td style="border: 1px solid #000" align="middle">
@@ -462,11 +469,11 @@
 												$productWithSdPriceVatPrice = ($productWithSdPrice + $productVatValue) * $qty;
 											@endphp --}}
 
-											{{ number_format($od->vat_total, 2, '.', '') }}
+											{{ number_format($od->vat_total, 0, '.', '') }}
 										</td>
 
 										{{-- <td style="border: 1px solid #000" align="middle">{{ $productWithSdPriceVatPrice }}</td> --}}
-										<td style="border: 1px solid #000" align="middle">{{ number_format(($singlePrice = $od->price * $qty), 2, '.', '') }}</td>
+										<td style="border: 1px solid #000" align="middle">{{ number_format(($singlePrice = $od->price * $qty), 0, '.', '') }}</td>
 									</tr>
 
 									@php
@@ -476,7 +483,7 @@
 								@endforeach
 									{{-- <tr>
 										<th colspan="9" class="text-right">উপ-মোট মূল্য:</th>
-										<th class="text-right">{{number_format($allProductPrice ?? 0, 2, '.', '')}}</th>
+										<th class="text-right">{{number_format($allProductPrice ?? 0, 0, '.', '')}}</th>
 									</tr>
 
 									<tr>
@@ -486,33 +493,33 @@
 
 										@if (($userType == 2) || ($userType == 3))
 											<th class="text-right" colspan="9">ছাড় ({{$order->user_type_discount ?? 0}} %)</th>
-											<th class="text-right">{{ number_format($order->discount_amount ?? 0, 2, '.', '') }}</th>
+											<th class="text-right">{{ number_format($order->discount_amount ?? 0, 0, '.', '') }}</th>
 										@else
 											<th class="text-right" colspan="9">ছাড় ({{$order->user_type_discount ?? 0}} %)</th>
-											<th class="text-right">{{ number_format($order->discount_amount ?? 0, 2, '.', '') }}</th>
+											<th class="text-right">{{ number_format($order->discount_amount ?? 0, 0, '.', '') }}</th>
 										@endif
 									</tr>
 
 									@if ($order->discount_on_amount == 2)
 										<tr>
 											<th class="text-right" colspan="9">ক্রয় কমিশন ({{ $order->discount_percent_in_total ?? 0 }} %)</th>
-											<th class="text-right">{{ number_format($order->discount_amount_in_total ?? 0, 2, '.', '')}}</th>
+											<th class="text-right">{{ number_format($order->discount_amount_in_total ?? 0, 0, '.', '')}}</th>
 										</tr>
 									@endif
 
 									<tr>
 										<th class="text-right" colspan="9">প্যাকিং চার্জ ({{$order->packType ? $order->packType->name : 'N/A'}})</th>
-										<th class="text-right">{{ number_format($order->packing_amount ?? 0, 2, '.', '') }}</th>
+										<th class="text-right">{{ number_format($order->packing_amount ?? 0, 0, '.', '') }}</th>
 									</tr>
 
 									<tr>
 										<th class="text-right" colspan="9">পরিবহন খরচ</th>
-										<th class="text-right">{{ number_format($order->courier_cost ?? 0, 2, '.', '') }}</th>
+										<th class="text-right">{{ number_format($order->courier_cost ?? 0, 0, '.', '') }}</th>
 									</tr>
 
 									<tr style="border-top: 1px solid #000;">
 										<th class="text-right" colspan="9">মোট মূল্য</th>
-										<th class="text-right">{{ number_format($order->grand_total_price, 2, ".", "") }}</th>
+										<th class="text-right">{{ number_format($order->grand_total_price, 0, ".", "") }}</th>
 									</tr> --}}
 							</tbody>
 						</table>
@@ -525,7 +532,7 @@
 							<p>সীল : <span></span> </p>
 							<p>উৎসে কর্তনযোগ্য সরবরাহের ক্ষেত্রে ফরমটি সমন্বিত কর চালানপত্র ও উৎসে কর কর্তন সনদপত্র হিসেবে বিবেচিত হইবে এবং উহা উৎসে কর কর্তনযোগ্য সরবরাহের ক্ষেত্রে প্রযোজ্য হবে।</p>
 							<br><br><br>
-							<p>{{ number_format($allProductPrice, 2, ".", "").' TK' ?? 'Undefined Product Price, SD or VAT' }}</p>
+							<p>{{ number_format($allProductPrice, 0, ".", "").' TK' ?? 'Undefined Product Price, SD or VAT' }}</p>
 							<p><span style="border-top: 1px solid #000"><b>সকল প্রকার কর ব্যতীত মূল্য</b></span></p>
 						</div>
 
@@ -657,14 +664,14 @@
 									<td style="border: 1px solid #000" align="middle">
 										@if ($od->weight and $od->unit)
 											@if ($od->unit == 1)
-												{{number_format((($od->quantity * $od->weight)),2,'.','')}} কেজি
+												{{number_format((($od->quantity * $od->weight)),0,'.','')}} কেজি
 											@elseif ($od->unit == 2)
-												{{number_format(($od->quantity * $od->weight),2,'.','')}} মেট্রিক টন
+												{{number_format(($od->quantity * $od->weight),0,'.','')}} মেট্রিক টন
 											@endif
 										@endif
 									</td>
 
-									<td style="border: 1px solid #000" align="middle">{{ number_format($od->f_price, 2, '.', '') }}</td>
+									<td style="border: 1px solid #000" align="middle">{{ number_format($od->f_price, 0, '.', '') }}</td>
 
 									{{-- @if ($od->productInfo->has_varient == 1)
 										<td style="border: 1px solid #000" align="middle">{{ $singlePrice = $od->varient->price ?? 0 }}</td>
@@ -672,7 +679,7 @@
 										<td style="border: 1px solid #000" align="middle">{{ $singlePrice = $od->productInfo->price ?? 0 }}</td>
 									@endif --}}
 
-									<td style="border: 1px solid #000" align="middle">{{ number_format(($totalQtyPrice = $qty * $od->f_price), 2, '.', '') }}</td>
+									<td style="border: 1px solid #000" align="middle">{{ number_format(($totalQtyPrice = $qty * $od->f_price), 0, '.', '') }}</td>
 
 									@php
 										// store all product price
@@ -692,7 +699,7 @@
 											$productWithSdPrice = $totalQtyPrice + $productSdValue;
 										@endphp --}}
 
-										{{  number_format($od->sd_total, 2, '.', '') }}
+										{{  number_format($od->sd_total, 0, '.', '') }}
 									</td>
 
 									<td style="border: 1px solid #000" align="middle">
@@ -716,11 +723,11 @@
 											$productWithSdPriceVatPrice = ($productWithSdPrice + $productVatValue) * $qty;
 										@endphp --}}
 
-										{{ number_format($od->vat_total, 2, '.', '') }}
+										{{ number_format($od->vat_total, 0, '.', '') }}
 									</td>
 
 									{{-- <td style="border: 1px solid #000" align="middle">{{ $productWithSdPriceVatPrice }}</td> --}}
-									<td style="border: 1px solid #000" align="middle">{{ number_format(($singlePrice = $od->price * $qty), 2, '.', '') }}</td>
+									<td style="border: 1px solid #000" align="middle">{{ number_format(($singlePrice = $od->price * $qty), 0, '.', '') }}</td>
 								</tr>
 
 								@php
@@ -730,7 +737,7 @@
 							@endforeach
 									{{-- <tr>
 										<th colspan="9" class="text-right">উপ-মোট মূল্য:</th>
-										<th class="text-right">{{number_format($allProductPrice ?? 0, 2, '.', '')}}</th>
+										<th class="text-right">{{number_format($allProductPrice ?? 0, 0, '.', '')}}</th>
 									</tr>
 
 									<tr>
@@ -740,33 +747,33 @@
 
 										@if (($userType == 2) || ($userType == 3))
 											<th class="text-right" colspan="9">ছাড় ({{$order->user_type_discount ?? 0}} %)</th>
-											<th class="text-right">{{ number_format($order->discount_amount ?? 0, 2, '.', '') }}</th>
+											<th class="text-right">{{ number_format($order->discount_amount ?? 0, 0, '.', '') }}</th>
 										@else
 											<th class="text-right" colspan="9">ছাড় ({{$order->user_type_discount ?? 0}} %)</th>
-											<th class="text-right">{{ number_format($order->discount_amount ?? 0, 2, '.', '') }}</th>
+											<th class="text-right">{{ number_format($order->discount_amount ?? 0, 0, '.', '') }}</th>
 										@endif
 									</tr>
 
 									@if ($order->discount_on_amount == 2)
 										<tr>
 											<th class="text-right" colspan="9">ক্রয় কমিশন ({{ $order->discount_percent_in_total ?? 0 }} %)</th>
-											<th class="text-right">{{ number_format($order->discount_amount_in_total ?? 0, 2, '.', '')}}</th>
+											<th class="text-right">{{ number_format($order->discount_amount_in_total ?? 0, 0, '.', '')}}</th>
 										</tr>
 									@endif
 
 									<tr>
 										<th class="text-right" colspan="9">প্যাকিং চার্জ ({{$order->packType ? $order->packType->name : 'N/A'}})</th>
-										<th class="text-right">{{ number_format($order->packing_amount ?? 0, 2, '.', '') }}</th>
+										<th class="text-right">{{ number_format($order->packing_amount ?? 0, 0, '.', '') }}</th>
 									</tr>
 
 									<tr>
 										<th class="text-right" colspan="9">পরিবহন খরচ</th>
-										<th class="text-right">{{ number_format($order->courier_cost ?? 0, 2, '.', '') }}</th>
+										<th class="text-right">{{ number_format($order->courier_cost ?? 0, 0, '.', '') }}</th>
 									</tr>
 
 									<tr style="border-top: 1px solid #000;">
 										<th class="text-right" colspan="9">মোট মূল্য</th>
-										<th class="text-right">{{ number_format($order->grand_total_price, 2, ".", "") }}</th>
+										<th class="text-right">{{ number_format($order->grand_total_price, 0, ".", "") }}</th>
 									</tr> --}}
 							</tbody>
 						</table>
@@ -779,7 +786,7 @@
 							<p>সীল : <span></span> </p>
 							<p>উৎসে কর্তনযোগ্য সরবরাহের ক্ষেত্রে ফরমটি সমন্বিত কর চালানপত্র ও উৎসে কর কর্তন সনদপত্র হিসেবে বিবেচিত হইবে এবং উহা উৎসে কর কর্তনযোগ্য সরবরাহের ক্ষেত্রে প্রযোজ্য হবে।</p>
 							<br><br><br>
-							<p>{{ number_format($allProductPrice, 2, ".", "").' TK' ?? 'Undefined Product Price, SD or VAT' }}</p>
+							<p>{{ number_format($allProductPrice, 0, ".", "").' TK' ?? 'Undefined Product Price, SD or VAT' }}</p>
 							<p><span style="border-top: 1px solid #000"><b>সকল প্রকার কর ব্যতীত মূল্য</b></span></p>
 						</div>
 

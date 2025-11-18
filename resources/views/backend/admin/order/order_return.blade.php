@@ -97,9 +97,9 @@
                                                         @endif
 
                                                     </td>
-                                                    <td>{{ number_format(($orderProduct->quantity - $return_quantity), 2, '.', '') }}</td>
-                                                    <td>{{ number_format($orderProduct->price, 2, '.', '') }}</td>
-                                                    <td>{{ number_format((($orderProduct->quantity - $return_quantity) * $orderProduct->price), 2, '.', '') }}</td>
+                                                    <td>{{ number_format(($orderProduct->quantity - $return_quantity), 0, '.', '') }}</td>
+                                                    <td>{{ number_format($orderProduct->price, 0, '.', '') }}</td>
+                                                    <td>{{ number_format((($orderProduct->quantity - $return_quantity) * $orderProduct->price), 0, '.', '') }}</td>
                                                     <td>
                                                         <input type="number" min="0" max="{{ ($orderProduct->quantity - $return_quantity) }}" name="details_id[{{Crypt::encryptString($orderProduct->id)}}]" class="form-control" placeholder="Return Quantity" />
                                                     </td>
@@ -109,11 +109,19 @@
 
                                         <tr>
                                             <td colspan="4" class="text-right"><strong>Shipping Cost</strong></td>
-                                            <td colspan="1" class="text-right">{{ number_format($order->shipping_cost, 2, '.', '') }}</td>
+                                            <td colspan="1" class="text-right">{{ number_format($order->shipping_cost, 0, '.', '') }}</td>
                                         </tr>
+
+                                        @if ($order->voucher_id > 0 and $order->voucher_discount > 0)
+                                            <tr>
+                                                <td colspan="4" class="text-right"><strong>Voucher Discount</strong></td>
+                                                <td colspan="1" class="text-right">{{ number_format($order->voucher_discount, 0, '.', '') }}</td>
+                                            </tr>
+                                        @endif
+
                                         <tr>
                                             <td colspan="4" class="text-right"><strong>Grand Total</strong></td>
-                                            <td colspan="1" class="text-right">{{ number_format($order->grand_total_price, 2, '.', '') }}</td>
+                                            <td colspan="1" class="text-right">{{ number_format($order->grand_total_price, 0, '.', '') }}</td>
                                         </tr>
                                         <tr>
                                             <td colspan="4" class="text-right"><strong>Payment Status</strong></td>

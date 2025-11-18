@@ -654,7 +654,7 @@
                                             <i class="far fa-dot-circle">
                                                 <span></span>
                                             </i>
-                                            <span class="menu-text">Product Inventory Report</span>
+                                            <span class="menu-text">Product Inventory</span>
                                         </a>
                                     </li>
                                 @endcan
@@ -665,7 +665,7 @@
                                             <i class="far fa-dot-circle">
                                                 <span></span>
                                             </i>
-                                            <span class="menu-text">Product Stock History Report</span>
+                                            <span class="menu-text">Product Stock History</span>
                                         </a>
                                     </li>
                                 @endcan
@@ -687,7 +687,7 @@
                                             <i class="far fa-dot-circle">
                                                 <span></span>
                                             </i>
-                                            <span class="menu-text">Store Inventory Report</span>
+                                            <span class="menu-text">Store Inventory</span>
                                         </a>
                                     </li>
                                 @endcan
@@ -698,7 +698,7 @@
                                             <i class="far fa-dot-circle">
                                                 <span></span>
                                             </i>
-                                            <span class="menu-text">Sales Report</span>
+                                            <span class="menu-text">Sales</span>
                                         </a>
                                     </li>
                                 @endcan

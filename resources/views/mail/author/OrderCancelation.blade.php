@@ -79,7 +79,7 @@
               <td style="vertical-align:top; text-align:right;">
                 {{-- <div class="meta" style="font-family:Arial,Helvetica,sans-serif;">
                   <strong>Order total</strong><br>
-                  <span style="font-size:16px; font-weight:700;">{{$global_setting->currency ?? ""}} {{ number_format($order->grand_total_price, 2, ".", "") }}</span><br>
+                  <span style="font-size:16px; font-weight:700;">{{$global_setting->currency ?? ""}} {{ number_format($order->grand_total_price, 0, ".", "") }}</span><br>
                   <span class="muted">Payment: {{payment_method}}</span><br>
                   <span class="muted">Shipping: {{shipping_method}}</span>
                 </div> --}}
@@ -119,7 +119,7 @@
                         @php
                             $sub_total = $order_detail->price * $order_detail->quantity;
                         @endphp
-                        {{ number_format($sub_total, 2, ".", "") }}
+                        {{ number_format($sub_total, 0, ".", "") }}
                     </div>
                   </td>
                 </tr>
@@ -131,15 +131,15 @@
               <tfoot>
                 <tr class="total-row">
                   <td colspan="2" style="padding:12px; text-align:right;">Subtotal</td>
-                  <td style="padding:12px; text-align:right;">{{$global_setting->currency ?? ""}} {{ number_format($order->total_price, 2, ".", "") }}</td>
+                  <td style="padding:12px; text-align:right;">{{$global_setting->currency ?? ""}} {{ number_format($order->total_price, 0, ".", "") }}</td>
                 </tr>
                 {{-- <tr class="total-row">
                   <td colspan="2" style="padding:12px; text-align:right;">Shipping Cost</td>
-                  <td style="padding:12px; text-align:right;">{{$global_setting->currency ?? ""}} {{ number_format($order->shipping_cost, 2, ".", "") }}</td>
+                  <td style="padding:12px; text-align:right;">{{$global_setting->currency ?? ""}} {{ number_format($order->shipping_cost, 0, ".", "") }}</td>
                 </tr> --}}
                 <tr class="total-row">
                   <td colspan="2" style="padding:12px; text-align:right; font-size:16px;">Total</td>
-                  <td style="padding:12px; text-align:right; font-size:16px; font-weight:700;">{{$global_setting->currency ?? ""}} {{ number_format($order->grand_total_price, 2, ".", "") }}</td>
+                  <td style="padding:12px; text-align:right; font-size:16px; font-weight:700;">{{$global_setting->currency ?? ""}} {{ number_format($order->grand_total_price, 0, ".", "") }}</td>
                 </tr>
               </tfoot>
             </table>
