@@ -108,7 +108,7 @@ class OrderReturnController extends Controller
                             'varient_id' => $order_detail->varient_id,
                             'product_id' => $order_detail->product_id,
                         ])->whereHas('orderReturnInfo', function($q) use ($order) {
-                            $q->whereIn('status', [0])->where('order_id', $order->id);
+                            $q->whereIn('status', [0,1])->where('order_id', $order->id);
                         })->sum('quantity');
 
                         if (($check_already_returned + $quantity) > $order_detail->quantity) {

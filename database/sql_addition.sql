@@ -17,3 +17,11 @@ ALTER TABLE `orders` CHANGE `coupon_discount` `voucher_discount` DECIMAL(18,2) N
 ALTER TABLE `orders` CHANGE `coupon_code_id` `voucher_id` INT(11) NULL DEFAULT NULL COMMENT 'voucher_id';
 ALTER TABLE `orders` CHANGE `vds` `voucher_code` TINYTEXT NULL DEFAULT NULL COMMENT '%';
 ALTER TABLE `orders` CHANGE `voucher_code` `voucher_code` TINYTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
+
+
+ALTER TABLE `order_returns` CHANGE `tds_amount` `voucher_type` TINYTEXT NULL DEFAULT NULL;
+ALTER TABLE `order_returns` CHANGE `tds` `voucher_value` DECIMAL(18,2) NULL DEFAULT NULL COMMENT '%';
+ALTER TABLE `order_returns` ADD `voucher_discount` DECIMAL(18,2) NULL AFTER `voucher_type`;
+ALTER TABLE `order_returns` ADD `voucher_id` INT NULL AFTER `voucher_discount`;
+ALTER TABLE `order_returns` CHANGE `vds` `voucher_code` TINYTEXT NULL DEFAULT NULL COMMENT '%';
+ALTER TABLE `order_returns` CHANGE `voucher_code` `voucher_code` TINYTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;

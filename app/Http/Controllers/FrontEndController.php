@@ -1123,9 +1123,8 @@ class FrontendController extends Controller
 
             DB::transaction(function () use ($request,$carts,$product_total_price,$product_before_discount,$voucher,$productIds) {
                 $data = $request->all();
-                // dd($data);
 
-                $voucher_discount = round($voucher->applyDiscount($product_total_price) ?? 0);
+                $voucher_discount = $voucher ? round($voucher->applyDiscount($product_total_price) ?? 0) : 0;
 
                 // shipping_area  = 1 = inside dhaka
                 // shipping_area  = 2 = outside dhaka
@@ -1236,7 +1235,9 @@ class FrontendController extends Controller
                         })->where('status',1)->get();
 
                         foreach ($mail_users as $key => $mail_user) {
-                            Mail::to($mail_user->email)->send(new AuthorNewOrder($order,$mail_user));
+                            if ($mail_user->email) {
+                                Mail::to($mail_user->email)->send(new AuthorNewOrder($order,$mail_user));
+                            }
                         }
                     }
 
@@ -1765,7 +1766,7 @@ class FrontendController extends Controller
                         'varient_id' => $order_detail->varient_id,
                         'product_id' => $order_detail->product_id,
                     ])->whereHas('orderReturnInfo', function($q) use ($order) {
-                        $q->whereIn('status', [0])->where('order_id', $order->id);
+                        $q->whereIn('status', [0,1])->where('order_id', $order->id);
                     })->sum('quantity');
 
                     if (($check_already_returned + $quantity) > $order_detail->quantity) {
@@ -1798,6 +1799,11 @@ class FrontendController extends Controller
             $data['user_id'] = $order->user_id;
             $data['remark'] = $request->reason;
             $data['status'] = 0;
+            $data['voucher_type'] = $order->voucher_type ?? '';
+            $data['voucher_value'] = $order->voucher_value ?? '';
+            $data['voucher_discount'] = $order->voucher_discount;
+            $data['voucher_id'] = $order->voucher_id ?? '';
+            $data['voucher_code'] = $order->voucher_code ?? '';
             $return_order = OrderReturn::create($data);
 
             $grand_total_price = 0;
@@ -1855,10 +1861,26 @@ class FrontendController extends Controller
     {
         $user = Auth::user();
 
-        $orders = OrderReturn::where([
-                'user_id' => $user->id,
-                // 'tracking_code' => $request->order_no,
-            ])->latest()->paginate(20);
+        $query = OrderReturn::where('user_id', $user->id);
+
+        if(isset($request->fromDate) and $request->fromDate != '') {
+            $query->whereDate('created_at', '>=',$request->fromDate);
+        }
+
+        if(isset($request->toDate) and $request->toDate != '') {
+            $query->whereDate('created_at', '>=',$request->toDate);
+        }
+
+        if(isset($request->order_id) and $request->order_id != '') {
+            $query->where('tracking_code', 'like','%'.$request->order_id.'%');
+        }
+
+        if(isset($request->main_order_id) and $request->main_order_id != '') {
+            $query->whereHas('mainOrderInfo', function ($new_query) use ($request) {
+                $new_query->where('tracking_code', 'like','%'.$request->main_order_id.'%');
+            });
+        }
+        $orders = $query->latest()->paginate(20);
 
         return view('customer.return_order_list', compact('orders'));
     }

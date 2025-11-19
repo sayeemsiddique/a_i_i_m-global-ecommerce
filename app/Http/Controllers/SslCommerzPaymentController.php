@@ -77,9 +77,9 @@ class SslCommerzPaymentController extends Controller
         $voucher_discount = round($voucher->applyDiscount($product_total_price) ?? 0);
 
 
-        if (!auth()->user()->email) {
-            return back()->with('error', "Please set your email address before Pay With SSLCOMMERZ Gateway");
-        }
+        // if (!auth()->user()->email) {
+        //     return back()->with('error', "Please set your email address before Pay With SSLCOMMERZ Gateway");
+        // }
 
         $order_data['tracking_code'] = $tracking_code;
         $order_data['transaction_id'] = $tracking_code;
@@ -109,7 +109,7 @@ class SslCommerzPaymentController extends Controller
 
         # CUSTOMER INFORMATION
         $post_data['cus_name'] = ''.auth()->user()->first_name . ' ' . auth()->user()->last_name.'';
-        $post_data['cus_email'] = auth()->user()->email;
+        $post_data['cus_email'] = auth()->user()->email ?? 'nomail@mail.com';
         $post_data['cus_add1'] = $shipping_address->address;
         $post_data['cus_add2'] = "";
         $post_data['cus_city'] = "";
@@ -384,8 +384,9 @@ class SslCommerzPaymentController extends Controller
 
                     if(auth()->user()->mobile != ''){
                         $data['number'] = auth()->user()->mobile;
-                        $data['message'] = 'Your Order has been placed, Your Order Tracking ID: '.$order->transaction_id;
-                        app('App\Http\Controllers\FrontendController')->sms_send($data);
+                        $data['message'] = 'Your Order has been placed at Sneho Digital, your order Tracking ID: '.$order->transaction_id;
+                        // app('App\Http\Controllers\FrontendController')->sms_send($data);
+                        $this->sms_send($data);
                     }
 
                     $mail_permission = Permission::where('name_en','author_get_new_order_mail')->first();
@@ -398,7 +399,9 @@ class SslCommerzPaymentController extends Controller
                         })->where('status',1)->get();
 
                         foreach ($mail_users as $key => $mail_user) {
-                            Mail::to($mail_user->email)->send(new AuthorNewOrder($order,$mail_user));
+                            if ($mail_user->email) {
+                                Mail::to($mail_user->email)->send(new AuthorNewOrder($order,$mail_user));
+                            }
                         }
                     }
 
@@ -506,6 +509,31 @@ class SslCommerzPaymentController extends Controller
         } else {
             echo "Invalid Data";
         }
+    }
+
+    public function sms_send($data)
+    {
+        $url = "http://bulksmsbd.net/api/smsapi";
+        $api_key = "y3FfVATWkcvMDn67cNkp";
+        $senderid = "8809617611033";
+        $number = $data['number'];
+        $message = $data['message'];
+
+        $data = [
+            "api_key" => $api_key,
+            "senderid" => $senderid,
+            "number" => $number,
+            "message" => $message
+        ];
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $response = curl_exec($ch);
+        curl_close($ch);
+        return $response;
     }
 
 }

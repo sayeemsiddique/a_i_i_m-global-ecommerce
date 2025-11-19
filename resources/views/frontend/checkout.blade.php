@@ -229,7 +229,7 @@
                                                     <div class="custom-control custom-radio">
                                                         <input type="radio" class="custom-control-input" id="stylishRadioSSL" name="delivery_option" value="2" autocomplete="off">
                                                         <label class="custom-control-label form-label" for="stylishRadioSSL" data-toggle="collapse" data-target="#basicsCollapseSLL" aria-expanded="true" aria-controls="basicsCollapseSLL">
-                                                            Pay With SSLCOMMERZ
+                                                            Pay Online
                                                         </label>
                                                     </div>
                                                 </div>

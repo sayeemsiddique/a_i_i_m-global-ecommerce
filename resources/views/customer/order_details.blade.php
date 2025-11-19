@@ -40,6 +40,12 @@
 														@if(($orderDetails->paymentInfo->status ?? 0) == $key) {{$payment_status}} @endif
 													@endforeach
                                 </p>
+                                {{-- @if (count($orderDetails->orderReturnInfos->where('status',1)) > 0)
+                                    <label class="">Return Status:</label>
+                                    <a href="{{route('returnOrderDetails', Crypt::encryptString($orderDetails->id))}}" target="_blank" class="btn btn-sm btn-primary">
+                                        Check Return Status
+                                    </a>
+                                @endif --}}
                             </div>
                         </div>
 
@@ -99,7 +105,7 @@
                                 @if ($orderDetails->voucher_id > 0 and $orderDetails->voucher_discount > 0)
                                     <tr>
                                         <td colspan="3" class="text-right"><strong>Voucher Discount</strong></td>
-                                        <td colspan="1" class="order-date font-weight-bold">{{ number_format($orderDetails->voucher_discount, 0, '.', '') }}</td>
+                                        <td colspan="1" class="order-date font-weight-bold text-right">{{ number_format($orderDetails->voucher_discount, 0, '.', '') }}</td>
                                     </tr>
                                 @endif
 

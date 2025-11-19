@@ -19,32 +19,62 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            {{-- <form class="mt-0 mb-5">
-                                <div class="row">
-                                    <div class="col-md-2">
-                                        <input type="text" class="form-control" placeholder="Enter Product Name or Code" name="name" value="{{ request()->name }}">
-                                    </div>
-                                    <div class="col-md-2">
-                                        <select class="form-control form-control-sm select2" name="category_id">
-                                            <option value="">Select category</option>
-                                            @foreach ($categories as $category)
-                                                <option @if(request()->category_id == $category->id) selected @endif value="{{ $category->id }}">{{ $category->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <div class="d-flex">
-                                            <div class="">
-                                                <button type="submit" class="btn btn-primary">Submit</button>
+                            <form class="form-inline mb-3" method="GET">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <div class="form-group">
+                                                <label class="pr-2 pl-2">From :</label>
+                                                <input class="form-control" type="date" name="fromDate" @if (isset($_GET['fromDate']) and $_GET['fromDate']!='')
+                                                    value="{{$_GET['fromDate']}}"
+                                                @endif>
                                             </div>
-                                            <div class="">
-                                                <a href="{{ route('admin.product.index') }}" class="btn btn-danger ml-2">Reset</a>
+                                        </td>
+                                        <td>
+                                            <div class="form-group">
+                                                <label class="pr-2 pl-2">To :</label>
+                                                <input class="form-control" type="date" name="toDate" @if (isset($_GET['toDate']) and $_GET['toDate']!='')
+                                                value="{{$_GET['toDate']}}"
+                                            @endif>
                                             </div>
-                                        </div>
+                                        </td>
+                                        {{-- <td>
 
-                                    </div>
-                                </div>
-                            </form> --}}
+                                            <div class="form-group">
+                                                <label class="pr-2 pl-2">User Type :</label>
+                                                <select class="form-control" name="type" id="type">
+                                                    <option value="">--Select User Type--</option>
+                                                    <option @if (isset($_GET['type']) and $_GET['type']==1) selected @endif value="1">Customer</option>
+                                                    <option @if (isset($_GET['type']) and $_GET['type']==2) selected @endif value="2">Corporate Consumer</option>
+                                                    <option @if (isset($_GET['type']) and $_GET['type']==3) selected @endif value="3">Dealer</option>
+                                                </select>
+                                            </div>
+                                        </td> --}}
+                                        <td>
+                                            <div class="form-group mt-2">
+                                                <label class="pr-2 pl-2">Return Order ID :</label>
+                                                <input class="form-control" type="text" name="order_id"  placeholder="Search by Order ID" @if (isset($_GET['order_id']) and $_GET['order_id']!='')
+                                                value="{{$_GET['order_id']}}"
+                                            @endif>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group mt-2">
+                                                <label class="pr-2 pl-2">Main Order ID :</label>
+                                                <input class="form-control" type="text" name="main_order_id"  placeholder="Search by Order ID" @if (isset($_GET['main_order_id']) and $_GET['main_order_id']!='')
+                                                value="{{$_GET['main_order_id']}}"
+                                            @endif>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <button type="submit" class="btn btn-success mt-2 ml-2">Search</button>
+                                            <a href="{{route('return_order_list')}}" class="btn btn-danger mt-2 ml-2">Reset Search</button>
+                                        </td>
+
+                                    </tr>
+                                </table>
+
+                            </form>
 
 
                         <div class="table-responsive">
