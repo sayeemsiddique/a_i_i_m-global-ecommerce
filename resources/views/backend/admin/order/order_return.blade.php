@@ -107,17 +107,18 @@
                                             @endif
                                         @endforeach
 
-                                        <tr>
-                                            <td colspan="4" class="text-right"><strong>Shipping Cost</strong></td>
-                                            <td colspan="1" class="text-right">{{ number_format($order->shipping_cost, 0, '.', '') }}</td>
-                                        </tr>
-
                                         @if ($order->voucher_id > 0 and $order->voucher_discount > 0)
                                             <tr>
                                                 <td colspan="4" class="text-right"><strong>Voucher Discount</strong></td>
                                                 <td colspan="1" class="text-right">{{ number_format($order->voucher_discount, 0, '.', '') }}</td>
                                             </tr>
                                         @endif
+                                        <tr>
+                                            <td colspan="4" class="text-right"><strong>Shipping Cost</strong></td>
+                                            <td colspan="1" class="text-right">{{ number_format($order->shipping_cost, 0, '.', '') }}</td>
+                                        </tr>
+
+
 
                                         <tr>
                                             <td colspan="4" class="text-right"><strong>Grand Total</strong></td>

@@ -42,6 +42,7 @@ use App\Models\OrderReturn;
 use App\Models\OrderReturnDetail;
 use App\Models\Permission;
 use App\Models\Voucher;
+use App\Models\Store;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
@@ -562,7 +563,8 @@ class FrontendController extends Controller
         }
         $setting = Setting::oldest()->first();
         $shipping_addresses = ShippingAddress::where('user_id', auth()->user()->id)->latest()->get();
-        return view('frontend.checkout', compact('carts','setting','shipping_addresses'));
+        $stores = Store::where('status',1)->latest()->get();
+        return view('frontend.checkout', compact('carts','setting','shipping_addresses','stores'));
     }
 
     public function account()
@@ -1158,9 +1160,9 @@ class FrontendController extends Controller
                 $order_data['delivery_option'] = $request->delivery_option ?? 0;
                 $order_data['transaction_id'] = $tracking_code;
                 $order_data['voucher_type'] = $voucher->type ?? '';
-                $order_data['voucher_value'] = $voucher->value ?? '';
+                $order_data['voucher_value'] = $voucher->value ?? 0;
                 $order_data['voucher_discount'] = $voucher_discount;
-                $order_data['voucher_id'] = $voucher->id ?? '';
+                $order_data['voucher_id'] = $voucher->id ?? 0;
                 $order_data['voucher_code'] = $voucher->code ?? '';
 
 
@@ -1800,9 +1802,9 @@ class FrontendController extends Controller
             $data['remark'] = $request->reason;
             $data['status'] = 0;
             $data['voucher_type'] = $order->voucher_type ?? '';
-            $data['voucher_value'] = $order->voucher_value ?? '';
+            $data['voucher_value'] = $order->voucher_value ?? 0;
             $data['voucher_discount'] = $order->voucher_discount;
-            $data['voucher_id'] = $order->voucher_id ?? '';
+            $data['voucher_id'] = $order->voucher_id ?? 0;
             $data['voucher_code'] = $order->voucher_code ?? '';
             $return_order = OrderReturn::create($data);
 

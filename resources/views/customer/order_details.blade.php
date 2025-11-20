@@ -91,6 +91,13 @@
                                     @endphp
                                 @endforeach
 
+                                @if ($orderDetails->voucher_id > 0 and $orderDetails->voucher_discount > 0)
+                                    <tr>
+                                        <td colspan="3" class="text-right"><strong>Voucher Discount</strong></td>
+                                        <td colspan="1" class="order-date font-weight-bold text-right">{{ number_format($orderDetails->voucher_discount, 0, '.', '') }}</td>
+                                    </tr>
+                                @endif
+
                                 <!--Show sub-total/total product price-->
                                 <tr class="font-weight-bold text-right">
                                     <td colspan="3" class="order-date text-right">Subtotal</td>
@@ -102,12 +109,7 @@
                                     <td class="order-date font-weight-bold">{{$global_setting->currency ?? ""}} {{ number_format($orderDetails->shipping_cost, 0, '.', '') }}</td>
                                 </tr>
 
-                                @if ($orderDetails->voucher_id > 0 and $orderDetails->voucher_discount > 0)
-                                    <tr>
-                                        <td colspan="3" class="text-right"><strong>Voucher Discount</strong></td>
-                                        <td colspan="1" class="order-date font-weight-bold text-right">{{ number_format($orderDetails->voucher_discount, 0, '.', '') }}</td>
-                                    </tr>
-                                @endif
+
 
                                 <!--Show total price-->
                                 <tr class="font-weight-bold text-right" style="border-top: 1px solid #000;">

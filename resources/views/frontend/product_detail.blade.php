@@ -275,9 +275,9 @@
                             <div class="d-flex align-items-baseline">
                                 <ins class="font-size-36 text-decoration-none">
 
-                                    {{$global_setting->currency ?? ""}} <span class="price_append_area">{{$sale_price}}</span>
+                                    {{$global_setting->currency ?? ""}} <span class="price_append_area">{{round($sale_price)}}</span>
                                     @if (($has_discount == 1) and ($sale_price_without_discount != $sale_price))
-                                        <del class="font-size-20 ml-2 text-danger">{{$global_setting->currency ?? ""}} {{$sale_price_without_discount}}</del>
+                                        <del class="font-size-20 ml-2 text-danger">{{$global_setting->currency ?? ""}} {{round($sale_price_without_discount)}}</del>
                                     @endif
 
                                 </ins>
@@ -298,7 +298,7 @@
                                         @php
                                             $pending_orders_quantity = $pending_orders_quantity_array[$productVarient->id] ?? 0;
                                         @endphp
-                                        <option @if ((($productVarient->productStock->quantity ?? 0) - $pending_orders_quantity) <= 0) style='color: #963e3eff' @endif data-price="{{$productVarient->discount_price}}" data-quantity="{{($productVarient->productStock->quantity ?? 0) - $pending_orders_quantity}}" value="{{$productVarient->id}}">
+                                        <option @if ((($productVarient->productStock->quantity ?? 0) - $pending_orders_quantity) <= 0) style='color: #963e3eff' @endif data-price="{{round($productVarient->discount_price)}}" data-quantity="{{($productVarient->productStock->quantity ?? 0) - $pending_orders_quantity}}" value="{{$productVarient->id}}">
                                             @foreach ($productVarient->productVarientData as $VarientData)
                                                 {{-- {{$VarientData}} --}}
                                                 {{$VarientData->varientTypeInfo->name ?? ''}}: {{$VarientData->data_value}} @if(!($loop->last)) , @endif

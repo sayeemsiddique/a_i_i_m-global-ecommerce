@@ -40,6 +40,7 @@ use App\Http\Controllers\{
     DistrictController,
     UpazilaController,
     VoucherController,
+    StoreController,
 };
 
 use App\Http\Middleware\SetLocale;
@@ -169,6 +170,16 @@ Route::middleware([SetLocale::class])->group(function () {
                 Route::get('/edit/{id}', [VoucherController::class, 'edit'])->name('edit');
                 Route::PATCH('/update/{voucher}', [VoucherController::class, 'update'])->name('update');
                 Route::DELETE('/delete/{voucher}', [VoucherController::class, 'destroy'])->name('delete');
+            });
+
+            Route::prefix('store')->as('store.')->group(function () {
+                Route::get('/index', [StoreController::class, 'index'])->name('index');
+                Route::get('/create', [StoreController::class, 'create'])->name('create');
+                Route::post('/store', [StoreController::class, 'store'])->name('store');
+                Route::get('/show/{id}', [StoreController::class, 'show'])->name('show');
+                Route::get('/edit/{id}', [StoreController::class, 'edit'])->name('edit');
+                Route::PUT('/update/{id}', [StoreController::class, 'update'])->name('update');
+                Route::DELETE('/delete/{store}', [StoreController::class, 'destroy'])->name('delete');
             });
 
 

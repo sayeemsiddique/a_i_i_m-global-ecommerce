@@ -64,6 +64,7 @@ class VoucherController extends Controller
 
     public function edit(Voucher $voucher)
     {
+        $user = Auth::user();
         if(Gate::allows('edit_voucher', $user))
         {
             return view('backend.admin.voucher.edit', compact('voucher'));

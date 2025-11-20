@@ -50,6 +50,51 @@
         .voucher_section_area {
             display: none;
         }
+
+        .store-option {
+            border-radius: 8px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: border-color 0.3s, background-color 0.3s;
+            z-index: 88;
+        }
+
+        .store-option input[type="radio"]:checked + .store-content {
+            border: 2px solid #9bbfe6;
+            background-color: #e9f5ff;
+            box-shadow: 0 0 3px 1px #9bbfe6;
+        }
+
+        .des_show_modal {
+            position: absolute;
+            background: red;
+            bottom: 0;
+            right: 0;
+            width: 15px;
+            height: 15px;
+            z-index: 999;
+        }
+
+        .store-option input[type="radio"] {
+            display: none;
+        }
+
+        .store-content {
+            border-radius: 6px;
+            padding: 15px;
+            background: #dddddd2e;
+            border: 1px solid #cacaca;
+        }
+
+        .store-category {
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+        .store_pickup_option {
+            z-index: 88;
+        }
     </style>
 @endpush
 
@@ -141,6 +186,13 @@
 
                                         </tbody>
                                         <tfoot class="mt-3">
+                                            <tr class="voucher_section_area">
+                                                <th>Voucher Discount</th>
+                                                <td>
+                                                    {{$global_setting->currency ?? ""}} <span class="voucher_discount_amount">0</span>
+                                                    <input type="text" class="d-none" name="voucher_discount_amount_code" value="">
+                                                </td>
+                                            </tr>
                                             <tr>
                                                 <th>Sub-total</th>
                                                 <td>
@@ -162,13 +214,7 @@
 
                                                 </td>
                                             </tr>
-                                            <tr class="voucher_section_area">
-                                                <th>Voucher Discount</th>
-                                                <td>
-                                                    {{$global_setting->currency ?? ""}} <span class="voucher_discount_amount">0</span>
-                                                    <input type="text" class="d-none" name="voucher_discount_amount_code" value="">
-                                                </td>
-                                            </tr>
+
 
 
 
@@ -190,29 +236,6 @@
                                             Delivery Option <span class="text-danger">*</span>
                                         </small>
                                         <div id="basicsAccordion1">
-                                            <!-- Manual payment Card -->
-                                            {{-- <div class="border-bottom border-color-1 border-dotted-bottom">
-                                                <div class="p-3" id="basicsHeadingOne">
-                                                    <div class="custom-control custom-radio">
-                                                        <input type="checkbox" class="custom-control-input" id="stylishRadio1" name="delivery_option" value="1" autocomplete="off">
-
-                                                        <label class="custom-control-label form-label" for="stylishRadio1" data-toggle="collapse" data-target="#basicsCollapseOnee" aria-expanded="true" aria-controls="basicsCollapseOnee">
-                                                            Cash On Delivery
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="border-bottom border-color-1 border-dotted-bottom">
-                                                <div class="p-3" id="basicsHeadingTwo">
-                                                    <div class="custom-control custom-radio">
-                                                        <input type="checkbox" class="custom-control-input" id="stylishRadioSSL" name="delivery_option" value="2" autocomplete="off">
-
-                                                        <label class="custom-control-label form-label" for="stylishRadioSSL" data-toggle="collapse" data-target="#basicsCollapseSLL" aria-expanded="true" aria-controls="basicsCollapseSLL">
-                                                            Pay With SSLCOMMEZ
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div> --}}
                                             <div class="border-bottom border-color-1 border-dotted-bottom">
                                                 <div class="p-3" id="basicsHeadingOne">
                                                     <div class="custom-control custom-radio">
@@ -234,6 +257,20 @@
                                                     </div>
                                                 </div>
                                             </div>
+
+                                            @if (count($stores) > 0)
+                                                <div class="border-bottom border-color-1 border-dotted-bottom">
+                                                    <div class="p-3" id="basicsHeadingThree">
+                                                        <div class="custom-control custom-radio">
+                                                            <input type="radio" class="custom-control-input" id="stylishRadioStore" name="delivery_option" value="3" autocomplete="off">
+                                                            <label class="custom-control-label form-label" for="stylishRadioStore" data-toggle="collapse" data-target="#basicsCollapseStore" aria-expanded="true" aria-controls="basicsCollapseStore">
+                                                                I will collect from store
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endif
+
                                             <!-- End Card -->
 
 
@@ -304,6 +341,30 @@
                                 </div>
 
                                 <p>Delivery Time: Inside Dhaka - 5 days & Outside Dhaka - 10 days</p>
+
+                                {{-- <div style="display: none;" class="store_pickup_area"> --}}
+                                <div class="store_pickup_area">
+                                    <div class="row">
+                                        @foreach ($stores as $store)
+                                            <div class=col-md-6>
+                                                <label class="store-option d-block">
+                                                    <input type="radio" name="store_id" value="{{$store->id}}" autocomplete="off">
+                                                    <div class="store-content position-relative store_pickup_option">
+                                                        <div class="store-category">{{$store->name}}</div>
+                                                        {{-- <div><strong>{{ $store->address }}</strong></div> --}}
+                                                        <div>📞 {{ $store->phone }}</div>
+                                                        <div>{{ $store->divisionInfo->name ?? ''}}, {{ $store->districtInfo->name ?? ''}}, {{ $store->upazilaInfo->name ?? ''}}</div>
+                                                        <div>{{ $store->address }}</div>
+                                                        <div class="des_show_modal">
+
+                                                        </div>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        @endforeach
+                                    </div>
+
+                                </div>
 
                             </div>
 

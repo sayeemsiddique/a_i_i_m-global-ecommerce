@@ -14,6 +14,7 @@ use App\Models\Payment;
 use App\Models\Permission;
 use App\Models\User;
 use App\Models\Voucher;
+use App\Models\Order;
 use Illuminate\Support\Facades\Mail;
 
 class SslCommerzPaymentController extends Controller
@@ -73,8 +74,7 @@ class SslCommerzPaymentController extends Controller
         }
 
         $voucher = Voucher::where('code', $request->voucher_discount_amount_code)->first();
-
-        $voucher_discount = round($voucher->applyDiscount($product_total_price) ?? 0);
+        $voucher_discount = $voucher ? round($voucher->applyDiscount($product_total_price) ?? 0) : 0;
 
 
         // if (!auth()->user()->email) {
@@ -146,9 +146,9 @@ class SslCommerzPaymentController extends Controller
         $order_data['updated_at'] = now();
         $order_data['update_by'] = auth()->user()->id;
         $order_data['voucher_type'] = $voucher->type ?? '';
-        $order_data['voucher_value'] = $voucher->value ?? '';
+        $order_data['voucher_value'] = $voucher->value ?? 0;
         $order_data['voucher_discount'] = $voucher_discount;
-        $order_data['voucher_id'] = $voucher->id ?? '';
+        $order_data['voucher_id'] = $voucher->id ?? 0;
         $order_data['voucher_code'] = $voucher->code ?? '';
 
 
@@ -265,8 +265,7 @@ class SslCommerzPaymentController extends Controller
         $sslc = new SslCommerzNotification();
 
         #Check order status in order tabel against the transaction id or order id.
-        $order = DB::table('orders')
-            ->where([
+        $order = Order::where([
                 'transaction_id' => $tran_id,
                 'user_id' => $user_id
             ])->first();
@@ -397,7 +396,7 @@ class SslCommerzPaymentController extends Controller
                                 $new_query->where('permission_id', $mail_permission->id);
                             });
                         })->where('status',1)->get();
-
+                        // dd($order);
                         foreach ($mail_users as $key => $mail_user) {
                             if ($mail_user->email) {
                                 Mail::to($mail_user->email)->send(new AuthorNewOrder($order,$mail_user));

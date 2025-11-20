@@ -835,6 +835,16 @@
                                         </a>
                                     </li>
                                 @endcan
+                                @can('all_store')
+                                    <li class="menu-item {{ session('lsbsm') == 'all_store' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
+                                        <a href="{{ route('admin.store.index') }}" class="menu-link">
+                                            <i class="far fa-dot-circle">
+                                                <span></span>
+                                            </i>
+                                            <span class="menu-text">Manage Store</span>
+                                        </a>
+                                    </li>
+                                @endcan
 
 
                             </ul>
