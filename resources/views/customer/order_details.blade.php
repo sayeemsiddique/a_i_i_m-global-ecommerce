@@ -21,32 +21,47 @@
                         <div class="card-body">
                         <div>
                             <h4 class="icon-box-title text-capitalize ls-normal mb-0" style="font-weight: 600;">Order Information</h4>
-                            <div class="">
-                                <p>Name: {{ $user->first_name }} {{ $user->last_name }}</p>
-                                <p>Order Date: {{ date('d M Y', strtotime($orderDetails->created_at)) }}</p>
-                                <p>Invoice Number: {{ sprintf('%08d', $orderDetails->salePaymentInfo->id ?? 0) }}</p>
-                                <p>Order ID: {{ $orderDetails->tracking_code }}</p>
-                                <p>Order Status: @foreach (orderStatus() as $key => $order_status)
-														@if($orderDetails->status == $key) {{$order_status}} @endif
-													@endforeach
-                                </p>
-                                <p>
-                                    Delivery Status: @foreach(deliveryStatus() as $key => $delivery_status)
-														@if($orderDetails->delivery_status == $key) {{$delivery_status}} @endif
-													@endforeach
-                                </p>
-                                <p>
-                                    Payment Status: @foreach(paymentStatus() as $key => $payment_status)
-														@if(($orderDetails->paymentInfo->status ?? 0) == $key) {{$payment_status}} @endif
-													@endforeach
-                                </p>
-                                {{-- @if (count($orderDetails->orderReturnInfos->where('status',1)) > 0)
-                                    <label class="">Return Status:</label>
-                                    <a href="{{route('returnOrderDetails', Crypt::encryptString($orderDetails->id))}}" target="_blank" class="btn btn-sm btn-primary">
-                                        Check Return Status
-                                    </a>
-                                @endif --}}
+
+                            <div class="d-flex">
+                                <div class="flex-fill">
+                                    <p>Name: {{ $user->first_name }} {{ $user->last_name }}</p>
+                                    <p>Order Date: {{ date('d M Y', strtotime($orderDetails->created_at)) }}</p>
+                                    <p>Invoice Number: {{ sprintf('%08d', $orderDetails->salePaymentInfo->id ?? 0) }}</p>
+                                    <p>Order ID: {{ $orderDetails->tracking_code }}</p>
+                                    <p>Order Status: @foreach (orderStatus() as $key => $order_status)
+                                                            @if($orderDetails->status == $key) {{$order_status}} @endif
+                                                        @endforeach
+                                    </p>
+                                    <p>
+                                        Delivery Status: @foreach(deliveryStatus() as $key => $delivery_status)
+                                                            @if($orderDetails->delivery_status == $key) {{$delivery_status}} @endif
+                                                        @endforeach
+                                    </p>
+                                    <p>
+                                        Payment Status: @foreach(paymentStatus() as $key => $payment_status)
+                                                            @if(($orderDetails->paymentInfo->status ?? 0) == $key) {{$payment_status}} @endif
+                                                        @endforeach
+                                    </p>
+                                    {{-- @if (count($orderDetails->orderReturnInfos->where('status',1)) > 0)
+                                        <label class="">Return Status:</label>
+                                        <a href="{{route('returnOrderDetails', Crypt::encryptString($orderDetails->id))}}" target="_blank" class="btn btn-sm btn-primary">
+                                            Check Return Status
+                                        </a>
+                                    @endif --}}
+                                </div>
+                                <div class="flex-fill text-right">
+                                    @if ($orderDetails->store_id > 0)
+                                        <label class="">
+                                            <strong>Store Pickup Location:</strong>
+                                        </label>
+                                        <p class="mb-0">{{ $orderDetails->storeInfo->name ?? '' }} </p>
+                                        <p class="mb-0">{{ $orderDetails->storeInfo->divisionInfo->name ?? ''}}, {{ $orderDetails->storeInfo->districtInfo->name ?? ''}}, {{ $orderDetails->storeInfo->upazilaInfo->name ?? ''}}</p>
+                                        <p class="mb-0">{{ $orderDetails->storeInfo->address }}</p>
+                                    <br/>
+                                    @endif
+                                </div>
                             </div>
+
                         </div>
 
                         <h4 class="icon-box-title text-capitalize ls-normal mb-0" style="font-weight: 600;">Ordered Items</h4>

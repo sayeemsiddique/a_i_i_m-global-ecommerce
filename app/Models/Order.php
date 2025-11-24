@@ -46,5 +46,10 @@ class Order extends Model
         return $this->hasMany(OrderReturn::class, 'order_id', 'id');
     }
 
+    public function storeInfo()
+    {
+        return $this->belongsTo(Store::class, 'store_id', 'id');
+    }
+
 
 }

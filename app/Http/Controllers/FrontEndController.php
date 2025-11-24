@@ -1132,9 +1132,14 @@ class FrontendController extends Controller
                 // shipping_area  = 2 = outside dhaka
 
 
-                $shipping_address = ShippingAddress::where('id', $request->shipping_address)->where('user_id', auth()->user()->id)->latest()->first();
-                if (!$shipping_address) {
-                    return back()->with('error', "Shipping address not found");
+                if (($request->store_delivery_option ?? 0) != 3) {
+                    $shipping_address = ShippingAddress::where('id', $request->shipping_address)->where('user_id', auth()->user()->id)->latest()->first();
+                    if (!$shipping_address) {
+                        return back()->with('error', "Shipping address not found");
+                    }
+                    $request->store_id = 0;
+                } else {
+                    $shipping_address = null;
                 }
 
 
@@ -1144,11 +1149,11 @@ class FrontendController extends Controller
                 $order_data['user_id'] = auth()->user()->id;
                 $order_data['status'] = 0;
                 $order_data['payment_status'] = 1; // 1 means pending helper function check
-                $order_data['total_price'] = $product_total_price - $voucher_discount;
-                $order_data['grand_total_price'] = $product_total_price + ($shipping_address->divisionInfo->shipping_cost ?? 0) - $voucher_discount;
+                $order_data['total_price'] = round($product_total_price) - round($voucher_discount);
+                $order_data['grand_total_price'] = round($product_total_price) + round($shipping_address->divisionInfo->shipping_cost ?? 0) - round($voucher_discount);
                 $order_data['discount_amount'] = 0;
                 // $order_data['coupon_discount'] = 0;
-                $order_data['shipping_cost'] = $shipping_address->divisionInfo->shipping_cost ?? 0;
+                $order_data['shipping_cost'] = round($shipping_address->divisionInfo->shipping_cost ?? 0);
                 $order_data['type'] = 2;
                 $order_data['vat'] = $request->vat ?? 0;
                 $order_data['tax'] = $request->tax ?? 0;
@@ -1161,9 +1166,10 @@ class FrontendController extends Controller
                 $order_data['transaction_id'] = $tracking_code;
                 $order_data['voucher_type'] = $voucher->type ?? '';
                 $order_data['voucher_value'] = $voucher->value ?? 0;
-                $order_data['voucher_discount'] = $voucher_discount;
+                $order_data['voucher_discount'] = round($voucher_discount);
                 $order_data['voucher_id'] = $voucher->id ?? 0;
                 $order_data['voucher_code'] = $voucher->code ?? '';
+                $order_data['store_id'] = $request->store_id ?? 0;
 
 
 

@@ -25,3 +25,7 @@ ALTER TABLE `order_returns` ADD `voucher_discount` DECIMAL(18,2) NULL AFTER `vou
 ALTER TABLE `order_returns` ADD `voucher_id` INT NULL AFTER `voucher_discount`;
 ALTER TABLE `order_returns` CHANGE `vds` `voucher_code` TINYTEXT NULL DEFAULT NULL COMMENT '%';
 ALTER TABLE `order_returns` CHANGE `voucher_code` `voucher_code` TINYTEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL;
+
+
+ALTER TABLE `orders` CHANGE `vds_amount` `store_id` INT NULL DEFAULT NULL COMMENT 'vds total amount';
+ALTER TABLE `order_returns` CHANGE `vds_amount` `store_id` INT NULL DEFAULT NULL COMMENT '';

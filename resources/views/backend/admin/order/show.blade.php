@@ -132,6 +132,8 @@
                                                 <br/>
 
 
+
+
                                                     @if (count($order->orderReturnInfos->where('status',1)) > 0)
                                                     <label class="">Return Status:</label>
                                                         <a href="{{route('admin.order.order_return_list')}}?main_order_id={{$order->tracking_code}}" target="_blank" rel="noopener noreferrer">
@@ -156,6 +158,17 @@
 												Recipient name: {{ $order->shippingAddressInfo->recipient_name ?? '' }} <br/>
 												Recipient Mobile: {{ $order->shippingAddressInfo->phone_no ?? '' }} <br/>
 												Recipient Address: {{ $order->shippingAddressInfo->address ?? '' }}, {{ $order->shippingAddressInfo->upazilaInfo->name ?? '' }}, {{ $order->shippingAddressInfo->districtInfo->name ?? '' }}, {{ $order->shippingAddressInfo->divisionInfo->name ?? '' }}
+
+                                                @if ($order->store_id > 0)
+                                                <br>
+                                                    <label class="">
+                                                        <strong>Store Pickup Location:</strong>
+                                                    </label>
+                                                    <p class="mb-0">{{ $order->storeInfo->name ?? '' }} </p>
+                                                    <p class="mb-0">{{ $order->storeInfo->divisionInfo->name ?? ''}}, {{ $order->storeInfo->districtInfo->name ?? ''}}, {{ $order->storeInfo->upazilaInfo->name ?? ''}}</p>
+                                                    <p class="mb-0">{{ $order->storeInfo->address }}</p>
+                                                <br/>
+                                                @endif
 
 											</div>
 										</div>

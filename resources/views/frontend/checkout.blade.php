@@ -67,7 +67,7 @@
 
         .des_show_modal {
             position: absolute;
-            background: red;
+            /* background: red; */
             bottom: 0;
             right: 0;
             width: 15px;
@@ -239,7 +239,7 @@
                                             <div class="border-bottom border-color-1 border-dotted-bottom">
                                                 <div class="p-3" id="basicsHeadingOne">
                                                     <div class="custom-control custom-radio">
-                                                        <input type="radio" class="custom-control-input" id="stylishRadio1" name="delivery_option" value="1" autocomplete="off">
+                                                        <input type="radio" class="custom-control-input" id="stylishRadio1" name="delivery_option" value="1" autocomplete="off" onclick="deliveryOptions(this);">
                                                         <label class="custom-control-label form-label" for="stylishRadio1" data-toggle="collapse" data-target="#basicsCollapseOnee" aria-expanded="true" aria-controls="basicsCollapseOnee">
                                                             Cash On Delivery
                                                         </label>
@@ -250,7 +250,7 @@
                                             <div class="border-bottom border-color-1 border-dotted-bottom">
                                                 <div class="p-3" id="basicsHeadingTwo">
                                                     <div class="custom-control custom-radio">
-                                                        <input type="radio" class="custom-control-input" id="stylishRadioSSL" name="delivery_option" value="2" autocomplete="off">
+                                                        <input type="radio" class="custom-control-input" id="stylishRadioSSL" name="delivery_option" value="2" autocomplete="off" onclick="deliveryOptions(this);">
                                                         <label class="custom-control-label form-label" for="stylishRadioSSL" data-toggle="collapse" data-target="#basicsCollapseSLL" aria-expanded="true" aria-controls="basicsCollapseSLL">
                                                             Pay Online
                                                         </label>
@@ -262,7 +262,7 @@
                                                 <div class="border-bottom border-color-1 border-dotted-bottom">
                                                     <div class="p-3" id="basicsHeadingThree">
                                                         <div class="custom-control custom-radio">
-                                                            <input type="radio" class="custom-control-input" id="stylishRadioStore" name="delivery_option" value="3" autocomplete="off">
+                                                            <input type="checkbox" class="custom-control-input" id="stylishRadioStore" name="store_delivery_option" value="3" autocomplete="off" onclick="deliveryOptions(this);">
                                                             <label class="custom-control-label form-label" for="stylishRadioStore" data-toggle="collapse" data-target="#basicsCollapseStore" aria-expanded="true" aria-controls="basicsCollapseStore">
                                                                 I will collect from store
                                                             </label>
@@ -310,20 +310,18 @@
                                 <p class="m-0">Email address: {{auth()->user()->email}}</p>
                                 <p class="m-0">Phone: {{auth()->user()->mobile}}</p>
                             </div>
-                            <div class="border-bottom border-color-1 mb-3 mt-3">
-                                <h3 class="section-title mb-0 pb-2 font-size-25">Choosing Shipping Address</h3>
-                            </div>
+                            <div class="choose-shipping-address mt-3">
+                                <div class="border-bottom border-color-1 mb-3 mt-3">
+                                    <h3 class="section-title mb-0 pb-2 font-size-25">Choosing Shipping Address</h3>
+                                </div>
+                                <div>
 
-                            <div class="w-100">
-                                <div class="row">
                                     @if (count($shipping_addresses) == 0)
-                                        <div class="col-12">
-
-                                            <p class="text-danger">No shipping address found. Please add a shipping address first. <a href="{{ route('shipping_address.create') }}@if(isset($_GET['cart_id']))?cart_id={{$_GET['cart_id']}} @endif">Add</a></p>
-                                        </div>
-                                    </div>
-
+                                        <p class="text-danger">No shipping address found. Please add a shipping address first. <a href="{{ route('shipping_address.create') }}@if(isset($_GET['cart_id']))?cart_id={{$_GET['cart_id']}} @endif">Add</a></p>
                                     @endif
+
+                                </div>
+                                <div class="row">
                                     @foreach ($shipping_addresses as $address)
                                         <div class=col-md-6>
                                             <label class="address-option d-block">
@@ -339,11 +337,13 @@
                                         </div>
                                     @endforeach
                                 </div>
+                            </div>
 
-                                <p>Delivery Time: Inside Dhaka - 5 days & Outside Dhaka - 10 days</p>
+                            <div style="display: none;" class="store_pickup_area">
+                                    <div class="border-bottom border-color-1 mb-3 mt-3">
+                                        <h4 class="section-title mb-0 pb-2 font-size-25">Choose Store:</h4>
+                                    </div>
 
-                                {{-- <div style="display: none;" class="store_pickup_area"> --}}
-                                <div class="store_pickup_area">
                                     <div class="row">
                                         @foreach ($stores as $store)
                                             <div class=col-md-6>
@@ -363,10 +363,15 @@
                                             </div>
                                         @endforeach
                                     </div>
-
                                 </div>
 
-                            </div>
+
+
+
+
+
+
+                            <p>Delivery Time: Inside Dhaka: 1-2 days & Outside Dhaka: 2-3 days</p>
 
                             <!-- End Billing Form -->
                         </div>
@@ -388,10 +393,37 @@
 
             window.updateTotal = function() {
                 var product_total = {{$product_total_price}};
+                let delivery_option = $('input[name="delivery_option"]:checked').val();
                 let voucher_discount = $('.voucher_discount_amount').text();
-                var shipping_cost = $('.shipping_cost').text();
+                var shipping_cost = $('input[name="shipping_address"]:checked').data('shippingcost');
+                let store_delivery_option = $('input[name="store_delivery_option"]:checked').val();
+                if (!shipping_cost) {
+                    shipping_cost = 0;
+                }
+                if(Number(store_delivery_option) == 3){
+                    shipping_cost = 0;
+                    $('.shipping_cost').text(0);
+                } else {
+                    $('.shipping_cost').text(parseFloat(shipping_cost).toFixed(0));
+                }
+                // let checked_stores = $('input[name="store_id"]:checked').length;
                 var in_total = (parseFloat(product_total) + parseFloat(shipping_cost)) - Number(voucher_discount);
-                $('.in_total').text(in_total.toFixed(0));
+                $('.in_total').text(in_total.toFixed(0));delivery_option
+            }
+
+
+            window.deliveryOptions = function(that) {
+                let delivery_option = $('input[name="delivery_option"]:checked').val();
+                let store_delivery_option = $('input[name="store_delivery_option"]:checked').val();
+
+                if(store_delivery_option == 3){
+                    $('.store_pickup_area').show();
+                    $('.choose-shipping-address').hide();
+                } else {
+                    $('.store_pickup_area').hide();
+                    $('.choose-shipping-address').show();
+                }
+                updateTotal();
             }
 
             // function updateTotal(){
@@ -413,17 +445,35 @@
 
             $("#complete_checkout").on("submit", function (e) {
                 e.preventDefault(); // stop immediate submission
-                let shipping_address_checked = $('input[name="shipping_address"]:checked').length;
-                if(shipping_address_checked == 0){
-                    alertify.error('Please select a shipping address.');
-                    return;
-                }
+
 
 
                 let delivery_option = $('input[name="delivery_option"]:checked').length;
+                let store_delivery_option = $('input[name="store_delivery_option"]:checked').val();
                 if(delivery_option == 0){
                     alertify.error('Delivery option is required');
                     return;
+                }
+
+                let check_store_delivery = $('input[name="delivery_option"]:checked').val();
+
+                if (!check_store_delivery) {
+                    check_store_delivery = 0;
+                }
+
+                if(store_delivery_option != 3){
+                    let shipping_address_checked = $('input[name="shipping_address"]:checked').length;
+                    if(shipping_address_checked == 0){
+                        alertify.error('Please select a shipping address.');
+                        return;
+                    }
+                }
+                if(store_delivery_option == 3){
+                    let store_id_checked = $('input[name="store_id"]:checked').length;
+                    if(store_id_checked == 0){
+                        alertify.error('Please select a store for pickup.');
+                        return;
+                    }
                 }
                 // let name = $("#name").val().trim();
                 // let email = $("#email").val().trim();
