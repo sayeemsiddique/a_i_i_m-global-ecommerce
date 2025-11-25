@@ -1,4 +1,4 @@
-<table class="table table-separate table-head-custom table-checkable table-striped">
+<table class="table table-bordered table-striped">
     <thead>
         <tr>
             <th>#</th>
@@ -31,21 +31,21 @@
 
                     <td>
                         @can('view_brand')
-                            <a href="{{route('admin.brand.show', $brand->id)}}" class="btn btn-sm btn-clean btn-icon" title="View">
-                                <i class="la la-eye"></i>
+                            <a href="{{route('admin.brand.show', $brand->id)}}" class="btn btn-outline btn-success btn-sm btn-rounded p-1" title="View">
+                                <i class="la la-eye p-0 text-white"></i>
                             </a>
                         @endcan
                         
                         @can('edit_brand')
-                            <a href="{{route('admin.brand.edit', $brand->id)}}" class="btn btn-sm btn-clean btn-icon" title="Edit">
-                                <i class="la la-edit"></i>
+                            <a href="{{route('admin.brand.edit', $brand->id)}}" class="btn btn-outline btn-info btn-sm btn-rounded p-1" title="Edit">
+                                <i class="la la-edit p-0 text-white"></i>
                             </a>
                         @endcan
 
                         @can('delete_brand')
                             
-                            <button class="btn btn-sm btn-clean btn-icon delete" title="Inactive" data-id="{{ $brand->id }}">
-                                    <i class="la la-trash"></i>
+                            <button class="btn btn-outline btn-danger btn-sm btn-rounded p-1 delete" title="Inactive" data-id="{{ $brand->id }}">
+                                    <i class="la la-trash p-0 text-white"></i>
                             </button>
                             
                         @endcan

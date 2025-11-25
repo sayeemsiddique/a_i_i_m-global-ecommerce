@@ -157,13 +157,13 @@
 
                                                     <td>
                                                         @can('view_store')
-                                                            <a href="{{route('admin.store.show', $store->id)}}" class="btn btn-sm btn-clean btn-icon" title="View">
-                                                                <i class="la la-eye"></i>
+                                                            <a href="{{route('admin.store.show', $store->id)}}" class="btn btn-outline btn-success btn-sm btn-rounded p-1" title="View">
+                                                                <i class="la la-eye p-0 text-white"></i>
                                                             </a>
                                                         @endcan
 
                                                         @can('edit_store')
-                                                            <a title="Edit" type="button" class="btn btn-sm bg-info p-1" href="{{ route('admin.store.edit', Crypt::encryptString($store->id)) }}">
+                                                            <a title="Edit" type="button" class="btn btn-outline btn-info btn-sm btn-rounded p-1" href="{{ route('admin.store.edit', Crypt::encryptString($store->id)) }}">
                                                                 <i class="la la-edit p-0 text-white"></i>
                                                             </a>
 
@@ -173,13 +173,13 @@
                                                         <form action="{{ route('admin.store.delete', $store) }}" method="POST" style="display: contents;">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <button type="submit" class="btn btn-sm bg-danger p-1" title="Delete" onclick="return confirm('Are you sure you want to delete this store?');">
+                                                            <button type="submit" class="btn btn-outline btn-danger btn-sm btn-rounded p-1" title="Delete" onclick="return confirm('Are you sure you want to delete this store?');">
                                                                 <i class="la la-trash p-0 text-white"></i>
                                                             </button>
                                                         </form>
 
                                                             {{-- <button class="btn btn-sm btn-clean btn-icon delete" title="Inactive" data-id="{{ $store->id }}">
-                                                                    <i class="la la-trash"></i>
+                                                                    <i class="la la-trash p-0 text-white"></i>
                                                             </button> --}}
 
                                                         @endcan

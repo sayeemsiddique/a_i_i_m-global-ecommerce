@@ -33,7 +33,7 @@
                             </a>
                         @endcan --}}
                         @can('edit_region')
-                            <a href="#" class="btn btn-sm bg-info p-1" title="Edit" data-toggle="modal" data-target="#exampleModalgrid_{{$region->id}}">
+                            <a href="#" class="btn btn-outline btn-info btn-sm btn-rounded p-1" title="Edit" data-toggle="modal" data-target="#exampleModalgrid_{{$region->id}}">
                                 <i class="la la-edit p-0 text-white"></i>
                             </a>
 
@@ -83,7 +83,7 @@
 
 
                         @can('delete_region')
-                            <a onclick="return confirm('Are you sure to delete this permanently')" href="{{route('admin.region.delete',$region->id)}}" class="btn btn-sm bg-danger p-1" title="Delete Permanently" data-id="{{ $region->id }}">
+                            <a onclick="return confirm('Are you sure to delete this permanently')" href="{{route('admin.region.delete',$region->id)}}" class="btn btn-outline btn-danger btn-sm btn-rounded p-1" title="Delete Permanently" data-id="{{ $region->id }}">
                                 <i class="la la-trash p-0 text-white"></i>
                             </a>
                         @endcan

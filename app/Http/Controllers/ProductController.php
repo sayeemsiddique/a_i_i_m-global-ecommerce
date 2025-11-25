@@ -1235,4 +1235,27 @@ class ProductController extends Controller
             return redirect()->route('admin.product.index')->with('success', 'Product Added');
 
     }
+
+    public function upload_remove($id)
+    {
+        $user = Auth::user();
+
+        if(Gate::allows('edit_product',$user))
+        {
+
+            $upload = Upload::where('id',$id)->first();
+
+            if ($upload) {
+                $image_path = storage_path().'/app/public/gallery/'.$upload->name;
+                if(file_exists($image_path)){
+                    unlink($image_path);
+                }
+                $upload->delete();
+
+            }
+
+            return redirect()->back()->with('success',"Gallery image removed.");
+            
+        }
+    }
 }

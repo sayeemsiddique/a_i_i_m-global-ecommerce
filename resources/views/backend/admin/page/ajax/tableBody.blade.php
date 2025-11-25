@@ -39,21 +39,21 @@
                 </td>
                 <td>
                     @can('view_page')
-                        <a href="{{route('admin.page.show', $page->id)}}" class="btn btn-sm btn-clean btn-icon" title="view">
-                            <i class="la la-eye"></i>
+                        <a href="{{route('admin.page.show', $page->id)}}" class="btn btn-outline btn-success btn-sm btn-rounded p-1" title="view">
+                            <i class="la la-eye p-0 text-white"></i>
                         </a>
                     @endcan
 
                     @can('edit_page')
 
-                        <a href="{{route('admin.page.edit', $page->id)}}" class="btn btn-sm btn-clean btn-icon" title="Edit">
-                            <i class="la la-edit"></i>
+                        <a href="{{route('admin.page.edit', $page->id)}}" class="btn btn-outline btn-info btn-sm btn-rounded p-1" title="Edit">
+                            <i class="la la-edit p-0 text-white"></i>
                         </a>
                     @endcan
 
                     @can('delete_page')
-                        <a href="{{route('admin.page.delete', $page->id)}}" onclick="return confirm('Are you sure you want to delete this item?')" class="btn btn-sm btn-clean btn-icon" title="Delete">
-                            <i class="la la-trash"></i>
+                        <a href="{{route('admin.page.delete', $page->id)}}" onclick="return confirm('Are you sure you want to delete this item?')" class="btn btn-outline btn-danger btn-sm btn-rounded p-1" title="Delete">
+                            <i class="la la-trash p-0 text-white"></i>
                         </a>
                     @endcan
 

@@ -1,4 +1,4 @@
-<table class="table table-separate table-head-custom table-checkable table-striped">
+<table class="table table-bordered table-striped">
     <thead>
         <tr>
             <th>#</th>
@@ -36,24 +36,24 @@
 
                     <td>
                         @can('view_packing_type')
-                            <a href="{{route('admin.packing_type.show', $packing_type->id)}}" class="btn btn-sm btn-clean btn-icon" title="view">
-                                <i class="la la-eye"></i>
+                            <a href="{{route('admin.packing_type.show', $packing_type->id)}}" class="btn btn-outline btn-success btn-sm btn-rounded p-1" title="view">
+                                <i class="la la-eye p-0 text-white"></i>
                             </a>
                         @endcan
                         
                         @can('edit_packing_type')
-                            <a href="{{route('admin.packing_type.edit', $packing_type->id)}}" class="btn btn-sm btn-clean btn-icon" title="Edit">
-                                <i class="la la-edit"></i>
+                            <a href="{{route('admin.packing_type.edit', $packing_type->id)}}" class="btn btn-outline btn-info btn-sm btn-rounded p-1" title="Edit">
+                                <i class="la la-edit p-0 text-white"></i>
                             </a>
                         @endcan
 
                         @can('delete_packing_type')
                             @if ($packing_type->status == 1)
-                                <button class="btn btn-sm btn-clean btn-icon delete" title="Delete" data-id="{{ $packing_type->id }}">
-                                    <i class="la la-trash"></i>
+                                <button class="btn btn-outline btn-danger btn-sm btn-rounded p-1 delete" title="Delete" data-id="{{ $packing_type->id }}">
+                                    <i class="la la-trash p-0 text-white"></i>
                                 </button>
                             @elseif ($packing_type->status == 0)
-                                <button class="btn btn-sm btn-clean btn-icon delete" title="Active" data-id="{{ $packing_type->id }}">
+                                <button class="btn btn-outline btn-danger btn-sm btn-rounded p-1 delete" title="Active" data-id="{{ $packing_type->id }}">
                                     <i class="la la-check"></i>
                                 </button>
                             @endif

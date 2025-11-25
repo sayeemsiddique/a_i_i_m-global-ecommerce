@@ -1,4 +1,4 @@
-<table class="table table-separate table-head-custom table-checkable table-striped">
+<table class="table table-bordered table-striped">
     <thead>
         <tr>
             <th>#</th>
@@ -35,24 +35,24 @@
 
                     <td>
                         @can('view_bank')
-                            <a href="{{route('admin.bank.show', $bank->id)}}" class="btn btn-sm btn-clean btn-icon" title="view">
-                                <i class="la la-eye"></i>
+                            <a href="{{route('admin.bank.show', $bank->id)}}" class="btn btn-outline btn-success btn-sm btn-rounded p-1" title="view">
+                                <i class="la la-eye p-0 text-white"></i>
                             </a>
                         @endcan
                         
                         @can('edit_bank')
-                            <a href="{{route('admin.bank.edit', $bank->id)}}" class="btn btn-sm btn-clean btn-icon" title="Edit">
-                                <i class="la la-edit"></i>
+                            <a href="{{route('admin.bank.edit', $bank->id)}}" class="btn btn-outline btn-info btn-sm btn-rounded p-1" title="Edit">
+                                <i class="la la-edit p-0 text-white"></i>
                             </a>
                         @endcan
 
                         @can('delete_bank')
                             @if ($bank->status == 1)
-                                <button class="btn btn-sm btn-clean btn-icon delete" title="Delete" data-id="{{ $bank->id }}">
-                                    <i class="la la-trash"></i>
+                                <button class="btn btn-outline btn-danger btn-sm btn-rounded p-1 delete" title="Delete" data-id="{{ $bank->id }}">
+                                    <i class="la la-trash p-0 text-white"></i>
                                 </button>
                             @elseif ($bank->status == 0)
-                                <button class="btn btn-sm btn-clean btn-icon delete" title="Active" data-id="{{ $bank->id }}">
+                                <button class="btn btn-outline btn-danger btn-sm btn-rounded p-1 delete" title="Active" data-id="{{ $bank->id }}">
                                     <i class="la la-check"></i>
                                 </button>
                             @endif

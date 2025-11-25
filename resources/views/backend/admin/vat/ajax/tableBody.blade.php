@@ -1,4 +1,4 @@
-<table class="table table-separate table-head-custom table-checkable table-striped">
+<table class="table table-bordered table-striped">
     <thead>
         <tr>
             <th>#</th>
@@ -36,17 +36,17 @@
 
                     <td>
                         @can('view_vat_type')
-                            <a href="{{route('admin.vat.show', $vat->id)}}" class="btn btn-sm btn-clean btn-icon" title="View">
-                                <i class="la la-eye"></i>
+                            <a href="{{route('admin.vat.show', $vat->id)}}" class="btn btn-outline btn-success btn-sm btn-rounded p-1" title="View">
+                                <i class="la la-eye p-0 text-white"></i>
                             </a>
                         @endcan
                         
                         @can('edit_vat_type')
                             {{-- <a href="{{route('admin.vat.edit', $vat->id)}}" class="btn btn-sm btn-clean btn-icon" title="Edit">
-                                <i class="la la-edit"></i>
+                                <i class="la la-edit p-0 text-white"></i>
                             </a> --}}
-                            <button title="Edit" type="button" class="btn btn-sm btn-clean btn-icon" data-toggle="modal" data-target="#vat_edit{{$vat->id}}">
-                                <i class="la la-edit"></i>
+                            <button title="Edit" type="button" class="btn btn-outline btn-info btn-sm btn-rounded p-1" data-toggle="modal" data-target="#vat_edit{{$vat->id}}">
+                                <i class="la la-edit p-0 text-white"></i>
                             </button>
 
                             <!-- The Modal -->
@@ -109,8 +109,8 @@
 
                         @can('delete_vat_type')
                             
-                            <button class="btn btn-sm btn-clean btn-icon delete" title="Inactive" data-id="{{ $vat->id }}">
-                                    <i class="la la-trash"></i>
+                            <button class="btn btn-outline btn-danger btn-sm btn-rounded p-1 delete" title="Inactive" data-id="{{ $vat->id }}">
+                                    <i class="la la-trash p-0 text-white"></i>
                             </button>
                             
                         @endcan

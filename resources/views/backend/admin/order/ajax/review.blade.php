@@ -1,4 +1,4 @@
-<table class="table table-separate table-head-custom table-checkable table-striped">
+<table class="table table-bordered table-striped">
     <thead>
         <tr>
             <th>#</th>
@@ -58,8 +58,8 @@
                         @endcan
 
                         @can('delete_review')
-                            <button class="btn btn-sm btn-clean btn-icon delete" title="Delete" data-id="{{ $review->id }}">
-                                <i class="la la-trash"></i>
+                            <button class="btn btn-outline btn-danger btn-sm btn-rounded p-1 delete" title="Delete" data-id="{{ $review->id }}">
+                                <i class="la la-trash p-0 text-white"></i>
                             </button>
                         @endcan
                     </td>

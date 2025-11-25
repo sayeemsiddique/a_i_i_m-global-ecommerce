@@ -32,7 +32,7 @@
                 <td>
                     @can('edit_assign_permission')
 
-                        <a href="{{route('admin.rolePermission.edit',$rolePerm->id)}}" class="btn btn-sm bg-primary p-1" title="Edit">
+                        <a href="{{route('admin.rolePermission.edit',$rolePerm->id)}}" class="btn btn-outline btn-info btn-sm btn-rounded p-1" title="Edit">
                             <i class="la la-edit p-0 text-white"></i>
                         </a>
                     @endcan

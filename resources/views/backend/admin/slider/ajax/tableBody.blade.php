@@ -32,25 +32,25 @@
                 <td>
                     @can('view_slider')
                         
-                        <a href="{{route('admin.slider.show', $slider->id)}}" class="btn btn-sm btn-clean btn-icon" title="view">
-                            <i class="la la-eye"></i>
+                        <a href="{{route('admin.slider.show', $slider->id)}}" class="btn btn-outline btn-success btn-sm btn-rounded p-1" title="view">
+                            <i class="la la-eye p-0 text-white"></i>
                         </a>
                     @endcan
                     @can('edit_slider')
 
-                        <a href="{{route('admin.slider.edit', $slider->id)}}" class="btn btn-sm btn-clean btn-icon" title="Edit">
-                            <i class="la la-edit"></i>
+                        <a href="{{route('admin.slider.edit', $slider->id)}}" class="btn btn-outline btn-info btn-sm btn-rounded p-1" title="Edit">
+                            <i class="la la-edit p-0 text-white"></i>
                         </a>
                     @endcan
                     
 
                     @can('delete_slider')
                         @if ($slider->status == 1 || $slider->status == 0)
-                            <button class="btn btn-sm btn-clean btn-icon delete" title="Delete" data-id="{{ $slider->id }}">
-                                <i class="la la-trash"></i>
+                            <button class="btn btn-outline btn-danger btn-sm btn-rounded p-1 delete" title="Delete" data-id="{{ $slider->id }}">
+                                <i class="la la-trash p-0 text-white"></i>
                             </button>
                         @elseif ($slider->status == 2)
-                            <button class="btn btn-sm btn-clean btn-icon delete" title="Restore" data-id="{{ $slider->id }}">
+                            <button class="btn btn-outline btn-danger btn-sm btn-rounded p-1 delete" title="Restore" data-id="{{ $slider->id }}">
                                 <i class="la la-trash-restore"></i>
                             </button>
                         @endif

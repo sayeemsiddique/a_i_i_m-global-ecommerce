@@ -145,7 +145,7 @@
 
 
 
-                                <table class="table table-separate table-head-custom table-checkable table-striped" id="TableData">
+                                <table class="table table-bordered table-striped" id="TableData">
                                     <thead>
                                         <tr>
                                             <th>#</th>

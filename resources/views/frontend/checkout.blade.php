@@ -232,8 +232,35 @@
                                     <!-- End Product Content -->
                                     <div class="border-top border-width-3 border-color-1 pt-3 mb-3">
                                         <!-- Basics Accordion -->
+                                        <div id="basicsAccordion2">
                                         <small>
                                             Delivery Option <span class="text-danger">*</span>
+                                        </small>
+                                        @if (count($stores) > 0)
+                                                <div class="border-bottom border-color-1 border-dotted-bottom">
+                                                    <div class="p-3" id="basicsHeadingThree">
+                                                        <div class="custom-control custom-radio">
+                                                            <input type="radio" class="custom-control-input" id="stylishRadioStore" name="store_delivery_option" value="3" autocomplete="off" onclick="deliveryOptions(this);">
+                                                            <label class="custom-control-label form-label" for="stylishRadioStore" data-toggle="collapse" data-target="#basicsCollapseStore" aria-expanded="true" aria-controls="basicsCollapseStore">
+                                                                Collect from store
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                            <div class="border-bottom border-color-1 border-dotted-bottom">
+                                                    <div class="p-3" id="basicsHeadingFour">
+                                                        <div class="custom-control custom-radio">
+                                                            <input type="radio" class="custom-control-input" id="stylishRadioHome" name="store_delivery_option" value="4" autocomplete="off" onclick="deliveryOptions(this);">
+                                                            <label class="custom-control-label form-label" for="stylishRadioHome" data-toggle="collapse" data-target="#basicsCollapseHome" aria-expanded="true" aria-controls="basicsCollapseHome">
+                                                                Home Delivery
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                        </div>
+                                        <small>
+                                            Payment Option <span class="text-danger">*</span>
                                         </small>
                                         <div id="basicsAccordion1">
                                             <div class="border-bottom border-color-1 border-dotted-bottom">
@@ -258,18 +285,7 @@
                                                 </div>
                                             </div>
 
-                                            @if (count($stores) > 0)
-                                                <div class="border-bottom border-color-1 border-dotted-bottom">
-                                                    <div class="p-3" id="basicsHeadingThree">
-                                                        <div class="custom-control custom-radio">
-                                                            <input type="checkbox" class="custom-control-input" id="stylishRadioStore" name="store_delivery_option" value="3" autocomplete="off" onclick="deliveryOptions(this);">
-                                                            <label class="custom-control-label form-label" for="stylishRadioStore" data-toggle="collapse" data-target="#basicsCollapseStore" aria-expanded="true" aria-controls="basicsCollapseStore">
-                                                                I will collect from store
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            @endif
+                                            
 
                                             <!-- End Card -->
 
@@ -317,7 +333,7 @@
                                 <div>
 
                                     @if (count($shipping_addresses) == 0)
-                                        <p class="text-danger">No shipping address found. Please add a shipping address first. <a href="{{ route('shipping_address.create') }}@if(isset($_GET['cart_id']))?cart_id={{$_GET['cart_id']}} @endif">Add</a></p>
+                                        <p class="text-danger">No shipping address found. Please add a shipping address first. <a class="bg-danger p-2 text-white border-radious-2" href="{{ route('shipping_address.create') }}@if(isset($_GET['cart_id']))?cart_id={{$_GET['cart_id']}} @endif">+ Add</a></p>
                                     @endif
 
                                 </div>
@@ -451,8 +467,13 @@
                 let delivery_option = $('input[name="delivery_option"]:checked').length;
                 let store_delivery_option = $('input[name="store_delivery_option"]:checked').val();
                 if(delivery_option == 0){
-                    alertify.error('Delivery option is required');
+                    alertify.error('Payment option is required');
                     return;
+                }
+
+                if (!store_delivery_option) {
+                    alertify.error('Please select a delivery option');
+                        return;
                 }
 
                 let check_store_delivery = $('input[name="delivery_option"]:checked').val();

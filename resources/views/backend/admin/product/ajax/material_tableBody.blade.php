@@ -150,7 +150,7 @@
         ],
     );
 @endphp
-<table class="table table-separate table-head-custom table-checkable table-striped">
+<table class="table table-bordered table-striped">
     <thead>
         <tr>
             <th>#</th>
@@ -195,14 +195,14 @@
 
                     <td>
                         @can('view_material_product')
-                            <a href="{{route('admin.product.show', $product->id)}}" class="btn btn-sm btn-clean btn-icon" title="View">
-                                <i class="la la-eye"></i>
+                            <a href="{{route('admin.product.show', $product->id)}}" class="btn btn-outline btn-success btn-sm btn-rounded p-1" title="View">
+                                <i class="la la-eye p-0 text-white"></i>
                             </a>
                         @endcan
                         
                         @can('edit_material_product')
-                            <button type="button" class="btn btn-sm btn-clean btn-icon" data-toggle="modal" data-target="#edit_product{{$product->id}}">
-                                <i class="la la-edit"></i>
+                            <button type="button" class="btn btn-outline btn-info btn-sm btn-rounded p-1" data-toggle="modal" data-target="#edit_product{{$product->id}}">
+                                <i class="la la-edit p-0 text-white"></i>
                             </button>
 
                             <div class="modal" id="edit_product{{$product->id}}">
@@ -291,15 +291,15 @@
                                 </div>
                             </div>
 
-                            {{-- <a href="{{route('admin.product.edit', $product->id)}}" class="btn btn-sm btn-clean btn-icon" title="Edit">
-                                <i class="la la-edit"></i>
+                            {{-- <a href="{{route('admin.product.edit', $product->id)}}" class="btn btn-outline btn-info btn-sm btn-rounded p-1" title="Edit">
+                                <i class="la la-edit p-0 text-white"></i>
                             </a> --}}
                         @endcan
 
                         @can('delete_material_product')
                             
-                            <button class="btn btn-sm btn-clean btn-icon delete" title="Inactive" data-id="{{ $product->id }}">
-                                    <i class="la la-trash"></i>
+                            <button class="btn btn-outline btn-danger btn-sm btn-rounded p-1 delete" title="Inactive" data-id="{{ $product->id }}">
+                                    <i class="la la-trash p-0 text-white"></i>
                             </button>
                             
                         @endcan

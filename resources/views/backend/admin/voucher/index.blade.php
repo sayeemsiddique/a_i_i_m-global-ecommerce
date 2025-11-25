@@ -183,13 +183,13 @@
 
                                                     <td>
                                                         @can('view_voucher')
-                                                            <a href="{{route('admin.voucher.show', $voucher->id)}}" class="btn btn-sm btn-clean btn-icon" title="View">
-                                                                <i class="la la-eye"></i>
+                                                            <a href="{{route('admin.voucher.show', $voucher->id)}}" class="btn btn-outline btn-success btn-sm btn-rounded p-1" title="View">
+                                                                <i class="la la-eye p-0 text-white"></i>
                                                             </a>
                                                         @endcan
 
                                                         @can('edit_voucher')
-                                                            <button title="Edit" type="button" class="btn btn-sm bg-info p-1" data-toggle="modal" data-target="#voucher_edit{{$voucher->id}}">
+                                                            <button title="Edit" type="button" class="btn btn-outline btn-info btn-sm btn-rounded p-1" data-toggle="modal" data-target="#voucher_edit{{$voucher->id}}">
                                                                 <i class="la la-edit p-0 text-white"></i>
                                                             </button>
 
@@ -284,13 +284,13 @@
                                                         <form action="{{ route('admin.voucher.delete', $voucher) }}" method="POST" style="display: contents;">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <button type="submit" class="btn btn-sm bg-danger p-1" title="Delete" onclick="return confirm('Are you sure you want to delete this voucher?');">
+                                                            <button type="submit" class="btn btn-outline btn-danger btn-sm btn-rounded p-1" title="Delete" onclick="return confirm('Are you sure you want to delete this voucher?');">
                                                                 <i class="la la-trash p-0 text-white"></i>
                                                             </button>
                                                         </form>
 
                                                             {{-- <button class="btn btn-sm btn-clean btn-icon delete" title="Inactive" data-id="{{ $voucher->id }}">
-                                                                    <i class="la la-trash"></i>
+                                                                    <i class="la la-trash p-0 text-white"></i>
                                                             </button> --}}
 
                                                         @endcan

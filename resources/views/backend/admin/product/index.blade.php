@@ -121,13 +121,13 @@
                                                         @endcan
                                                         
                                                         @can('edit_product')
-                                                            <a href="{{ route('admin.product.edit', $product->id) }}" class="btn btn-sm bg-info p-1" title="Edit">
+                                                            <a href="{{ route('admin.product.edit', $product->id) }}" class="btn btn-outline btn-info btn-sm btn-rounded p-1" title="Edit">
                                                                 <i class="la la-edit p-0 text-white"></i>
                                                             </a>
                                                         @endcan
 
                                                         @can('delete_product')
-                                                            <button class="btn btn-sm bg-danger p-1 delete" onclick="deleteProduct({{ $product->id }})" title="Inactive" data-id="{{ $product->id }}">
+                                                            <button class="btn btn-outline btn-danger btn-sm btn-rounded p-1 delete" onclick="deleteProduct({{ $product->id }})" title="Inactive" data-id="{{ $product->id }}">
                                                                 <i class="la la-trash p-0 text-white"></i>
                                                             </button>
                                                         @endcan

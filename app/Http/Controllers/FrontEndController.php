@@ -569,10 +569,12 @@ class FrontendController extends Controller
 
     public function account()
     {
-        if (Auth::user()) {
+        $user = Auth::user();
+        if ($user) {
 
-            $user = User::where('id', Auth::id())->first();
-            return view('customer.index', compact('user'));
+            $cart_count = Cart::where('user_id',$user->id)->select('id')->count();
+            $total_order = Order::where('type',2)->where('user_id',$user->id)->select('id')->count();
+            return view('customer.index', compact('user','cart_count','total_order'));
 
         } else {
 

@@ -25,7 +25,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive ajax-data-container pt-3">
-                                    <table class="table table-separate table-head-custom table-checkable table-striped" >
+                                    <table class="table table-bordered table-striped" >
                                         <thead>
                                             <tr>
                                                 <th>#</th>

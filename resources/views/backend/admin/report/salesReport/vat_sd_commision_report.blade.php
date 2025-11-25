@@ -151,7 +151,7 @@
                                     $total_vds_amount = 0;
                                 @endphp
                                     <div class="table-responsive ajax-data-container pt-3">
-                                        <table class="table table-separate table-head-custom table-checkable table-striped" id="TableData">
+                                        <table class="table table-bordered table-striped" id="TableData">
                                             <thead>
                                                 <tr>
                                                     <th>#</th>

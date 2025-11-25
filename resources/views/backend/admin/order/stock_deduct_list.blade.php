@@ -65,7 +65,7 @@
 
                             <div class="table-responsive ajax-data-container pt-3">
                                 {{-- @include('backend.admin.order.ajax.stock_in_list')                                     --}}
-                                <table class="table table-separate table-head-custom table-checkable table-striped">
+                                <table class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
                                             <th>#</th>
@@ -119,14 +119,14 @@
                                                             </span>
                                                         @endif
                                                         @can('view_order')
-                                                            <a href="{{route('admin.order.stock_in_show', $order->id)}}" class="btn btn-sm btn-clean btn-icon" title="view">
-                                                                <i class="la la-eye"></i>
+                                                            <a href="{{route('admin.order.stock_in_show', $order->id)}}" class="btn btn-outline btn-success btn-sm btn-rounded p-1" title="view">
+                                                                <i class="la la-eye p-0 text-white"></i>
                                                             </a>
                                                         @endcan
 
                                                         @can('delete_order')
                                                             {{-- <button class="btn btn-sm btn-clean btn-icon delete" title="Delete" data-id="{{ $order->id }}">
-                                                                <i class="la la-trash"></i>
+                                                                <i class="la la-trash p-0 text-white"></i>
                                                             </button> --}}
 
                                                         @endcan

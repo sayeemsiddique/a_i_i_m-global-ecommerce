@@ -214,7 +214,7 @@
                                         @endif
                                     </div>
 
-                                    <table class="table table-separate table-head-custom table-checkable table-striped" id="TableData">
+                                    <table class="table table-bordered table-striped" id="TableData">
                                         <thead>
                                             <tr>
                                                 <th>#</th>
@@ -285,14 +285,14 @@
 
                                                         <td>
                                                             @can('view_order')
-                                                                <a href="{{route('admin.order.show', Crypt::encryptString($order->id))}}" class="btn btn-sm btn-clean btn-icon" title="view">
-                                                                    <i class="la la-eye"></i>
+                                                                <a href="{{route('admin.order.show', Crypt::encryptString($order->id))}}" class="btn btn-outline btn-success btn-sm btn-rounded p-1" title="view">
+                                                                    <i class="la la-eye p-0 text-white"></i>
                                                                 </a>
                                                             @endcan
 
                                                             @can('delete_order')
                                                                 <button class="btn btn-sm btn-clean btn-icon delete" title="Delete" data-id="{{ $order->id }}">
-                                                                    <i class="la la-trash"></i>
+                                                                    <i class="la la-trash p-0 text-white"></i>
                                                                 </button>
                                                                 @if ($order->status == 1)
 

@@ -33,25 +33,25 @@
                 </td>
                 <td>
                     @can('view_page')
-                        <a href="{{route('admin.page.show', $page->id)}}" class="btn btn-sm btn-clean btn-icon" title="view">
-                            <i class="la la-eye"></i>
+                        <a href="{{route('admin.page.show', $page->id)}}" class="btn btn-outline btn-success btn-sm btn-rounded p-1" title="view">
+                            <i class="la la-eye p-0 text-white"></i>
                         </a>
                     @endcan
                     @can('edit_page')
 
-                        <a href="{{route('admin.page.edit', $page->id)}}" class="btn btn-sm btn-clean btn-icon" title="Edit">
-                            <i class="la la-edit"></i>
+                        <a href="{{route('admin.page.edit', $page->id)}}" class="btn btn-outline btn-info btn-sm btn-rounded p-1" title="Edit">
+                            <i class="la la-edit p-0 text-white"></i>
                         </a>
                     @endcan
                     
 
                     @can('delete_page')
                         @if ($page->status == 1 || $page->status == 0)
-                            <button class="btn btn-sm btn-clean btn-icon delete" title="Delete" data-id="{{ $page->id }}">
-                                <i class="la la-trash"></i>
+                            <button class="btn btn-outline btn-danger btn-sm btn-rounded p-1 delete" title="Delete" data-id="{{ $page->id }}">
+                                <i class="la la-trash p-0 text-white"></i>
                             </button>
                         @elseif ($page->status == 2)
-                            <button class="btn btn-sm btn-clean btn-icon delete" title="Restore" data-id="{{ $page->id }}">
+                            <button class="btn btn-outline btn-danger btn-sm btn-rounded p-1 delete" title="Restore" data-id="{{ $page->id }}">
                                 <i class="la la-trash-restore"></i>
                             </button>
                         @endif

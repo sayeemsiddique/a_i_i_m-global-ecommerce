@@ -33,25 +33,25 @@
                 </td>
                 <td>
                     @can('view_office')
-                        <a href="{{route('admin.office.show', $office->id)}}" class="btn btn-sm btn-clean btn-icon" title="view">
-                            <i class="la la-eye"></i>
+                        <a href="{{route('admin.office.show', $office->id)}}" class="btn btn-outline btn-success btn-sm btn-rounded p-1" title="view">
+                            <i class="la la-eye p-0 text-white"></i>
                         </a>
                     @endcan
                     @can('edit_office')
 
-                        <a href="{{route('admin.office.edit', $office->id)}}" class="btn btn-sm btn-clean btn-icon" title="Edit">
-                            <i class="la la-edit"></i>
+                        <a href="{{route('admin.office.edit', $office->id)}}" class="btn btn-outline btn-info btn-sm btn-rounded p-1" title="Edit">
+                            <i class="la la-edit p-0 text-white"></i>
                         </a>
                     @endcan
                     
 
                     @can('delete_office')
                         @if ($office->status == 1 || $office->status == 0)
-                            <button class="btn btn-sm btn-clean btn-icon delete" title="Delete" data-id="{{ $office->id }}">
-                                <i class="la la-trash"></i>
+                            <button class="btn btn-outline btn-danger btn-sm btn-rounded p-1 delete" title="Delete" data-id="{{ $office->id }}">
+                                <i class="la la-trash p-0 text-white"></i>
                             </button>
                         @elseif ($office->status == 2)
-                            <button class="btn btn-sm btn-clean btn-icon delete" title="Restore" data-id="{{ $office->id }}">
+                            <button class="btn btn-outline btn-danger btn-sm btn-rounded p-1 delete" title="Restore" data-id="{{ $office->id }}">
                                 <i class="la la-trash-restore"></i>
                             </button>
                         @endif

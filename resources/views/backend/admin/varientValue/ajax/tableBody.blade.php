@@ -1,4 +1,4 @@
-<table class="table table-separate table-head-custom table-checkable table-striped">
+<table class="table table-bordered table-striped">
     <thead>
         <tr>
             <th>#</th>
@@ -35,18 +35,18 @@
 
                     <td>
                         @can('edit_varient_value')
-                            <a href="{{ route('admin.varient_value.edit', $varient_value->id) }}" class="btn btn-sm btn-clean btn-icon" title="Edit">
-                                <i class="la la-edit"></i>
+                            <a href="{{ route('admin.varient_value.edit', $varient_value->id) }}" class="btn btn-outline btn-info btn-sm btn-rounded p-1" title="Edit">
+                                <i class="la la-edit p-0 text-white"></i>
                             </a>
                         @endcan
 
                         @can('delete_varient_value')
                             @if ($varient_value->status == 1)
-                                <button class="btn btn-sm btn-clean btn-icon delete" title="Delete" data-id="{{ $varient_value->id }}">
-                                    <i class="la la-trash"></i>
+                                <button class="btn btn-outline btn-danger btn-sm btn-rounded p-1 delete" title="Delete" data-id="{{ $varient_value->id }}">
+                                    <i class="la la-trash p-0 text-white"></i>
                                 </button>
                             @elseif ($varient_value->status == 0)
-                                <button class="btn btn-sm btn-clean btn-icon delete" title="Active" data-id="{{ $varient_value->id }}">
+                                <button class="btn btn-outline btn-danger btn-sm btn-rounded p-1 delete" title="Active" data-id="{{ $varient_value->id }}">
                                     <i class="la la-check"></i>
                                 </button>
                             @endif
