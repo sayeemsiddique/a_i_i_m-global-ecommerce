@@ -56,8 +56,9 @@
                                     <tbody>
                                         @foreach ($order->orderDetails as $orderProduct)
                                             @php
-                                                $returned_orders = $orderProduct->returnOrderInfo->where('status', 0)->where('user_id', auth()->user()->id);
+                                                $returned_orders = $orderProduct->returnOrderInfo->whereIn('status', [0,1])->where('user_id', auth()->user()->id);
                                                 $return_quantity = 0;
+                                                // dd($returned_orders);
                                                 if (count($returned_orders) > 0) {
                                                     foreach ($returned_orders as $key => $returned_order) {
                                                         foreach ($returned_order->orderDetails as $key => $returnOrderDetails) {
@@ -108,10 +109,10 @@
                                             <td colspan="1" class="text-right">{{ number_format($order->shipping_cost, 0, '.', '') }}</td>
                                         </tr>
 
-                                        <tr>
+                                        {{-- <tr>
                                             <td colspan="4" class="text-right"><strong>Grand Total</strong></td>
                                             <td colspan="1" class="text-right">{{ number_format($order->grand_total_price, 0, '.', '') }}</td>
-                                        </tr>
+                                        </tr> --}}
                                         <tr>
                                             <td colspan="3" class="text-right"><strong>Return Reason</strong></td>
                                             <td colspan="2" class="text-right">

@@ -1151,7 +1151,8 @@ class FrontendController extends Controller
                 $order_data['user_id'] = auth()->user()->id;
                 $order_data['status'] = 0;
                 $order_data['payment_status'] = 1; // 1 means pending helper function check
-                $order_data['total_price'] = round($product_total_price) - round($voucher_discount);
+                // $order_data['total_price'] = round($product_total_price) - round($voucher_discount);
+                $order_data['total_price'] = round($product_total_price);
                 $order_data['grand_total_price'] = round($product_total_price) + round($shipping_address->divisionInfo->shipping_cost ?? 0) - round($voucher_discount);
                 $order_data['discount_amount'] = 0;
                 // $order_data['coupon_discount'] = 0;
@@ -1184,15 +1185,15 @@ class FrontendController extends Controller
                     $order_detail['varient_id'] = $cart->variation_id;
 
                     if ($cart->variation_id == 0){
-                        $order_detail['f_price'] = $cart->productInfo->price ?? 0;
-                        $order_detail['price'] = $cart->productInfo->discount_price ?? 0;
-                        $order_detail['discount'] = $cart->productInfo->discount ?? 0;
-                        $order_detail['discount_type'] = $cart->productInfo->discount_type ?? 0;
+                        $order_detail['f_price'] = round($cart->productInfo->price ?? 0);
+                        $order_detail['price'] = round($cart->productInfo->discount_price ?? 0);
+                        $order_detail['discount'] = round($cart->productInfo->discount ?? 0);
+                        $order_detail['discount_type'] = round($cart->productInfo->discount_type ?? 0);
                     } else {
-                        $order_detail['f_price'] = $cart->varientInfo->price ?? 0;
-                        $order_detail['price'] = $cart->varientInfo->discount_price ?? 0;
-                        $order_detail['discount'] = $cart->varientInfo->discount ?? 0;
-                        $order_detail['discount_type'] = $cart->varientInfo->discount_type ?? 0;
+                        $order_detail['f_price'] = round($cart->varientInfo->price ?? 0);
+                        $order_detail['price'] = round($cart->varientInfo->discount_price ?? 0);
+                        $order_detail['discount'] = round($cart->varientInfo->discount ?? 0);
+                        $order_detail['discount_type'] = round($cart->varientInfo->discount_type ?? 0);
                     }
 
                     OrderDetail::create($order_detail);
@@ -1750,8 +1751,14 @@ class FrontendController extends Controller
 
         $order_id = Crypt::decryptString($request->order_id);
 
-        $order = Order::where('id', $order_id)->first();
+        $order = Order::where([
+            'id' => $order_id,
+            'user_id' => auth()->user()->id,
+        ])->first();
 
+        if (!$order) {
+            return redirect()->back()->with('error', 'This order return not possible at this stage');
+        }
         if ($order->status != 1) {
             return redirect()->back()->with('error', 'This order return not possible at this stage');
         }
@@ -1802,9 +1809,11 @@ class FrontendController extends Controller
 
         DB::transaction(function () use ($request,$order) {
 
+            $voucher_discount = 0;
+
             $tracking_code = date("yhis");
             $data['tracking_code'] = $tracking_code;
-            $data['invoice_no'] = sprintf('%08d', $order->id);;
+            $data['invoice_no'] = sprintf('%08d', $order->id);
             $data['order_id'] = $order->id;
             $data['user_id'] = $order->user_id;
             $data['remark'] = $request->reason;
@@ -1814,6 +1823,9 @@ class FrontendController extends Controller
             $data['voucher_discount'] = $order->voucher_discount;
             $data['voucher_id'] = $order->voucher_id ?? 0;
             $data['voucher_code'] = $order->voucher_code ?? '';
+            $data['shipping_cost'] = $order->shipping_cost ?? 0;
+            $data['shipping_area'] = $order->shipping_area ?? 0;
+            $data['shipping_address'] = $order->shipping_address ?? 0;
             $return_order = OrderReturn::create($data);
 
             $grand_total_price = 0;
@@ -1826,7 +1838,7 @@ class FrontendController extends Controller
                     ])->first();
 
                     if ($order_detail) {
-                        $grand_total_price += ($order_detail->price * $quantity);
+                        $grand_total_price += round($order_detail->price * $quantity);
                         $return_data['return_order_id'] = $return_order->id;
                         $return_data['order_id'] = $order->id;
                         $return_data['order_detail_id'] = $detail_id;
@@ -1845,22 +1857,27 @@ class FrontendController extends Controller
                 }
             }
 
+            if ($order->voucher_id > 0) {
+                if ($order->total_price > 0) {
+                    $voucher_discount = ($grand_total_price * ($order->voucher_discount ?? 0)) / $order->total_price;
+                }
+
+            }
+
             $payment['type'] = 2;
             $payment['order_id'] = $return_order->id;
             $payment['user_id'] = $order->user_id;
-            $payment['amount'] = $grand_total_price;
+            $payment['amount'] = round($grand_total_price - ($voucher_discount + ($order->shipping_cost ?? 0)));
             $payment['payment_method'] = 5;
             $payment['status'] = 0; // helper function return payment functon status check
             $payment['created_by'] = $order->user_id;
             Payment::create($payment);
 
-            $return_order->grand_total_price = $grand_total_price;
+            $return_order->voucher_discount = round($voucher_discount);
+            $return_order->total_price = round($grand_total_price);
+            $return_order->grand_total_price = rouns($grand_total_price - ($voucher_discount + ($order->shipping_cost ?? 0)));
             $return_order->save();
         });
-
-
-
-
 
         return redirect()->back()->with('success', 'Order Return Request Submitted Successfully!');
 

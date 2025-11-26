@@ -228,16 +228,17 @@
 																@endforeach
 
 																<!--Show sub-total/total product price-->
-                                                                @if ($order->voucher_id > 0 and $order->voucher_discount > 0)
-                                                                    <tr>
-                                                                        <td colspan="2" class="text-right"><strong>Voucher Discount</strong></td>
-                                                                        <td colspan="1" class="text-right">{{ number_format($order->voucher_discount, 0, '.', '') }}</td>
-                                                                    </tr>
-                                                                @endif
+
 																<tr>
 																	<th class="text-right" colspan="2">Subtotal</th>
 																	<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->total_price, 0, ".", "") }}</th>
 																</tr>
+                                                                @if ($order->voucher_id > 0 and $order->voucher_discount > 0)
+                                                                    <tr>
+                                                                        <td colspan="2" class="text-right"><strong>Voucher Discount</strong></td>
+                                                                        <td colspan="1" class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->voucher_discount, 0, '.', '') }}</td>
+                                                                    </tr>
+                                                                @endif
 
 																<tr>
 																	<th class="text-right" colspan="2">Shipping Cost</th>

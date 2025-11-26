@@ -17,7 +17,7 @@ class OrderReturnDetail extends Model
 
     public function orderReturnInfo()
     {
-        return $this->belongsTo(Product::class, 'return_order_id', 'id');
+        return $this->belongsTo(OrderReturn::class, 'return_order_id', 'id');
     }
 
     public function varientDataInfo()

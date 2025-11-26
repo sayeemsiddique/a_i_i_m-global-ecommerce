@@ -133,7 +133,7 @@
 																		@endphp
 
 																		<td class="text-primary pt-7 text-right align-middle">
-																			{{$global_setting->currency ?? ""}} {{ number_format($sub_total, 2, ".", "") }}
+																			{{$global_setting->currency ?? ""}} {{ number_format($sub_total, 0, ".", "") }}
 																		</td>
 																	</tr>
 
@@ -144,8 +144,25 @@
 
 																<!--Show sub-total/total product price-->
 																<tr>
+																	<td class="text-right" colspan="3">Sub Total</td>
+																	<td class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($orderReturn->total_price, 0, ".", "") }}</td>
+																</tr>
+
+                                                                @if ($orderReturn->voucher_id > 0 and $orderReturn->voucher_discount > 0)
+                                                                    <tr>
+                                                                        <td colspan="3" class="text-right">Voucher Discount</td>
+                                                                        <td colspan="1" class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($orderReturn->voucher_discount, 0, '.', '') }}</td>
+                                                                    </tr>
+                                                                @endif
+
+                                                                <tr>
+																	<td class="text-right" colspan="3">Shipping Cost</td>
+																	<td class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($orderReturn->shipping_cost, 0, ".", "") }}</td>
+																</tr>
+
+                                                                <tr style="border-top: 1px solid #000;">
 																	<th class="text-right" colspan="3">Total</th>
-																	<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($totalProductPrice, 2, ".", "") }}</th>
+																	<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($orderReturn->grand_total_price, 0, ".", "") }}</th>
 																</tr>
 
 															</tbody>
@@ -230,6 +247,14 @@
                                                                                         <option @if(($orderReturn->paymentInfo->status ?? 0) == $key) selected @endif value="{{$key}}">{{$payment_status}}</option>
                                                                                     @endforeach
                                                                                 </select>
+                                                                            </div>
+
+                                                                        </div>
+                                                                        <div class="form-group row">
+
+                                                                            <label for="shipping_cost" class="col-sm-4 col-form-label">Shipping Cost</label>
+                                                                            <div class="col-sm-8">
+                                                                                <input type="nummber" step="1" min="0" class="form-control" id="shipping_cost" name="shipping_cost" value="{{ number_format($orderReturn->shipping_cost, 0, '.', '') }}" required>
                                                                             </div>
 
                                                                         </div>

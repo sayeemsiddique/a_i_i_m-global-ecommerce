@@ -74,6 +74,10 @@ class OrderReturnController extends Controller
                 return redirect()->back()->with('error', 'Please select at least one product to return.');
             }
 
+            if ($request->shipping_cost < 0) {
+                return redirect()->back()->with('error', 'Shipping Cost can not be negative.');
+            }
+
             $quantity_sum = array_sum($request->details_id);
 
             if ($quantity_sum <= 0) {
@@ -110,7 +114,7 @@ class OrderReturnController extends Controller
                         ])->whereHas('orderReturnInfo', function($q) use ($order) {
                             $q->whereIn('status', [0,1])->where('order_id', $order->id);
                         })->sum('quantity');
-
+                        // dd($check_already_returned);
                         if (($check_already_returned + $quantity) > $order_detail->quantity) {
                             return redirect()->back()->with('error', 'You have already requested return for this product. Return quantity exceeds ordered quantity.');
                         }
@@ -134,6 +138,8 @@ class OrderReturnController extends Controller
 
             DB::transaction(function () use ($request,$order,$user) {
 
+                $voucher_discount = 0;
+
                 $tracking_code = date("yhis");
                 $data['tracking_code'] = $tracking_code;
                 $data['invoice_no'] = sprintf('%08d', $order->id);;
@@ -143,6 +149,16 @@ class OrderReturnController extends Controller
                 $data['status'] = 1;
                 $data['payment_status'] = $request->payment_status;
                 $data['created_by'] = $user->id;
+
+                $data['voucher_type'] = $order->voucher_type ?? '';
+                $data['voucher_value'] = $order->voucher_value ?? 0;
+                $data['voucher_discount'] = $order->voucher_discount;
+                $data['voucher_id'] = $order->voucher_id ?? 0;
+                $data['voucher_code'] = $order->voucher_code ?? '';
+                $data['shipping_cost'] = $order->shipping_cost ?? 0;
+                $data['shipping_area'] = $order->shipping_area ?? 0;
+                $data['shipping_address'] = $order->shipping_address ?? 0;
+
                 $return_order = OrderReturn::create($data);
 
                 $grand_total_price = 0;
@@ -155,7 +171,7 @@ class OrderReturnController extends Controller
                         ])->first();
 
                         if ($order_detail) {
-                            $grand_total_price += ($order_detail->price * $quantity);
+                            $grand_total_price += round($order_detail->price * $quantity);
                             $return_data['return_order_id'] = $return_order->id;
                             $return_data['order_id'] = $order->id;
                             $return_data['order_detail_id'] = $detail_id;
@@ -194,16 +210,26 @@ class OrderReturnController extends Controller
                     }
                 }
 
+                if ($order->voucher_id > 0) {
+                    if ($order->total_price > 0) {
+                        $voucher_discount = ($grand_total_price * ($order->voucher_discount ?? 0)) / $order->total_price;
+                    }
+                }
+
                 $payment['type'] = 2;
                 $payment['order_id'] = $return_order->id;
                 $payment['user_id'] = $order->user_id;
-                $payment['amount'] = $grand_total_price;
+                $payment['amount'] = round($grand_total_price - ($voucher_discount + ($order->shipping_cost ?? 0)));
                 $payment['payment_method'] = 5;
                 $payment['status'] = $request->payment_status;
                 $payment['created_by'] = $user->id;
                 Payment::create($payment);
 
-                $return_order->grand_total_price = $grand_total_price;
+
+
+                $return_order->voucher_discount = round($voucher_discount);
+                $return_order->total_price = round($grand_total_price);
+                $return_order->grand_total_price = round($grand_total_price - ($voucher_discount + ($order->shipping_cost ?? 0)));
                 $return_order->save();
             });
 
@@ -556,8 +582,15 @@ class OrderReturnController extends Controller
                 return redirect()->back()->with('error','Order not found.');
             }
 
+            if ($request->shipping_cost < 0) {
+                return redirect()->back()->with('error','Shipping Cost can not be negative.');
+            }
+
             $update_data['status'] = $request->status;
             $update_data['payment_status'] = $request->payment_status;
+            $update_data['shipping_cost'] = $request->shipping_cost ?? 0;
+            $update_data['grand_total_price'] = ($orderReturn->total_price) - (($orderReturn->voucher_discount ?? 0) + ($request->shipping_cost ?? 0));
+
             $orderReturn->update($update_data);
 
             $get_payment = Payment::where([

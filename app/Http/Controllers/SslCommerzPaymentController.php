@@ -91,7 +91,8 @@ class SslCommerzPaymentController extends Controller
         $order_data['user_id'] = auth()->user()->id;
         $order_data['status'] = 3;
         $order_data['payment_status'] = 1;
-        $order_data['total_price'] = round($product_total_price) - round($voucher_discount);
+        // $order_data['total_price'] = round($product_total_price) - round($voucher_discount);
+        $order_data['total_price'] = round($product_total_price);
         $order_data['grand_total_price'] = round($product_total_price) + round($shipping_address->divisionInfo->shipping_cost ?? 0) - round($voucher_discount);
         $order_data['discount_amount'] = 0;
         // $order_data['coupon_discount'] = 0;

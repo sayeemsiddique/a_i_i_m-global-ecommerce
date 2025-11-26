@@ -186,17 +186,18 @@
 
                                         </tbody>
                                         <tfoot class="mt-3">
+
+                                            <tr>
+                                                <th>Sub-total</th>
+                                                <td>
+                                                    {{$global_setting->currency ?? ""}} {{number_format($product_total_price,0,".","")}}
+                                                </td>
+                                            </tr>
                                             <tr class="voucher_section_area">
                                                 <th>Voucher Discount</th>
                                                 <td>
                                                     {{$global_setting->currency ?? ""}} <span class="voucher_discount_amount">0</span>
                                                     <input type="text" class="d-none" name="voucher_discount_amount_code" value="">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th>Sub-total</th>
-                                                <td>
-                                                    {{$global_setting->currency ?? ""}} {{number_format($product_total_price,0,".","")}}
                                                 </td>
                                             </tr>
                                             <tr>
@@ -285,7 +286,7 @@
                                                 </div>
                                             </div>
 
-                                            
+
 
                                             <!-- End Card -->
 

@@ -156,16 +156,17 @@
                   <td colspan="2" style="padding:12px; text-align:right;">Subtotal</td>
                   <td style="padding:12px; text-align:right;">{{$global_setting->currency ?? ""}} {{ number_format($order->total_price, 0, ".", "") }}</td>
                 </tr>
-                <tr class="total-row">
-                  <td colspan="2" style="padding:12px; text-align:right;">Shipping Cost</td>
-                  <td style="padding:12px; text-align:right;">{{$global_setting->currency ?? ""}} {{ number_format($order->shipping_cost, 0, ".", "") }}</td>
-                </tr>
                 @if ($order->voucher_id > 0 and $order->voucher_discount > 0)
                     <tr>
                         <td colspan="2" style="padding:12px; text-align:right;"><strong>Voucher Discount</strong></td>
                         <td colspan="1" style="padding:12px; text-align:right;">{{ number_format($order->voucher_discount, 0, '.', '') }}</td>
                     </tr>
                 @endif
+                <tr class="total-row">
+                  <td colspan="2" style="padding:12px; text-align:right;">Shipping Cost</td>
+                  <td style="padding:12px; text-align:right;">{{$global_setting->currency ?? ""}} {{ number_format($order->shipping_cost, 0, ".", "") }}</td>
+                </tr>
+
                 <tr class="total-row">
                   <td colspan="2" style="padding:12px; text-align:right; font-size:16px;">Total</td>
                   <td style="padding:12px; text-align:right; font-size:16px; font-weight:700;">{{$global_setting->currency ?? ""}} {{ number_format($order->grand_total_price, 0, ".", "") }}</td>

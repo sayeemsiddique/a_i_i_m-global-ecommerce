@@ -67,7 +67,7 @@
                                     <tbody>
                                         @foreach ($order->orderDetails as $orderProduct)
                                             @php
-                                                $returned_orders = $orderProduct->returnOrderInfo->where('status', 0)->where('user_id', $order->user_id);
+                                                $returned_orders = $orderProduct->returnOrderInfo->whereIn('status', [0,1])->where('user_id', $order->user_id);
                                                 $return_quantity = 0;
                                                 if (count($returned_orders) > 0) {
                                                     foreach ($returned_orders as $key => $returned_order) {
@@ -107,6 +107,10 @@
                                             @endif
                                         @endforeach
 
+                                        <tr>
+                                            <td colspan="4" class="text-right"><strong>Subtotal</strong></td>
+                                            <td colspan="1" class="text-right">{{ number_format($order->total_price, 0, '.', '') }}</td>
+                                        </tr>
                                         @if ($order->voucher_id > 0 and $order->voucher_discount > 0)
                                             <tr>
                                                 <td colspan="4" class="text-right"><strong>Voucher Discount</strong></td>
@@ -115,7 +119,9 @@
                                         @endif
                                         <tr>
                                             <td colspan="4" class="text-right"><strong>Shipping Cost</strong></td>
-                                            <td colspan="1" class="text-right">{{ number_format($order->shipping_cost, 0, '.', '') }}</td>
+                                            <td colspan="1" class="text-right">
+                                                <input type="number" min="0" name="shipping_cost" class="form-control" value="{{ number_format($order->shipping_cost, 0, '.', '') }}" />
+                                            </td>
                                         </tr>
 
 

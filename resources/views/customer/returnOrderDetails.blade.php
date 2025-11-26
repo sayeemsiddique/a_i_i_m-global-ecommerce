@@ -84,13 +84,20 @@
                                 <tr class="font-weight-bold text-right">
                                     <td colspan="3" class="order-date text-right">Subtotal</td>
                                     {{-- <td class="order-date font-weight-bold">{{$global_setting->currency ?? ""}} {{ number_format($orderDetails->total_price, 0, '.', '') }}</td> --}}
-                                    <td class="order-date font-weight-bold">{{$global_setting->currency ?? ""}} {{ number_format($orderDetails->grand_total_price, 0, '.', '') }}</td>
+                                    <td class="order-date font-weight-bold">{{$global_setting->currency ?? ""}} {{ number_format($orderDetails->total_price, 0, '.', '') }}</td>
                                 </tr>
 
-                                {{-- <tr class="font-weight-bold text-right">
+                                @if ($orderDetails->voucher_id > 0 and $orderDetails->voucher_discount > 0)
+                                    <tr class="font-weight-bold text-right">
+                                        <td colspan="3" class="order-date text-right"><strong>Voucher Discount</strong></td>
+                                        <td class="order-date font-weight-bold">{{ number_format($orderDetails->voucher_discount, 0, '.', '') }}</td>
+                                    </tr>
+                                @endif
+
+                                <tr class="font-weight-bold text-right">
                                     <td colspan="3" class="order-date text-right">Shipping Cost</td>
                                     <td class="order-date font-weight-bold">{{$global_setting->currency ?? ""}} {{ number_format($orderDetails->shipping_cost, 0, '.', '') }}</td>
-                                </tr> --}}
+                                </tr>
 
                                 <!--Show total price-->
                                 <tr class="font-weight-bold text-right" style="border-top: 1px solid #000;">
