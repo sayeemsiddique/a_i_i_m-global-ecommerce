@@ -44,7 +44,7 @@
 								</div>
 								<!--end::Header-->
 
-								<div class="card-body">
+								<div class="card-body order-details-section">
 									<!--begin::Order details header section-->
 
 										<div class="card card-custom card-shadowless">
@@ -271,6 +271,8 @@
                                                     @endif
                                                 </div>
 												<div class="col-lg-6 text-right">
+                                                    <span id="exportPdfBtn" class="btn btn-bordered border-info mb-4 btn-sm">Download Invoice</span>
+
 
 													@if (($order->status != 2))
 														@can('manage_order_status')
@@ -289,6 +291,13 @@
 									<!--end::Invoice Body-->
 
 								</div> {{-- Details tab end --}}
+
+                                <div class="invoice_box-section" style="display:none;">
+                                    <div id="element-to-print">
+                                        @include('backend.admin.order.invoice_template', ['order' => $order, 'user' => $order->orderUserInfo])
+                                    </div>
+                                </div>
+
 							</div>
 							<!--end::Card-->
 						</div>
@@ -300,518 +309,11 @@
 			<!--end::Entry-->
 		</div>
 
-		<div id="printChalanOne" class="container" style="display: none;">
-			<div class="card card-custom m-9">
-				<div class="card-header mt-5" style="border-bottom: 1px solid #fff">
 
-					<div class="col-md-6 offset-md-3 text-center mt-4" style="line-height: 100%">
-						<h3>চালান পত্র</h3>
-						<p class="font-weight-bold">[বিধি ৪০ এর উপ-বিধি (১) এর দফা (গ) ও দফা (চ) দ্রষ্টব্য]</p>
-					</div>
-					<div class="col-md-3">
-						<p class="font-weight-bold text-right">প্রথম কপি</p>
-						<p class="font-weight-bold text-right">মূসক-৬.৩</p>
-					</div>
-				</div>
-				<div class="card-body" style="padding-top: 0px;">
-
-					<div class="row">
-						<div class="col-md-9">
-							<table>
-								<tr>
-									<th>ব্যবসা প্রতিষ্ঠানের নাম : </th>
-									<td>বাংলাদেশ ইনসুলেটর এন্ড স্যানিটারীওয়্যার লিঃ</td>
-								</tr>
-								<tr>
-									<th>ঠিকানা : </th>
-									<td>বক্স নগর, মিরপুর, ঢাকা।</td>
-								</tr>
-								<tr>
-									<th>করদাতা সনাক্তকরণ সংখ্যা :</th>
-									<td>৭৫১৫৩৫৮৮৩৬৪৫</td>
-								</tr>
-								<tr>
-									<th>ক্রেতার নাম :</th>
-									<td>{{ $order->orderUserInfo ? $order->orderUserInfo->first_name : ''}} {{ $order->orderUserInfo ? $order->orderUserInfo->last_name : ''}}</td>
-								</tr>
-								<tr>
-									<th>ঠিকানা :</th>
-									<td>{{ $order->orderUserInfo ? $order->orderUserInfo->present_address : '' }}</td>
-								</tr>
-								<tr>
-									<th>করদাতা বিআইএন :</th>
-									<td>০০০০০২৯২৬-০০০২</td>
-								</tr>
-								<tr>
-									<th>পণ্যের চূড়ান্ত গন্তব্য স্থল :</th>
-									<td>{{ $order->orderUserInfo ? $order->orderUserInfo->present_address : '' }}</td>
-								</tr>
-								<tr>
-									<th>যানবাহনের প্রকৃতি এবং নম্বর :</th>
-									<td></td>
-								</tr>
-							</table>
-						</div>
-						<div class="col-md-3">
-							<table>
-								<tr>
-									<th>চালান পত্রের নম্বর :</th>
-									<td>{{ $order->invoice_no = sprintf('%08d', $order->invoice_no) }}</td>
-								</tr>
-								<tr>
-									<th>ইস্যুর তারিখ :</th>
-									<td>{{date('d M Y')}}</td>
-								</tr>
-								<tr>
-									<th>ইস্যুর সময় :</th>
-									<td>{{date('h:i:s')}}</td>
-								</tr>
-							</table>
-						</div>
-					</div>
-
-					<div class="table-responsive ajax-data-container pt-3">
-						<table class="table">
-							<thead>
-								<tr>
-									<th style="border: 1px solid #000" align="moddle">ক্রমিক <br> নং</th>
-									<th style="border: 1px solid #000" align="moddle">পণ্য বা <br> সেবার বর্ণনা <br> (প্রযোজ্য ক্ষেত্রে <br> ব্রান্ড নামসহ)</th>
-									<th style="border: 1px solid #000" align="moddle">সরবরাহের <br> একক</th>
-									<th style="border: 1px solid #000" align="moddle">পরিমাণ</th>
-									<th style="border: 1px solid #000" align="moddle">ওজন</th>
-									<th style="border: 1px solid #000" align="moddle">একক <br> মূল্য <br> (টাকায়)</th>
-									<th style="border: 1px solid #000" align="moddle">মোট <br> মূল্য <br>(টাকায়)</th>
-									<th style="border: 1px solid #000" align="moddle">সম্পূরক <br> শুল্কের <br> পরিমাণ <br> (টাকায়)</th>
-									<th style="border: 1px solid #000" align="moddle">মূল্য সংযোজন <br> করের হার / <br> সুনির্দিষ্ট কর</th>
-									<th style="border: 1px solid #000" align="moddle">মূল্য <br> সংযোজন কর / <br> সুনির্দিষ্ট করের <br> পরিমাণ (টাকায়)</th>
-									<th style="border: 1px solid #000" align="moddle">সকল প্রকার <br> শুল্ক ও করসহ <br> মূল্য</th>
-								</tr>
-							</thead>
-							<tbody>
-								@php
-									$i = 1;
-									$qty = 0;
-									$singlePrice = 0;
-									$totalQtyPrice = 0;
-									$allProductPrice = 0;
-									$productSdValue = 0;
-									$productVatValue = 0;
-
-								@endphp
-
-								@foreach ($order->orderDetails as $od)
-									<tr>
-										<td style="border: 1px solid #000" align="middle">{{ $i }}</td>
-										<td style="border: 1px solid #000" align="middle">{{$od->productInfo ? $od->productInfo->name : 'N/A'}}</td>
-
-										<td style="border: 1px solid #000" align="middle">
-											{{-- @if (!isset($od->productInfo) || (empty($od->productInfo->unit) || ($od->productInfo->unit == NULL)))
-												Pcs --}}
-											@if($od->productInfo->unit == 1)
-												KG
-											@elseif($od->productInfo->unit == 2)
-												MT
-											@endif
-
-
-										</td>
-
-
-										@php
-											$qty = $od->quantity;
-										@endphp
-										<td style="border: 1px solid #000" align="middle">{{ number_format($od->quantity) }}</td>
-
-										<td style="border: 1px solid #000" align="middle">
-											@if ($od->weight and $od->unit)
-												@if ($od->unit == 1)
-													{{number_format((($od->quantity * $od->weight)),0,'.','')}} কেজি
-												@elseif ($od->unit == 2)
-													{{number_format(($od->quantity * $od->weight),0,'.','')}} মেট্রিক টন
-												@endif
-											@endif
-										</td>
-
-										<td style="border: 1px solid #000" align="middle">{{ number_format($od->f_price, 0, '.', '') }}</td>
-
-										{{-- @if ($od->productInfo->has_varient == 1)
-											<td style="border: 1px solid #000" align="middle">{{ $singlePrice = $od->varient->price ?? 0 }}</td>
-										@else
-											<td style="border: 1px solid #000" align="middle">{{ $singlePrice = $od->productInfo->price ?? 0 }}</td>
-										@endif --}}
-
-										<td style="border: 1px solid #000" align="middle">{{ number_format(($totalQtyPrice = $qty * $od->f_price), 0, '.', '') }}</td>
-
-										@php
-											// store all product price
-											$allProductPrice += $totalQtyPrice;
-										@endphp
-
-										<td style="border: 1px solid #000" align="middle">
-											{{-- Display Only SD value of product --}}
-											{{-- @if(empty($od->productInfo->sd) || ($od->productInfo->sd == NULL) || !isset($od->productInfo->sd))
-												0.00
-											@else
-												{{$productSdValue = ($totalQtyPrice * $od->productInfo->sd)/100}}
-											@endif
-
-											@php
-											// store product price include sd value
-												$productWithSdPrice = $totalQtyPrice + $productSdValue;
-											@endphp --}}
-
-											{{  number_format($od->sd_total, 0, '.', '') }}
-										</td>
-
-										<td style="border: 1px solid #000" align="middle">
-											@if (!isset($od->productInfo) || (empty($od->productInfo->vat) || ($od->productInfo->vat == NULL)))
-												0.00
-											@else
-												{{ $od->productInfo->vat.' %' }}
-											@endif
-										</td>
-
-										<td style="border: 1px solid #000" align="middle">
-											{{-- Display Only VAT of product (product + sd value) --}}
-											{{-- @if (empty($od->productInfo->vat) || $od->productInfo->vat == NULL || !isset($od->productInfo))
-												0.00
-											@else
-												{{$productVatValue = ($productWithSdPrice * $od->productInfo->vat)/100}}
-											@endif
-
-											@php
-											// store product price include sd value include vat value
-												$productWithSdPriceVatPrice = ($productWithSdPrice + $productVatValue) * $qty;
-											@endphp --}}
-
-											{{ number_format($od->vat_total, 0, '.', '') }}
-										</td>
-
-										{{-- <td style="border: 1px solid #000" align="middle">{{ $productWithSdPriceVatPrice }}</td> --}}
-										<td style="border: 1px solid #000" align="middle">{{ number_format(($singlePrice = $od->price * $qty), 0, '.', '') }}</td>
-									</tr>
-
-									@php
-										$i++;
-									@endphp
-
-								@endforeach
-									{{-- <tr>
-										<th colspan="9" class="text-right">উপ-মোট মূল্য:</th>
-										<th class="text-right">{{number_format($allProductPrice ?? 0, 0, '.', '')}}</th>
-									</tr>
-
-									<tr>
-										@php
-											$userType = $order->user ? $order->user->type : 100;
-										@endphp
-
-										@if (($userType == 2) || ($userType == 3))
-											<th class="text-right" colspan="9">ছাড় ({{$order->user_type_discount ?? 0}} %)</th>
-											<th class="text-right">{{ number_format($order->discount_amount ?? 0, 0, '.', '') }}</th>
-										@else
-											<th class="text-right" colspan="9">ছাড় ({{$order->user_type_discount ?? 0}} %)</th>
-											<th class="text-right">{{ number_format($order->discount_amount ?? 0, 0, '.', '') }}</th>
-										@endif
-									</tr>
-
-									@if ($order->discount_on_amount == 2)
-										<tr>
-											<th class="text-right" colspan="9">ক্রয় কমিশন ({{ $order->discount_percent_in_total ?? 0 }} %)</th>
-											<th class="text-right">{{ number_format($order->discount_amount_in_total ?? 0, 0, '.', '')}}</th>
-										</tr>
-									@endif
-
-									<tr>
-										<th class="text-right" colspan="9">প্যাকিং চার্জ ({{$order->packType ? $order->packType->name : 'N/A'}})</th>
-										<th class="text-right">{{ number_format($order->packing_amount ?? 0, 0, '.', '') }}</th>
-									</tr>
-
-									<tr>
-										<th class="text-right" colspan="9">পরিবহন খরচ</th>
-										<th class="text-right">{{ number_format($order->courier_cost ?? 0, 0, '.', '') }}</th>
-									</tr>
-
-									<tr style="border-top: 1px solid #000;">
-										<th class="text-right" colspan="9">মোট মূল্য</th>
-										<th class="text-right">{{ number_format($order->grand_total_price, 0, ".", "") }}</th>
-									</tr> --}}
-							</tbody>
-						</table>
-					</div>
-					<div class="row">
-						<div class="col-md-8">
-							<p>প্রতিষ্ঠান কর্তৃপক্ষের দায়িত্বপ্রাপ্ত ব্যক্তির নাম : <span></span> </p>
-							<p>পদবি : <span></span> </p>
-							<p>স্বাক্ষর : <span></span> </p>
-							<p>সীল : <span></span> </p>
-							<p>উৎসে কর্তনযোগ্য সরবরাহের ক্ষেত্রে ফরমটি সমন্বিত কর চালানপত্র ও উৎসে কর কর্তন সনদপত্র হিসেবে বিবেচিত হইবে এবং উহা উৎসে কর কর্তনযোগ্য সরবরাহের ক্ষেত্রে প্রযোজ্য হবে।</p>
-							<br><br><br>
-							<p>{{ number_format($allProductPrice, 0, ".", "").' TK' ?? 'Undefined Product Price, SD or VAT' }}</p>
-							<p><span style="border-top: 1px solid #000"><b>সকল প্রকার কর ব্যতীত মূল্য</b></span></p>
-						</div>
-
-						<div class="col-md-4 text-right mt-40">
-							<p>প্রস্তুতকারক</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
 		<!--/Print chalan one area-->
 
 		<!--Print chalan two area -->
-		<div id="printChalanTwo" class="container" style="display: none;">
-			<div class="card card-custom m-9">
-				<div class="card-header mt-5" style="border-bottom: 1px solid #fff">
 
-					<div class="col-md-6 offset-md-3 text-center mt-4" style="line-height: 100%">
-						<h3>চালান পত্র</h3>
-						<p class="font-weight-bold">[বিধি ৪০ এর উপ-বিধি (১) এর দফা (গ) ও দফা (চ) দ্রষ্টব্য]</p>
-					</div>
-					<div class="col-md-3">
-						<p class="font-weight-bold text-right">দ্বিতীয় কপি</p>
-						<p class="font-weight-bold text-right">মূসক-৬.৩</p>
-					</div>
-				</div>
-				<div class="card-body" style="padding-top: 0px;">
-
-					<div class="row">
-						<div class="col-md-9">
-							<table>
-								<tr>
-									<th>ব্যবসা প্রতিষ্ঠানের নাম : </th>
-									<td>বাংলাদেশ ইনসুলেটর এন্ড স্যানিটারীওয়্যার লিঃ</td>
-								</tr>
-								<tr>
-									<th>ঠিকানা : </th>
-									<td>বক্স নগর, মিরপুর, ঢাকা।</td>
-								</tr>
-								<tr>
-									<th>করদাতা সনাক্তকরণ সংখ্যা :</th>
-									<td>৭৫১৫৩৫৮৮৩৬৪৫</td>
-								</tr>
-								<tr>
-									<th>ক্রেতার নাম :</th>
-									<td>{{ $order->orderUserInfo ? $order->orderUserInfo->first_name : ''}} {{ $order->orderUserInfo ? $order->orderUserInfo->last_name : ''}}</td>
-								</tr>
-								<tr>
-									<th>ঠিকানা :</th>
-									<td>{{ $order->orderUserInfo ? $order->orderUserInfo->present_address : '' }}</td>
-								</tr>
-								<tr>
-									<th>করদাতা বিআইএন :</th>
-									<td>০০০০০২৯২৬-০০০২</td>
-								</tr>
-								<tr>
-									<th>পণ্যের চূড়ান্ত গন্তব্য স্থল :</th>
-									<td>{{ $order->orderUserInfo ? $order->orderUserInfo->present_address : '' }}</td>
-								</tr>
-								<tr>
-									<th>যানবাহনের প্রকৃতি এবং নম্বর :</th>
-									<td></td>
-								</tr>
-							</table>
-						</div>
-						<div class="col-md-3">
-							<table>
-								<tr>
-									<th>চালান পত্রের নম্বর :</th>
-									<td>{{ $order->invoice_no = sprintf('%08d', $order->invoice_no) }}</td>
-								</tr>
-								<tr>
-									<th>ইস্যুর তারিখ :</th>
-									<td>{{date('d M Y')}}</td>
-								</tr>
-								<tr>
-									<th>ইস্যুর সময় :</th>
-									<td>{{date('h:i:s')}}</td>
-								</tr>
-							</table>
-						</div>
-					</div>
-
-					<div class="table-responsive ajax-data-container pt-3">
-						<table class="table">
-							<thead>
-								<tr>
-									<th style="border: 1px solid #000" align="moddle">ক্রমিক <br> নং</th>
-									<th style="border: 1px solid #000" align="moddle">পণ্য বা <br> সেবার বর্ণনা <br> (প্রযোজ্য ক্ষেত্রে <br> ব্রান্ড নামসহ)</th>
-									<th style="border: 1px solid #000" align="moddle">সরবরাহের <br> একক</th>
-									<th style="border: 1px solid #000" align="moddle">পরিমাণ</th>
-									<th style="border: 1px solid #000" align="moddle">ওজন</th>
-									<th style="border: 1px solid #000" align="moddle">একক <br> মূল্য <br> (টাকায়)</th>
-									<th style="border: 1px solid #000" align="moddle">মোট <br> মূল্য <br>(টাকায়)</th>
-									<th style="border: 1px solid #000" align="moddle">সম্পূরক <br> শুল্কের <br> পরিমাণ <br> (টাকায়)</th>
-									<th style="border: 1px solid #000" align="moddle">মূল্য সংযোজন <br> করের হার / <br> সুনির্দিষ্ট কর</th>
-									<th style="border: 1px solid #000" align="moddle">মূল্য <br> সংযোজন কর / <br> সুনির্দিষ্ট করের <br> পরিমাণ (টাকায়)</th>
-									<th style="border: 1px solid #000" align="moddle">সকল প্রকার <br> শুল্ক ও করসহ <br> মূল্য</th>
-								</tr>
-							</thead>
-							<tbody>
-								@php
-									$i = 1;
-									$qty = 0;
-									$singlePrice = 0;
-									$totalQtyPrice = 0;
-									$allProductPrice = 0;
-									$productSdValue = 0;
-									$productVatValue = 0;
-
-								@endphp
-								@foreach ($order->orderDetails as $od)
-								<tr>
-									<td style="border: 1px solid #000" align="middle">{{ $i }}</td>
-									<td style="border: 1px solid #000" align="middle">{{$od->productInfo ? $od->productInfo->name : 'N/A'}}</td>
-
-									<td style="border: 1px solid #000" align="middle">
-
-										@if($od->unit == 1)
-											KG
-										@elseif($od->unit == 2)
-											MT
-										@endif
-									</td>
-									@php
-										$qty = $od->quantity;
-									@endphp
-									<td style="border: 1px solid #000" align="middle">{{ number_format($od->quantity) }}</td>
-									<td style="border: 1px solid #000" align="middle">
-										@if ($od->weight and $od->unit)
-											@if ($od->unit == 1)
-												{{number_format((($od->quantity * $od->weight)),0,'.','')}} কেজি
-											@elseif ($od->unit == 2)
-												{{number_format(($od->quantity * $od->weight),0,'.','')}} মেট্রিক টন
-											@endif
-										@endif
-									</td>
-
-									<td style="border: 1px solid #000" align="middle">{{ number_format($od->f_price, 0, '.', '') }}</td>
-
-									{{-- @if ($od->productInfo->has_varient == 1)
-										<td style="border: 1px solid #000" align="middle">{{ $singlePrice = $od->varient->price ?? 0 }}</td>
-									@else
-										<td style="border: 1px solid #000" align="middle">{{ $singlePrice = $od->productInfo->price ?? 0 }}</td>
-									@endif --}}
-
-									<td style="border: 1px solid #000" align="middle">{{ number_format(($totalQtyPrice = $qty * $od->f_price), 0, '.', '') }}</td>
-
-									@php
-										// store all product price
-										$allProductPrice += $totalQtyPrice;
-									@endphp
-
-									<td style="border: 1px solid #000" align="middle">
-										{{-- Display Only SD value of product --}}
-										{{-- @if(empty($od->productInfo->sd) || ($od->productInfo->sd == NULL) || !isset($od->productInfo->sd))
-											0.00
-										@else
-											{{$productSdValue = ($totalQtyPrice * $od->productInfo->sd)/100}}
-										@endif
-
-										@php
-										// store product price include sd value
-											$productWithSdPrice = $totalQtyPrice + $productSdValue;
-										@endphp --}}
-
-										{{  number_format($od->sd_total, 0, '.', '') }}
-									</td>
-
-									<td style="border: 1px solid #000" align="middle">
-										@if (!isset($od->productInfo) || (empty($od->productInfo->vat) || ($od->productInfo->vat == NULL)))
-											0.00
-										@else
-											{{ $od->productInfo->vat.' %' }}
-										@endif
-									</td>
-
-									<td style="border: 1px solid #000" align="middle">
-										{{-- Display Only VAT of product (product + sd value) --}}
-										{{-- @if (empty($od->productInfo->vat) || $od->productInfo->vat == NULL || !isset($od->productInfo))
-											0.00
-										@else
-											{{$productVatValue = ($productWithSdPrice * $od->productInfo->vat)/100}}
-										@endif
-
-										@php
-										// store product price include sd value include vat value
-											$productWithSdPriceVatPrice = ($productWithSdPrice + $productVatValue) * $qty;
-										@endphp --}}
-
-										{{ number_format($od->vat_total, 0, '.', '') }}
-									</td>
-
-									{{-- <td style="border: 1px solid #000" align="middle">{{ $productWithSdPriceVatPrice }}</td> --}}
-									<td style="border: 1px solid #000" align="middle">{{ number_format(($singlePrice = $od->price * $qty), 0, '.', '') }}</td>
-								</tr>
-
-								@php
-									$i++;
-								@endphp
-
-							@endforeach
-									{{-- <tr>
-										<th colspan="9" class="text-right">উপ-মোট মূল্য:</th>
-										<th class="text-right">{{number_format($allProductPrice ?? 0, 0, '.', '')}}</th>
-									</tr>
-
-									<tr>
-										@php
-											$userType = $order->user ? $order->user->type : 100;
-										@endphp
-
-										@if (($userType == 2) || ($userType == 3))
-											<th class="text-right" colspan="9">ছাড় ({{$order->user_type_discount ?? 0}} %)</th>
-											<th class="text-right">{{ number_format($order->discount_amount ?? 0, 0, '.', '') }}</th>
-										@else
-											<th class="text-right" colspan="9">ছাড় ({{$order->user_type_discount ?? 0}} %)</th>
-											<th class="text-right">{{ number_format($order->discount_amount ?? 0, 0, '.', '') }}</th>
-										@endif
-									</tr>
-
-									@if ($order->discount_on_amount == 2)
-										<tr>
-											<th class="text-right" colspan="9">ক্রয় কমিশন ({{ $order->discount_percent_in_total ?? 0 }} %)</th>
-											<th class="text-right">{{ number_format($order->discount_amount_in_total ?? 0, 0, '.', '')}}</th>
-										</tr>
-									@endif
-
-									<tr>
-										<th class="text-right" colspan="9">প্যাকিং চার্জ ({{$order->packType ? $order->packType->name : 'N/A'}})</th>
-										<th class="text-right">{{ number_format($order->packing_amount ?? 0, 0, '.', '') }}</th>
-									</tr>
-
-									<tr>
-										<th class="text-right" colspan="9">পরিবহন খরচ</th>
-										<th class="text-right">{{ number_format($order->courier_cost ?? 0, 0, '.', '') }}</th>
-									</tr>
-
-									<tr style="border-top: 1px solid #000;">
-										<th class="text-right" colspan="9">মোট মূল্য</th>
-										<th class="text-right">{{ number_format($order->grand_total_price, 0, ".", "") }}</th>
-									</tr> --}}
-							</tbody>
-						</table>
-					</div>
-					<div class="row">
-						<div class="col-md-8">
-							<p>প্রতিষ্ঠান কর্তৃপক্ষের দায়িত্বপ্রাপ্ত ব্যক্তির নাম : <span></span> </p>
-							<p>পদবি : <span></span> </p>
-							<p>স্বাক্ষর : <span></span> </p>
-							<p>সীল : <span></span> </p>
-							<p>উৎসে কর্তনযোগ্য সরবরাহের ক্ষেত্রে ফরমটি সমন্বিত কর চালানপত্র ও উৎসে কর কর্তন সনদপত্র হিসেবে বিবেচিত হইবে এবং উহা উৎসে কর কর্তনযোগ্য সরবরাহের ক্ষেত্রে প্রযোজ্য হবে।</p>
-							<br><br><br>
-							<p>{{ number_format($allProductPrice, 0, ".", "").' TK' ?? 'Undefined Product Price, SD or VAT' }}</p>
-							<p><span style="border-top: 1px solid #000"><b>সকল প্রকার কর ব্যতীত মূল্য</b></span></p>
-						</div>
-
-						<div class="col-md-4 text-right mt-40">
-							<p>প্রস্তুতকারক</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
 		<!--/Print chalan two area -->
 
 		{{-- Update status modal --}}
@@ -892,8 +394,7 @@
 					</form>
 				</div>
 				<div class="modal-footer">
-				{{-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				<button type="button" class="btn btn-primary">Save changes</button> --}}
+
 				</div>
 			</div>
 			</div>
@@ -902,6 +403,10 @@
 	@endsection
 
 	@push('stackScript')
+    <script src="https://unpkg.com/easyqrcodejs@4.6.0/dist/easy.qrcode.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 		<script>
 			function printDiv(divName,title_name) {
 				document.title = title_name;
@@ -929,4 +434,25 @@
 				}
 			});
 		</script>
+
+        <script>
+            document.getElementById('exportPdfBtn').addEventListener('click', function() {
+    $('.order-details-section').hide();
+    $('.invoice_box-section').show();
+    var element = document.getElementById('element-to-print');
+    html2pdf(element);
+    $('.order-details-section').show();
+    $('.invoice_box-section').hide();
+});
+
+let options = {
+        text: "{{ route('getOrderTrack') }}?tracking_code={{$order->tracking_code}}&mobile={{$order->orderUserInfo->mobile ?? ''}}",
+        width: 120,
+        height: 120,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+    };
+    new QRCode(document.getElementById("qrcode"), options);
+        </script>
 	@endpush
+

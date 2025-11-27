@@ -29,3 +29,5 @@ ALTER TABLE `order_returns` CHANGE `voucher_code` `voucher_code` TINYTEXT CHARAC
 
 ALTER TABLE `orders` CHANGE `vds_amount` `store_id` INT NULL DEFAULT NULL COMMENT 'vds total amount';
 ALTER TABLE `order_returns` CHANGE `vds_amount` `store_id` INT NULL DEFAULT NULL COMMENT '';
+
+ALTER TABLE `vouchers` ADD `person_max_use` TINYINT NOT NULL DEFAULT '0' AFTER `used_count`;

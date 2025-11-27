@@ -1268,7 +1268,7 @@ class FrontendController extends Controller
     public function account_orders(Request $request)
     {
         $user = Auth::user();
-        $orders = Order::where('user_id', $user->id)->latest()->paginate(20);
+        $orders = Order::where('user_id', $user->id)->where('type',2)->latest()->paginate(20);
 
         return view('customer.orderList', compact('user', 'orders', 'request'));
     }

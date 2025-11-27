@@ -11,7 +11,7 @@
             <!--begin::Card-->
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="card card-custom example example-compact">
+                    <div class="card card-custom example example-compact order-details-section">
                         <div class="card-header">
                             <h3 class="card-title">Order Details</h3>
                             <div class="d-flex align-items-center">
@@ -25,19 +25,21 @@
                             <div class="d-flex">
                                 <div class="flex-fill">
                                     <p>Name: {{ $user->first_name }} {{ $user->last_name }}</p>
-                                    <p>Order Date: {{ date('d M Y', strtotime($orderDetails->created_at)) }}</p>
-                                    <p>Invoice Number: {{ sprintf('%08d', $orderDetails->salePaymentInfo->id ?? 0) }}</p>
-                                    <p>Order ID: {{ $orderDetails->tracking_code }}</p>
-                                    <p>Order Status: @foreach (orderStatus() as $key => $order_status)
+                                    <p class="mb-1">Email: {{ $user->email }}</p>
+                                    <p class="mb-1">Mobile: {{ $user->mobile }}</p>
+                                    <p class="mb-1">Order Date: {{ date('d M Y', strtotime($orderDetails->created_at)) }}</p>
+                                    <p class="mb-1">Invoice Number: {{ sprintf('%08d', $orderDetails->salePaymentInfo->id ?? 0) }}</p>
+                                    <p class="mb-1">Order ID: {{ $orderDetails->tracking_code }}</p>
+                                    <p class="mb-1">Order Status: @foreach (orderStatus() as $key => $order_status)
                                                             @if($orderDetails->status == $key) {{$order_status}} @endif
                                                         @endforeach
                                     </p>
-                                    <p>
+                                    <p class="mb-1">
                                         Delivery Status: @foreach(deliveryStatus() as $key => $delivery_status)
                                                             @if($orderDetails->delivery_status == $key) {{$delivery_status}} @endif
                                                         @endforeach
                                     </p>
-                                    <p>
+                                    <p class="mb-1">
                                         Payment Status: @foreach(paymentStatus() as $key => $payment_status)
                                                             @if(($orderDetails->paymentInfo->status ?? 0) == $key) {{$payment_status}} @endif
                                                         @endforeach
@@ -135,12 +137,52 @@
                                 </tr>
                             </tbody>
                         </table>
+
+                        <p>
+                            <span id="exportPdfBtn" class="btn btn-bordered border-info">Download Invoice</span>
+                        </p>
+
                         </div>
                     </div>
+                </div>
+                <div class="col-lg-12">
+                        <div class="invoice_box-section" style="display:none;">
+                            <div id="element-to-print">
+                                @include('customer.invoice_template', ['order' => $orderDetails, 'user' => $user])
+                            </div>
+                        </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 @endsection
+
+
+@push('stackScript')
+<script src="https://unpkg.com/easyqrcodejs@4.6.0/dist/easy.qrcode.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+document.getElementById('exportPdfBtn').addEventListener('click', function() {
+    $('.order-details-section').hide();
+    $('.invoice_box-section').show();
+    var element = document.getElementById('element-to-print');
+    html2pdf(element);
+    $('.order-details-section').show();
+    $('.invoice_box-section').hide();
+});
+
+let options = {
+        text: "{{ route('getOrderTrack') }}?tracking_code={{$orderDetails->tracking_code}}&mobile={{$user->mobile}}",
+        width: 120,
+        height: 120,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+    };
+    new QRCode(document.getElementById("qrcode"), options);
+</script>
+@endpush
+
 

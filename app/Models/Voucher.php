@@ -17,7 +17,7 @@ class Voucher extends Model
         if ($this->end_date && $today->gt(Carbon::parse($this->end_date))) return false;
         if ($this->max_uses > 0 && $this->used_count >= $this->max_uses) return false;
         if ($this->min_order_amount && $orderTotal < $this->min_order_amount) return false;
-
+        if ($this->person_max_use > 0 && $this->person_max_use <= $this->userVoucherUsedCount((auth()->user()->id),$this->id)) return false;
         return true;
     }
 
@@ -27,5 +27,12 @@ class Voucher extends Model
             return $orderTotal * ($this->value / 100);
         }
         return $this->value;
+    }
+
+    public function userVoucherUsedCount($userId,$voucherId)
+    {
+        return Order::where('voucher_id', $voucherId)
+            ->where('user_id', $userId)
+            ->select('id')->count();
     }
 }

@@ -73,6 +73,12 @@
                                                             <input type="number" name="max_uses" class="form-control" placeholder="Max Uses" value="{{ old('max_uses', 0) }}">
                                                         </div>
 
+                                                        {{-- Person Max Uses --}}
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Person Max Uses (0 = unlimited)</label>
+                                                            <input type="number" name="person_max_use" class="form-control" placeholder="Person Max Uses" value="{{ old('person_max_use', 0) }}">
+                                                        </div>
+
                                                         {{-- Validity --}}
                                                         <div class="mb-3">
                                                             <label class="form-label">Start Date</label>
@@ -243,6 +249,12 @@
                                                                                 <div class="mb-3">
                                                                                     <label class="form-label">Max Uses (0 = unlimited)</label>
                                                                                     <input type="number" name="max_uses" class="form-control" placeholder="Max Uses" value="{{ $voucher->max_uses }}">
+                                                                                </div>
+
+                                                                                {{-- Person Max Uses --}}
+                                                                                <div class="mb-3">
+                                                                                    <label class="form-label">Person Max Uses (0 = unlimited)</label>
+                                                                                    <input type="number" name="person_max_use" class="form-control" placeholder="Person Max Uses" value="{{ $voucher->person_max_use }}">
                                                                                 </div>
 
                                                                                 {{-- Validity --}}
