@@ -36,9 +36,17 @@
 							<!--begin::Card-->
 							<div class="card card-custom">
 								<!--begin::Header-->
-								<div class="card-header py-3">
-									<div class="card-title align-items-start flex-column">
-										<h3 class="card-label font-weight-bolder text-dark">Order Details</h3>
+								<div class="card-header py-3 d-block">
+									<div class="card-title d-block">
+                                        <div class="d-flex justify-content-between">
+                                            <div class="">
+                                                <h3 class="card-label font-weight-bolder text-dark">Order Details</h3>
+                                            </div>
+                                            <div class="">
+                                                <span id="exportPdfBtn" class="btn btn-bordered border-info btn-sm">Download Invoice</span>
+                                            </div>
+                                        </div>
+
 									</div>
 
 								</div>
@@ -271,7 +279,7 @@
                                                     @endif
                                                 </div>
 												<div class="col-lg-6 text-right">
-                                                    <span id="exportPdfBtn" class="btn btn-bordered border-info mb-4 btn-sm">Download Invoice</span>
+
 
 
 													@if (($order->status != 2))
@@ -437,13 +445,16 @@
 
         <script>
             document.getElementById('exportPdfBtn').addEventListener('click', function() {
-    $('.order-details-section').hide();
-    $('.invoice_box-section').show();
-    var element = document.getElementById('element-to-print');
-    html2pdf(element);
-    $('.order-details-section').show();
-    $('.invoice_box-section').hide();
-});
+                $('.order-details-section').hide();
+                $('.invoice_box-section').show();
+                var element = document.getElementById('element-to-print');
+                var opt = {
+                    filename:     'order-{{$order->tracking_code}}.pdf',
+                };
+                html2pdf(element,opt);
+                $('.order-details-section').show();
+                $('.invoice_box-section').hide();
+            });
 
 let options = {
         text: "{{ route('getOrderTrack') }}?tracking_code={{$order->tracking_code}}&mobile={{$order->orderUserInfo->mobile ?? ''}}",

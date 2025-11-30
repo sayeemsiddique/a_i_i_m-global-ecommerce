@@ -1095,12 +1095,19 @@ class FrontendController extends Controller
         $product_total_price = 0; // total sale price
         $product_before_discount = 0;
         foreach ($carts as $key => $cart) {
+            if (($cart->productInfo->status ?? 0) != 1) {
+                return redirect()->back()->with('error', 'Product '.($cart->productInfo->name ?? "").' is not available for sale');
+            }
             if ($cart->variation_id == 0) {
                 $product_total_price +=  ($cart->productInfo->discount_price ?? 0)  * $cart->quantity;
                 $product_before_discount +=  ($cart->productInfo->price ?? 0)  * $cart->quantity;
             } else {
                 $product_total_price +=  ($cart->varientInfo->discount_price ?? 0)  * $cart->quantity;
                 $product_before_discount +=  ($cart->varientInfo->price ?? 0)  * $cart->quantity;
+
+                if (($cart->varientInfo->status) != 1) {
+                    return redirect()->back()->with('error', 'Product '.($cart->productInfo->name ?? "").' varient is not available for sale');
+                }
             }
         }
 

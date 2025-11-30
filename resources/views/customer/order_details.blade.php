@@ -15,7 +15,7 @@
                         <div class="card-header">
                             <h3 class="card-title">Order Details</h3>
                             <div class="d-flex align-items-center">
-
+                                <span id="exportPdfBtn" class="btn btn-bordered border-info">Download Invoice</span>
                             </div>
                         </div>
                         <div class="card-body">
@@ -138,9 +138,6 @@
                             </tbody>
                         </table>
 
-                        <p>
-                            <span id="exportPdfBtn" class="btn btn-bordered border-info">Download Invoice</span>
-                        </p>
 
                         </div>
                     </div>
@@ -169,7 +166,10 @@ document.getElementById('exportPdfBtn').addEventListener('click', function() {
     $('.order-details-section').hide();
     $('.invoice_box-section').show();
     var element = document.getElementById('element-to-print');
-    html2pdf(element);
+    var opt = {
+        filename:     'order-{{$orderDetails->tracking_code}}.pdf',
+    };
+    html2pdf(element,opt);
     $('.order-details-section').show();
     $('.invoice_box-section').hide();
 });

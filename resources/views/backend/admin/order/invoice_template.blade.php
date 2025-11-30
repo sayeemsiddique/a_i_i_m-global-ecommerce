@@ -46,10 +46,16 @@
               <td style="text-align:right; vertical-align:middle;width:33%;">
                 <span class="font-weight-bold"><b>Order ID:</b> {{ $order->tracking_code }}</span> <br>
 				<span class="font-weight-bold"><b>Order Date:</b> {{ date('d-M-Y', strtotime($order->created_at)) }}</span> <br>
+                <label class="">Order Status:</label>
+                @foreach (orderStatus() as $key => $order_status)
+                    @if($order->status == $key) {{$order_status}} @endif
+                @endforeach
+                <br>
                 <label class="">Payment Status:</label>
                 @foreach(paymentStatus() as $key => $payment_status)
                     @if(($order->paymentInfo->status ?? 0) == $key) {{$payment_status}} @endif
                 @endforeach
+
 
               </td>
             </tr>
