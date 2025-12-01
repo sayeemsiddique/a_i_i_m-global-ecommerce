@@ -40,7 +40,8 @@ class FrontFilter extends Component
 
         $main_categories = $cat_query->with('childTreeInfo')->withCount('SellProducts')->get();
 
-        $brands = Brand::withCount('BrandProducts')->get();
+        $brands = Brand::select('id','name')->withCount(['BrandProducts as brand_products_count'])->get();
+
         $varient_datas = VarientType::with('varientValues')->get();
 
         Product::whereNotIn('status', [2])->where([
@@ -63,12 +64,12 @@ class FrontFilter extends Component
         if ($varient_max_price > $product_max_price) {
             $product_max_price = $varient_max_price;
         }
-        
+
         if ($varient_min_price < $product_min_price) {
             $product_min_price = $varient_min_price;
         }
 
-        
+
 
         return view('components.front-filter', compact('main_categories','brands','varient_datas','product_min_price','product_max_price'));
     }

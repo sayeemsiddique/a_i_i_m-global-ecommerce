@@ -60,12 +60,13 @@
 
 @section('content')
 @php
+
     $has_discount = 0;
     $sale_price_without_discount = 0;
     // $cart_category = $latest_cart_item->productInfo->category_id ?? 0;
     // $product_category = $product->category_id ?? 0;
     if ($product->has_varient == 1) {
-        $in_stock = $product->productAllStock()->where('varient_id', '!=', 0)->sum('quantity');
+        $in_stock = $product->productAllStock()->where('varient_id', '!=', 0)->sum('quantity') + array_sum($pending_orders_quantity_array);
         $sale_price = $product->cheapVarient->discount_price ?? 0;
 
         if ($product->cheapVarient) {
@@ -86,7 +87,7 @@
 
 
     } else {
-        $in_stock = $product->productAllStock()->where('varient_id', 0)->sum('quantity');
+        $in_stock = $product->productAllStock()->where('varient_id', 0)->sum('quantity') + array_sum($pending_orders_quantity_array);
         $sale_price = $product->discount_price;
         if (in_array(($product->discount_type ?? 0),[1,2])) {
             $has_discount = 1;
@@ -259,9 +260,9 @@
 
                                     @if ($in_stock > 0)
                                             <input type="hidden" class="stock_quantity" value="{{$in_stock}}">
-                                        <span class="text-green font-weight-bold">In stock</span>
+                                        <span class="text-green font-weight-bold stock_availability">In stock</span>
                                     @else
-                                        <span class="text-danger font-weight-bold">Out of stock</span>
+                                        <span class="text-danger font-weight-bold stock_availability">Out of stock</span>
                                     @endif
                                 </div>
                             </div>
@@ -735,6 +736,11 @@
                 $('.price_append_area').text(price);
             }
             if (stock_quantity) {
+                if (Number(stock_quantity) > Number(0)) {
+                    $('.stock_availability').removeClass('text-danger').addClass('text-green').text('In stock');
+                } else {
+                    $('.stock_availability').removeClass('text-green').addClass('text-danger').text('Out of stock');
+                }
                 $('.stock_quantity').val(Number(stock_quantity));
             }
 

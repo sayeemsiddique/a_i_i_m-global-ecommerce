@@ -1092,9 +1092,36 @@ class FrontendController extends Controller
             return back()->with('error', "Your cart is empty");
         }
 
+
+
         $product_total_price = 0; // total sale price
         $product_before_discount = 0;
         foreach ($carts as $key => $cart) {
+
+            $pending_order_quantity = OrderDetail::where([
+                'product_id' => $cart->product_id,
+                'varient_id' => $cart->variation_id,
+            ])->whereHas('orderInfo', function($q){
+                $q->whereIn('status', [0,1])->where('type',2)->whereIn('delivery_status',[0,1]);
+            })->sum('quantity');
+
+            $check_stock = Stock::where([
+                'product_id' => $cart->product_id,
+                'varient_id' => $cart->variation_id,
+            ])->latest()->first();
+
+            $user_cart_quantity = Cart::where([
+                'product_id' => $cart->product_id,
+                'variation_id' => $cart->variation_id,
+                'user_id' => auth()->user()->id,
+            ])->sum('quantity');
+
+            $available_quantity = ($check_stock->quantity ?? 0) - ($pending_order_quantity + $user_cart_quantity);
+
+            if ($available_quantity < 0) {
+                return redirect()->back()->with('error', 'Product '.($cart->productInfo->name ?? "").' is out of stock');
+            }
+
             if (($cart->productInfo->status ?? 0) != 1) {
                 return redirect()->back()->with('error', 'Product '.($cart->productInfo->name ?? "").' is not available for sale');
             }
