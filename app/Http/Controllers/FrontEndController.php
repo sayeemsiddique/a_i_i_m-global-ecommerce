@@ -1236,7 +1236,7 @@ class FrontendController extends Controller
                 $payment_data['user_id'] = auth()->user()->id;
                 $payment_data['order_id'] = $order->id;
                 $payment_data['amount'] = $order->grand_total_price;
-                $payment_data['payment_method'] = $request->delivery_option ?? 0; // 1 = cash on delivery, 2 = bkash, 3 = online payment
+                $payment_data['payment_method'] = $request->delivery_option ?? 0;
                 $payment_data['bank_id'] = $request->bank_id ?? "";
 
                 if (isset($request->document) and $request->file('document')) {

@@ -129,6 +129,11 @@
 
 
 												<br/>
+                                                    <label class="">Payment Method:</label>
+                                                    @foreach(returnPaymentMethod() as $key => $payment_method)
+                                                        @if(($order->delivery_option ?? 0) == $key) {{$payment_method}} @endif
+                                                    @endforeach
+                                                    <br>
 
 
 
@@ -138,6 +143,11 @@
 													@endforeach
 
                                                 <br/>
+                                                @if ($order->paymentInfo->status == 3)
+                                                    <label class="">Payment Reject Reason:</label>
+                                                    {{$order->paymentInfo->remark ?? ''}}
+                                                <br/>
+                                                @endif
 
 
 
@@ -190,12 +200,12 @@
 														<h3 class="card-title mb-3 font-weight-bold">Order Items</h3>
 													</div>
 													<div class="table-responsive">
-														<table class="table table-responseve">
+														<table class="table table-bordered">
 															<thead>
 																<tr>
-																	<th class="pl-0 font-weight-bold text-muted text-uppercase text-left">Item Name</th>
+																	<th class="font-weight-bold text-muted text-uppercase text-left">Item Name</th>
 																	<th class="text-right font-weight-bold text-muted text-uppercase">Quantity (pcs)</th>
-																	<th class="text-right pr-0 font-weight-bold text-muted text-uppercase">Amount</th>
+																	<th class="text-right font-weight-bold text-muted text-uppercase">Amount</th>
 																</tr>
 															</thead>
 
@@ -206,7 +216,7 @@
 																@endphp
 																@foreach ($order->orderDetails as $order_detail)
 																	<tr class="font-weight-boldest">
-																		<td class="pl-0 pt-7 text-left">
+																		<td class="pt-7 text-left">
 																			{{ $order_detail->productInfo->name ?? '' }} <br/>
 																			@if ($order_detail->varient_id > 0)
 																				<span class="text-success">
@@ -225,7 +235,7 @@
 																			$sub_total = $order_detail->price * $order_detail->quantity;
 																		@endphp
 
-																		<td class="text-primary pt-7 text-right align-middle">
+																		<td class="pt-7 text-right align-middle">
 																			{{$global_setting->currency ?? ""}} {{ number_format($sub_total, 0, ".", "") }}
 																		</td>
 																	</tr>
@@ -238,27 +248,25 @@
 																<!--Show sub-total/total product price-->
 
 																<tr>
-																	<th class="text-right" colspan="2">Subtotal</th>
-																	<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->total_price, 0, ".", "") }}</th>
+																	<td class="text-right" colspan="2">Subtotal</td>
+																	<td class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->total_price, 0, ".", "") }}</td>
 																</tr>
                                                                 @if ($order->voucher_id > 0 and $order->voucher_discount > 0)
                                                                     <tr>
-                                                                        <td colspan="2" class="text-right"><strong>Voucher Discount</strong></td>
+                                                                        <td colspan="2" class="text-right">Voucher Discount</td>
                                                                         <td colspan="1" class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->voucher_discount, 0, '.', '') }}</td>
                                                                     </tr>
                                                                 @endif
 
 																<tr>
-																	<th class="text-right" colspan="2">Shipping Cost</th>
-																	<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->shipping_cost, 0, ".", "") }}</th>
+																	<td class="text-right" colspan="2">Shipping Cost</td>
+																	<td class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->shipping_cost, 0, ".", "") }}</td>
 																</tr>
-
-
 
 																<!--Show total price-->
 																<tr style="border-top: 1px solid #000;">
-																	<th class="text-right" colspan="2">Total</th>
-																	<th class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->grand_total_price, 0, ".", "") }}</th>
+																	<td class="text-right" colspan="2">Total</td>
+																	<td class="text-right">{{$global_setting->currency ?? ""}} {{ number_format($order->grand_total_price, 0, ".", "") }}</td>
 																</tr>
 
 															</tbody>
@@ -269,7 +277,7 @@
 										</div>
 
 										<!--begin::Buttons-->
-										<div class="card-footer printHide">
+										<div class="card-footer border-0 printHide">
 											<div class="row">
 												<div class="col-lg-6 text-left">
                                                     @if($order->status == 2)
@@ -280,13 +288,37 @@
                                                 </div>
 												<div class="col-lg-6 text-right">
 
+                                                    @if(($order->delivery_option ?? 0) == 2)
+
+													<button onclick="checkOnlinePaymentStatus({{$order->tracking_code ?? 0}})" type="button" class="btn btn-sm btn-info mb-4" data-toggle="modal" data-target="#viewOnlinePaymentStatus">Check Payment Status</button>
+
+                                                        <div class="modal fade" id="viewOnlinePaymentStatus" tabindex="-1" role="dialog" aria-labelledby="viewOnlinePaymentStatus" aria-hidden="true">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+
+                                                                <!-- Modal body -->
+                                                                <div class="modal-body">
+                                                                    <div class="onlinePaymentStatusContent">
+
+                                                                    </div>
+                                                                </div>
+
+                                                                <!-- Modal footer -->
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                                                </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @endif
 
 
-													@if (($order->status != 2))
+													{{-- @if ($order->status != 2) --}}
 														@can('manage_order_status')
 															<button type="button" class="btn btn-sm btn-success mb-4" data-toggle="modal" data-target="#manageOrderStatus">Manage Order Status</button>
 														@endcan
-													@endif
+													{{-- @endif --}}
 
 													{{-- <button type="button" class="btn btn-sm btn-primary mb-4" onclick="printDiv('printInvoice','invoice_{{$order->tracking_code}}')">Print Invoice</button> --}}
 
@@ -382,6 +414,13 @@
 
 						</div>
 
+						<div class="form-group row payment_comments_div" style="display: @if(($order->paymentInfo->status ?? 0) != 3) none @endif;">
+							<label for="stage" class="col-sm-4 col-form-label">Payment Reject Reason:<span class="text-danger">*</span></label>
+
+							<div class="col-sm-8">
+								<input type="text" class="form-control" name="payment_reject_reason" id="payment_reject_reason" value="{{ $order->paymentInfo->remark ?? '' }}">
+							</div>
+						</div>
 						<div class="form-group row delivery_date_div" style="display: none;">
 							<label for="stage" class="col-sm-4 col-form-label">Delivery Date:<span class="text-danger">*</span></label>
 
@@ -416,6 +455,26 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 		<script>
+			function checkOnlinePaymentStatus(tracking_code) {
+                $('.onlinePaymentStatusContent').html('Loading...');
+                $.ajax({
+                    url: "{{ route('admin.order.checkOnlinePaymentStatus') }}",
+                    type: "GET",
+                    data: {
+                        // _token: "{{ csrf_token() }}",
+                        tracking_code: tracking_code
+                    },
+                    success: function(response){
+
+                        $('.onlinePaymentStatusContent').html('');
+                        $('.onlinePaymentStatusContent').append(response);
+                    },
+                    error: function() {
+                        $('.onlinePaymentStatusContent').html('');
+                    }
+                });
+			}
+
 			function printDiv(divName,title_name) {
 				document.title = title_name;
 				var printContents = document.getElementById(divName).innerHTML;
@@ -441,6 +500,17 @@
 					$('#delivery_date').removeAttr('required');
 				}
 			});
+			$('#payment_status').on('change', function() {
+				let payment_status = $('#payment_status').val();
+
+				if(payment_status == 3) {
+					$('.payment_comments_div').show();
+					$('#payment_reject_reason').attr('required', 'required');
+				} else {
+					$('.payment_comments_div').hide();
+					$('#payment_reject_reason').removeAttr('required');
+				}
+			});
 		</script>
 
         <script>
@@ -464,6 +534,10 @@ let options = {
         colorLight: "#ffffff",
     };
     new QRCode(document.getElementById("qrcode"), options);
+
+
+
+
         </script>
 	@endpush
 

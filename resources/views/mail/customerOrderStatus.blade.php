@@ -91,6 +91,12 @@
 
             <br/>
 
+                <label class="">Payment Method:</label>
+                @foreach(returnPaymentMethod() as $key => $payment_method)
+                    @if(($order->delivery_option ?? 0) == $key) {{$payment_method}} @endif
+                @endforeach
+                <br>
+
 
 
                 <label class="">Payment Status:</label>

@@ -40,6 +40,11 @@
                                                         @endforeach
                                     </p>
                                     <p class="mb-1">
+                                        Payment Method: @foreach(returnPaymentMethod() as $key => $payment_status)
+                                                            @if(($orderDetails->delivery_option ?? 0) == $key) {{$payment_status}} @endif
+                                                        @endforeach
+                                    </p>
+                                    <p class="mb-1">
                                         Payment Status: @foreach(paymentStatus() as $key => $payment_status)
                                                             @if(($orderDetails->paymentInfo->status ?? 0) == $key) {{$payment_status}} @endif
                                                         @endforeach

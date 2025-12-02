@@ -62,7 +62,7 @@
                 @if (count($categories->childTreeInfo) > 0)
                     <li>
                         <div class="d-flex justify-content-between">
-                            <div class="" style="margin-left: 15px;">
+                            <div style="margin-left: 15px;">
                                 <label>
                                     <input name="c[]" @if (in_array($categories->id,$category_array))
                                             checked
@@ -70,7 +70,7 @@
                                 {{$categories->name}} ({{$categories->sell_products_count ?? 0}})
                                 </label>
                             </div>
-                            <div class="">
+                            <div>
                                 <span class="dropdown-toggle dropdown-toggle-collapse" href="javascript:;" role="button" data-toggle="collapse" aria-expanded="false" aria-controls="sidebarNav1Collapse_{{$categories->id}}" data-target="#sidebarNav1Collapse_{{$categories->id}}">
 
                                 </span>
@@ -81,17 +81,17 @@
                                 <ul id="sidebarNav1" class="list-unstyled dropdown-list">
                                     <!-- Menu List -->
                                     <li>
-                                        <div class="d-flex justify-content-between">
-                                            <div>
+                                        <label class="d-flex justify-content-between">
+
                                                 <input @if (in_array($child_item->id,$category_array))
                                                     checked
                                                 @endif name="c[]" value="{{$child_item->id}}" type="checkbox">
-                                                <a class="dropdown-item" href="#">
+                                                <div type="button" class="dropdown-item" href="#">
                                                     {{$child_item->name}}
                                                     <span class="text-gray-25 font-size-12 font-weight-normal"> ({{$child_item->child_sell_products_count ?? 0}})</span>
-                                                </a>
-                                            </div>
-                                        </div>
+                                                </div>
+
+                                        </label>
                                     </li>
                                     <!-- End Menu List -->
                                 </ul>

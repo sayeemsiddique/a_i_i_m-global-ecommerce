@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\CustomerOrderMail;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 
 class OrderController extends Controller
 {
@@ -223,7 +224,8 @@ class OrderController extends Controller
                 'type' => 1
             ])->first();
             // $payment->type = 1; // 1=sale,2=return
-            $payment->status = $request->payment_status ?? 0; // 1 => 'Pending',2 => 'Recieved',3 => 'Rejected',4 => 'Returned',
+            $payment->status = $request->payment_status ?? 0;
+            $payment->remark = $request->payment_reject_reason ?? '';
             $payment->save();
 
 
@@ -476,5 +478,29 @@ class OrderController extends Controller
         {
             abort(403);
         }
+    }
+
+    public function checkOnlinePaymentStatus(Request $request)
+    {
+        $user = Auth::user();
+        $tracking_code = $request->tracking_code;
+
+        if ($tracking_code != 0 and $tracking_code != '') {
+            $order = Order::where('tracking_code', $tracking_code)->first();
+
+            if ($order) {
+                $response = Http::get('https://securepay.sslcommerz.com/validator/api/merchantTransIDvalidationAPI.php', [
+                    'tran_id' => $order->tracking_code,
+                    'store_id' => env('SSLCZ_STORE_ID'),
+                    'store_passwd' => env('SSLCZ_STORE_PASSWORD'),
+                ]);
+
+                $response = json_decode($response->body(), true);
+                return view('backend.admin.order.online_payment_content', compact('response'));
+            } else {
+                return 'Order not found.';
+            }
+        }
+
     }
 }

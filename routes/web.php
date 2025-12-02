@@ -159,6 +159,7 @@ Route::middleware([SetLocale::class])->group(function () {
                 Route::get('/order-return-list', [OrderReturnController::class, 'order_return_list'])->name('order_return_list');
                 Route::get('/order-return/show/{id}', [OrderReturnController::class, 'order_return_show'])->name('order_return_show');
                 Route::post('/retum-order-status-update', [OrderReturnController::class, 'returnOrderStatusUpdate'])->name('returnOrderStatusUpdate');
+                Route::get('/online-payment-status', [OrderController::class, 'checkOnlinePaymentStatus'])->name('checkOnlinePaymentStatus');
 
             });
 

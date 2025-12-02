@@ -105,3 +105,13 @@ function returnPaymentStatus()
     return $payment_status;
 }
 
+function returnPaymentMethod()
+{
+    $payment_method = array(
+        1 => 'Cash On Delivery',
+        2 => 'Online Pay',
+    );
+
+    return $payment_method;
+}
+
