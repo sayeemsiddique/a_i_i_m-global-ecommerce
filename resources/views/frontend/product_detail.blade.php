@@ -203,7 +203,7 @@
                 <div class="col-md-7 mb-md-6 mb-lg-0">
                     <div class="mb-2">
                         <div class="mb-1 pb-md-1">
-                            <a href="{{route('store.grid')}}?c[]={{$product->category_id}}" class="font-size-12 text-gray-5 mb-2 d-inline-block">{{$product->productCategory->name ?? ''}}</a>
+                            <a href="{{route('store.grid')}}?c[]={{$product->category_id}}" class="font-size-12 text-gray-5 mb-2 d-inline-block"><i class="fas fa-link mr-2"></i> {{$product->productCategory->name ?? ''}}</a>
                             <h2 class="font-size-25 text-lh-1dot2">
                                 {{$product->name}}
                             </h2>
@@ -211,48 +211,27 @@
                                 <a class="d-inline-flex align-items-center small font-size-15 text-lh-1" href="#">
 
                                     <div class="text-warning mr-2">
-                                        @if ($review_avg == 1)
-                                            <small class="fas fa-star"></small>
-                                            <small class="far fa-star text-muted"></small>
-                                            <small class="far fa-star text-muted"></small>
-                                            <small class="far fa-star text-muted"></small>
-                                            <small class="far fa-star text-muted"></small>
-                                        @elseif ($review_avg == 2)
-                                            <small class="fas fa-star"></small>
-                                            <small class="fas fa-star"></small>
-                                            <small class="far fa-star text-muted"></small>
-                                            <small class="far fa-star text-muted"></small>
-                                            <small class="far fa-star text-muted"></small>
-                                        @elseif ($review_avg == 3)
-                                            <small class="fas fa-star"></small>
-                                            <small class="fas fa-star"></small>
-                                            <small class="fas fa-star"></small>
-                                            <small class="far fa-star text-muted"></small>
-                                            <small class="far fa-star text-muted"></small>
-                                        @elseif ($review_avg == 4)
-                                            <small class="fas fa-star"></small>
-                                            <small class="fas fa-star"></small>
-                                            <small class="fas fa-star"></small>
-                                            <small class="fas fa-star"></small>
-                                            <small class="far fa-star text-muted"></small>
-                                        @elseif ($review_avg == 5)
-                                            <small class="fas fa-star"></small>
-                                            <small class="fas fa-star"></small>
-                                            <small class="fas fa-star"></small>
-                                            <small class="fas fa-star"></small>
-                                            <small class="fas fa-star"></small>
-                                        @else
-                                            <small class="far fa-star text-muted"></small>
-                                            <small class="far fa-star text-muted"></small>
-                                            <small class="far fa-star text-muted"></small>
-                                            <small class="far fa-star text-muted"></small>
-                                            <small class="far fa-star text-muted"></small>
-                                        @endif
+                                        <small class="fas fa-star @if ($review_avg < 1) text-muted @endif"></small>
+                                        <small class="fas fa-star @if ($review_avg < 2) text-muted @endif"></small>
+                                        <small class="fas fa-star @if ($review_avg < 3) text-muted @endif"></small>
+                                        <small class="fas fa-star @if ($review_avg < 4) text-muted @endif"></small>
+                                        <small class="fas fa-star @if ($review_avg < 5) text-muted @endif"></small>
                                     </div>
 
                                     <span class="text-secondary font-size-13">({{ $review_count }} reviews)</span>
                                 </a>
                             </div>
+
+                            @if ($product->productBrand)
+                                <div class="d-md-flex align-items-center pt-2 pb-2">
+                                    <div class="text-gray-9 font-size-14">Brand:
+                                        <span class="font-weight-bold">
+                                            <a class="text-gray-5 mb-2 d-inline-block" href="{{route('store.grid')}}?b[]={{$product->brand_id}}"> {{$product->productBrand->name ?? ''}}</a>
+                                        </span>
+                                    </div>
+                                </div>
+                            @endif
+
                             <div class="d-md-flex align-items-center">
                                 <i class="fas fa-shopping-cart @if ($in_stock > 0) text-green @else text-danger @endif" style="font-size: 13px; margin: 10px 0;"></i>
 
@@ -266,6 +245,8 @@
                                     @endif
                                 </div>
                             </div>
+
+
                         </div>
                         {{-- <div class="flex-horizontal-center flex-wrap mb-4"> --}}
                             {{-- <a href="#" class="text-gray-6 font-size-13 mr-2"><i class="ec ec-favorites mr-1 font-size-15"></i> Wishlist</a> --}}

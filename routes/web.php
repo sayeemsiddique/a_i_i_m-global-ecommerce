@@ -41,6 +41,7 @@ use App\Http\Controllers\{
     UpazilaController,
     VoucherController,
     StoreController,
+    CampaignController,
 };
 
 use App\Http\Middleware\SetLocale;
@@ -171,6 +172,16 @@ Route::middleware([SetLocale::class])->group(function () {
                 Route::get('/edit/{id}', [VoucherController::class, 'edit'])->name('edit');
                 Route::PATCH('/update/{voucher}', [VoucherController::class, 'update'])->name('update');
                 Route::DELETE('/delete/{voucher}', [VoucherController::class, 'destroy'])->name('delete');
+            });
+
+            Route::prefix('campaign')->as('campaign.')->group(function () {
+                Route::get('/index', [CampaignController::class, 'index'])->name('index');
+                Route::get('/create', [CampaignController::class, 'create'])->name('create');
+                Route::post('/store', [CampaignController::class, 'store'])->name('store');
+                Route::get('/show/{id}', [CampaignController::class, 'show'])->name('show');
+                Route::get('/edit/{id}', [CampaignController::class, 'edit'])->name('edit');
+                Route::PATCH('/update/{voucher}', [CampaignController::class, 'update'])->name('update');
+                Route::DELETE('/delete/{voucher}', [CampaignController::class, 'destroy'])->name('delete');
             });
 
             Route::prefix('store')->as('store.')->group(function () {

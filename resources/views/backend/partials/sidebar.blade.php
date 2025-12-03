@@ -835,6 +835,16 @@
                                         </a>
                                     </li>
                                 @endcan
+                                @can('all_campaign')
+                                    <li class="menu-item {{ session('lsbsm') == 'all_campaign' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
+                                        <a href="{{ route('admin.campaign.index') }}" class="menu-link">
+                                            <i class="far fa-dot-circle">
+                                                <span></span>
+                                            </i>
+                                            <span class="menu-text">Manage Campaign</span>
+                                        </a>
+                                    </li>
+                                @endcan
                                 @can('all_store')
                                     <li class="menu-item {{ session('lsbsm') == 'all_store' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
                                         <a href="{{ route('admin.store.index') }}" class="menu-link">

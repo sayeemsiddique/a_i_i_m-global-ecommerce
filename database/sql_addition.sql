@@ -31,3 +31,7 @@ ALTER TABLE `orders` CHANGE `vds_amount` `store_id` INT NULL DEFAULT NULL COMMEN
 ALTER TABLE `order_returns` CHANGE `vds_amount` `store_id` INT NULL DEFAULT NULL COMMENT '';
 
 ALTER TABLE `vouchers` ADD `person_max_use` TINYINT NOT NULL DEFAULT '0' AFTER `used_count`;
+
+ALTER TABLE `campaigns` ADD `featured` TINYINT NULL DEFAULT '0' AFTER `status`;
+ALTER TABLE `campaign_products` ADD `varient_id` INT NULL DEFAULT '0' AFTER `product_id`;
+ALTER TABLE `campaigns` ADD `discount` DECIMAL(18,2) NULL AFTER `slug`, ADD `discount_type` TINYINT NULL AFTER `discount`;

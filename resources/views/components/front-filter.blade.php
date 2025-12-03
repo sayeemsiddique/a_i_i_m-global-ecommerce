@@ -27,12 +27,12 @@
 
 @endphp
 <style>
-    .dropdown-item label {
+    /* .dropdown-item label {
         display: flex;
         align-items: flex-start;
         gap: 6px;
         white-space: normal;
-        /* word-break: break-word; */
+        word-break: break-word;
     }
     #sidebarNav1 label {
         margin-bottom: 0 !important;
@@ -44,9 +44,33 @@
     .sidebar-navbar.view-all > li:not(:first-child) {
         margin: 0 !important;
     }
+
+    .custom-checkbox-input[type="checkbox"] {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 16px;
+        height: 16px;
+        border: 1px solid #ffbfbf;
+        border-radius: 50%;
+        outline: none;
+        cursor: pointer;
+        position: relative;
+    }  */
     .sidebar-navbar .dropdown-item {
-        padding: 0 1.5rem !important;
         white-space: collapse;
+        padding: 0.2rem .5rem;
+    }
+    .sidebar-navbar.view-all .dropdown-toggle {
+        padding: 0;
+    }
+    .custom-sidemenu-label {
+        margin: 6px 0px;
+        cursor: pointer;
+    }
+    .sidebar-navbar .dropdown-list {
+        padding: 0px 10px !important;
+        background: #d96d6d14;
+  border-radius: 8px;
     }
 </style>
 <form id="sidebar_form" action="" method="get">
@@ -62,63 +86,47 @@
                 @if (count($categories->childTreeInfo) > 0)
                     <li>
                         <div class="d-flex justify-content-between">
-                            <div style="margin-left: 15px;">
-                                <label>
+                            <div>
+                                <label class="custom-sidemenu-label">
                                     <input name="c[]" @if (in_array($categories->id,$category_array))
                                             checked
                                         @endif value="{{$categories->id}}" type="checkbox">
                                 {{$categories->name}} ({{$categories->sell_products_count ?? 0}})
                                 </label>
                             </div>
-                            <div>
+                            <div class="align-content-center">
                                 <span class="dropdown-toggle dropdown-toggle-collapse" href="javascript:;" role="button" data-toggle="collapse" aria-expanded="false" aria-controls="sidebarNav1Collapse_{{$categories->id}}" data-target="#sidebarNav1Collapse_{{$categories->id}}">
 
                                 </span>
                             </div>
                         </div>
-                        @foreach ($categories->childTreeInfo as $child_item)
+
                             <div id="sidebarNav1Collapse_{{$categories->id}}" class="collapse" data-parent="#sidebarNav">
                                 <ul id="sidebarNav1" class="list-unstyled dropdown-list">
-                                    <!-- Menu List -->
+                                    @foreach ($categories->childTreeInfo as $child_item)
                                     <li>
-                                        <label class="d-flex justify-content-between">
+                                        <label class="d-flex justify-content-between custom-sidemenu-label">
 
-                                                <input @if (in_array($child_item->id,$category_array))
+                                                <input class="custom-checkbox-input" @if (in_array($child_item->id,$category_array))
                                                     checked
                                                 @endif name="c[]" value="{{$child_item->id}}" type="checkbox">
                                                 <div type="button" class="dropdown-item" href="#">
                                                     {{$child_item->name}}
-                                                    <span class="text-gray-25 font-size-12 font-weight-normal"> ({{$child_item->child_sell_products_count ?? 0}})</span>
+                                                    <span class="text-gray-25 font-size-12 font-weight-normal"> ({{$child_item->sell_products_count ?? 0}})</span>
                                                 </div>
 
                                         </label>
                                     </li>
                                     <!-- End Menu List -->
+                                    @endforeach
                                 </ul>
                             </div>
-                        @endforeach
-                        {{-- <span class="dropdown-toggle dropdown-toggle-collapse" href="javascript:;" role="button" data-toggle="collapse" aria-expanded="false" aria-controls="sidebarNav1Collapse_{{$categories->id}}" data-target="#sidebarNav1Collapse_{{$categories->id}}">
-                            {{$categories->name}}<span class="text-gray-25 font-size-12 font-weight-normal"> ({{$categories->sell_products_count ?? 0}})</span>
-                        </span>
-                        @foreach ($categories->childTreeInfo as $child_item)
-                            <div id="sidebarNav1Collapse_{{$categories->id}}" class="collapse" data-parent="#sidebarNav">
-                                <ul id="sidebarNav1" class="list-unstyled dropdown-list">
-                                    <!-- Menu List -->
-                                    <li>
-                                        <a class="dropdown-item" href="#">
-                                            {{$child_item->name}}
-                                            <span class="text-gray-25 font-size-12 font-weight-normal"> ({{$child_item->child_sell_products_count ?? 0}})</span>
-                                        </a>
-                                    </li>
-                                    <!-- End Menu List -->
-                                </ul>
-                            </div>
-                        @endforeach --}}
+
                     </li>
                 @else
                     <li>
                         <span class="non-sub-menu" >
-                            <label>
+                            <label class="custom-sidemenu-label">
                             <input name="c[]" @if (in_array($categories->id,$category_array)) checked @endif value="{{$categories->id}}" type="checkbox">
                             {{$categories->name}}<span class="text-gray-25 font-size-12 font-weight-normal"> ({{$categories->sell_products_count ?? 0}})</span>
                             </label>
@@ -127,48 +135,6 @@
                 @endif
             @endforeach
         </ul>
-        {{-- <ul id="sidebarNav" class="list-unstyled mb-0 sidebar-navbar">
-            <li>
-                <a class="dropdown-toggle dropdown-toggle-collapse dropdown-title" href="javascript:;" role="button" data-toggle="collapse" aria-expanded="false" aria-controls="sidebarNav1Collapse" data-target="#sidebarNav1Collapse">
-                    Show All Categories
-                </a>
-
-                    <ul id="sidebarNav1" class="list-unstyled dropdown-list">
-                        <!-- Menu List -->
-                        <li>
-                            @foreach ($main_categories as $categories)
-                                <a class="dropdown-item" href="#">
-                                    <label>
-                                        <input name="c[]" @if (in_array($categories->id,$category_array))
-                                            checked
-                                        @endif value="{{$categories->id}}" type="checkbox">
-                                        {{$categories->name}}<span class="text-gray-25 font-size-12 font-weight-normal"> ({{$categories->sell_products_count ?? 0}})</span>
-                                    </label>
-                                </a>
-                                @if (count($categories->childTreeInfo) > 0)
-                                @foreach ($categories->childTreeInfo as $child_item)
-                                    <a class="dropdown-item" href="#">
-                                        <label style="margin-left: 15px;">
-                                              <input @if (in_array($child_item->id,$category_array))
-                                              checked
-                                          @endif name="c[]" value="{{$child_item->id}}" type="checkbox">
-                                            {{$child_item->name}}<span class="text-gray-25 font-size-12 font-weight-normal"> ({{$child_item->child_sell_products_count ?? 0}})</span>
-                                        </label>
-                                    </a>
-                                @endforeach
-
-                                @endif
-
-                            @endforeach
-
-                        </li>
-
-                        <!-- End Menu List -->
-                    </ul>
-            </li>
-
-        </ul> --}}
-        <!-- End List -->
     </div>
     <div class="mb-6">
         <div class="border-bottom border-color-1 mb-3">
@@ -278,10 +244,10 @@
             <!-- End Range Slider -->
             <div class="mt-1 text-gray-111 d-flex mb-4">
                 <span class="mr-0dot5">Price: </span>
-                <span>{{$global_setting->currency ?? ""}} </span>
+                <span class="mr-1">{{$global_setting->currency ?? ""}} </span>
                 <span id="rangeSliderExample3MinResult" class=""></span>
                 <span class="mx-0dot5"> — </span>
-                <span>{{$global_setting->currency ?? ""}} </span>
+                <span class="mr-1">{{$global_setting->currency ?? ""}} </span>
                 <span id="rangeSliderExample3MaxResult" class=""></span>
             </div>
             <button type="submit" class="btn px-4 btn-primary-dark-w py-2 rounded-lg">Filter</button>
