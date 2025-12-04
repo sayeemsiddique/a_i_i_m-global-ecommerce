@@ -35,3 +35,4 @@ ALTER TABLE `vouchers` ADD `person_max_use` TINYINT NOT NULL DEFAULT '0' AFTER `
 ALTER TABLE `campaigns` ADD `featured` TINYINT NULL DEFAULT '0' AFTER `status`;
 ALTER TABLE `campaign_products` ADD `varient_id` INT NULL DEFAULT '0' AFTER `product_id`;
 ALTER TABLE `campaigns` ADD `discount` DECIMAL(18,2) NULL AFTER `slug`, ADD `discount_type` TINYINT NULL AFTER `discount`;
+ALTER TABLE `campaign_products` ADD `price` DECIMAL(18,2) NULL DEFAULT '0' AFTER `discount_type`;
