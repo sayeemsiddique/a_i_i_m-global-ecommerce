@@ -32,7 +32,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="division_id">Division</label>
-                                            <select name="division_id" class="form-control" required>
+                                            <select id="divisionid" name="division_id" class="form-control" required>
                                                 @foreach($divisions as $division)
                                                     <option value="{{ $division->id }}" {{ $shippingAddress->division_id == $division->id ? 'selected' : '' }}>
                                                         {{ $division->name }}
@@ -45,7 +45,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="district_id">District</label>
-                                            <select name="district_id" class="form-control" required>
+                                            <select id="districtid" name="district_id" class="form-control" required>
                                                 @foreach($districts as $district)
                                                     <option value="{{ $district->id }}" {{ $shippingAddress->district_id == $district->id ? 'selected' : '' }}>
                                                         {{ $district->name }}
@@ -58,7 +58,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="upazila_id">Upazila</label>
-                                            <select name="upazila_id" class="form-control" required>
+                                            <select id="upazilaid" name="upazila_id" class="form-control" required>
                                                 @foreach($upazilas as $upazila)
                                                     <option value="{{ $upazila->id }}" {{ $shippingAddress->upazila_id == $upazila->id ? 'selected' : '' }}>
                                                         {{ $upazila->name }}
@@ -121,3 +121,47 @@
     </div>
 </div>
 @endsection
+
+@push('stackScript')
+    <script>
+        $(document).ready(function () {
+            // When division changes → load districts
+            $("#divisionid").on('change',function(e){
+            e.preventDefault();
+                let divisionId = $(this).val();
+                if (divisionId) {
+                    $.ajax({
+                        url: "{{ route('districts') }}/?division_id=" + divisionId,
+                        type: "GET",
+                        success: function (data) {
+                            $('#districtid').empty().append('<option value="">-- Select District --</option>');
+                            $('#upazilaid').empty().append('<option value="">-- Select Upazila / Thana --</option>'); // reset
+                            $.each(data.districts, function (key, district) {
+                                $('#districtid').append('<option value="' + district.id + '">' + district.name + '</option>');
+                            });
+                        }
+                    });
+                }
+            });
+
+            // When district changes → load upazilas
+            $("#districtid").on('change',function(e){
+            e.preventDefault();
+                let districtId = $(this).val();
+                if (districtId) {
+                    $.ajax({
+                        url: "{{ route('upazilas') }}/?district_id=" + districtId,
+                        type: "GET",
+                        success: function (data) {
+                            $('#upazilaid').empty().append('<option value="">-- Select Upazila / Thana --</option>');
+                            $.each(data.upazilas, function (key, upazila) {
+                                $('#upazilaid').append('<option value="' + upazila.id + '">' + upazila.name + '</option>');
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+@endpush

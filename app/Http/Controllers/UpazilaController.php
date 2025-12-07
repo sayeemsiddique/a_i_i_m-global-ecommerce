@@ -23,13 +23,26 @@ class UpazilaController extends Controller
                     $new_query->where('division_id',$request->division);
                 });
             }
+            if (isset($request->district_id) and $request->district_id != '') {
+                $query->whereHas('districtInfo',function($new_query) use ($request){
+                    $new_query->where('id',$request->district_id);
+                });
+            }
 
             if (isset($request->name) and $request->name != '') {
                 $query->where('name','like','%'.$request->name.'%');
             }
             $upazilas = $query->with('districtInfo.divisionInfo')->paginate(20);
-            $regions = Division::where('status',1)->latest()->get();
-            $districts = District::where('status',1)->with('divisionInfo')->latest()->get();
+            $region_query = Division::query();
+            $district_query = District::where('status',1)->with('divisionInfo');
+
+            if (isset($request->division) and $request->division != '') {
+                $district_query->where('division_id',$request->division);
+            }
+
+            $regions = $region_query->where('status',1)->latest()->get();
+
+            $districts = $district_query->latest()->get();
 
             return view('backend.admin.upazila.index', compact("upazilas","regions","districts"));
         }else{

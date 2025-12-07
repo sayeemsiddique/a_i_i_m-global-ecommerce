@@ -2,6 +2,7 @@
 
 @section('content')
 <!--begin::Content-->
+
 <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
 
     <div class="d-flex flex-column-fluid">
@@ -73,11 +74,11 @@
                                         <button type="submit" name="create_campaign" value="1" class="btn btn-primary">Save Campaign</button>
                                     </div> --}}
                                     <div class="col-md-12">
-                                        <select id="productSelect" multiple required>
+                                        <select id="productSelect" multiple required autocomplete="off">
                                             @foreach ($products as $product)
                                                 @if ($product->has_varient == 1)
                                                     @foreach ($product->productVarient as $varient)
-                                                        <option data-price={{$varient->discount_price}} value="{{ $product->id }}-{{ $varient->id }}">
+                                                        <option data-price={{$varient->discount_price}} data-delprice={{$product->price}} value="{{ $product->id }}-{{ $varient->id }}">
                                                             {{ $product->name }} -
                                                             @foreach ($varient->productVarientData as $varient_data)
                                                                 {{$varient_data->varientTypeInfo->name ?? ''}}: {{ $varient_data->data_value }}@if(!$loop->last)-@endif
@@ -85,7 +86,7 @@
                                                         </option>
                                                     @endforeach
                                                 @else
-                                                    <option data-price={{$product->discount_price}} value="{{ $product->id }}-0">{{ $product->name }}</option>
+                                                    <option data-price={{$product->discount_price}} data-delprice={{$product->price}} value="{{ $product->id }}-0">{{ $product->name }}</option>
                                                 @endif
                                             @endforeach
                                         </select>
@@ -136,55 +137,71 @@
 
     <script>
 
+        function calculate_values(that) {
+            let type = $(that).closest('te').find('.varient_discount_type').val();
+            let discount = $(that).closest('te').find('.product_discount').val();
+
+        }
+
         $('#productSelect').change(function() {
 
             let product_value = $(this).val();
             let product_name = $(this).text();
+            let lastClicked = $(this).find(':selected').last();
+            // console.log(product_value);
             if (product_value.length > 0) {
-                // let product_id = product_value.split("-")[0];
-                // let varient_id = product_value.split("-")[1];
-
-
-                let exists = 0;
                 document.querySelectorAll('.campaign_product_list tbody input[name="product_id[]"]').forEach(function(input) {
-
                     if (!product_value.includes(input.value)) {
                         input.closest('tr').remove();
                     }
                 });
 
 
+                product_value.forEach(function(selected_value) {
+                    let product_text = $('#productSelect option[value="'+selected_value+'"]').text();
+                    let product_price = $('#productSelect option[value="'+selected_value+'"]').attr('data-price');
+                    let del_product_price = $('#productSelect option[value="'+selected_value+'"]').attr('data-delprice');
 
-                let appended_html = `<tr>
-                    <td>
-                        <span class="product_name">${product_name}</span>
-                        <input type="hidden" name="product_id[]" value="${product_value}"
-                    </td>
-                    <td>
-                        <del class="product_price"></del> <br>
-                        <span class="product_discount_price"></span>
-                    </td>
-                    <td>
-                        <select onchange='calculate_values(this)' class='form-control varient_discount_type' name='discount_type[]'>
-                            <option value="">Select</option>
-                            <option value="1">Flat Rate</option>
-                            <option value="2">Percentage</option>
-                        </select>
-                    </td>
-                    <td>
-                        <input type="number" name="product_discount[]">
-                    </td>
-                    <td>
-                        <span class="discounted_price"></span>
-                    </td>
-                </tr>`;
-
-                if (exists == 1) {
-                    $('.campaign_product_list').find('tbody').append(appended_html);
-                }
+                    let check_existence = $('.hidden_product_'+selected_value).val();
+                    if (!check_existence) {
+                        let appended_html = `<tr>
+                                    <td>
+                                        <span class="product_name">${product_text}</span>
+                                        <input type="hidden" class="hidden_product_${selected_value}" name="product_id[]" value="${selected_value}">
+                                    </td>
+                                    <td>
+                                        <del class="product_price">${del_product_price}</del> <br>
+                                        <span class="product_discount_price">${product_price}</span>
+                                    </td>
+                                    <td>
+                                        <select onchange='calculate_values(this)' class='form-control varient_discount_type' name='discount_type[]'>
+                                            <option value="1">Flat Rate</option>
+                                            <option value="2">Percentage</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input class="form-control product_discount" onchange='calculate_values(this)' type="number" name="product_discount[]">
+                                    </td>
+                                    <td>
+                                        <span class="discounted_price"></span>
+                                    </td>
+                                </tr>`;
 
 
+                        $('.campaign_product_list').find('tbody').append(appended_html);
+                    }
 
+                });
+
+
+
+
+
+
+
+
+            } else {
+                $('.campaign_product_list tbody').find('tr').remove()
             }
 
         });
@@ -196,6 +213,7 @@
             loadingText: 'Loading...',
             noResultsText: 'No results found',
             shouldSort: false,
+            placeholderValue: 'Select products',
         });
 
 

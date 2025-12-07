@@ -32,10 +32,20 @@
                             <div class="row g-3">
                                 <div class="col-xxl-2 col-sm-2">
                                     <div>
-                                        <select class="form-control" data-choices data-choices-search-false name="division" id="idStatus">
+                                        <select class="form-control" data-choices data-choices-search-false name="division" id="divisionid">
                                             <option value="">{{__('Select Division')}}</option>
                                             @foreach ($regions as $region)
                                                     <option @if(isset($_GET['division']) and $_GET['division']==$region->id) selected @endif value="{{$region->id}}">{{$region->name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-xxl-2 col-sm-2">
+                                    <div>
+                                        <select class="form-control" data-choices data-choices-search-false name="district_id" id="districtid">
+                                            <option value="">{{__('Select District')}}</option>
+                                            @foreach ($districts as $district)
+                                                    <option @if(isset($_GET['district_id']) and $_GET['district_id']==$district->id) selected @endif value="{{$district->id}}">{{$district->name}}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -140,7 +150,7 @@
                             </table>
                                 </div>
 
-                                {{ $upazilas->links() }}
+                                {{ $upazilas->appends($_GET)->links() }}
                             </div>
                         </div>
                         <!--end::Card-->
@@ -152,3 +162,47 @@
         <!--end::Entry-->
 </div>
 @endsection
+
+@push('stackScript')
+    <script>
+        $(document).ready(function () {
+            // When division changes → load districts
+            $("#divisionid").on('change',function(e){
+            e.preventDefault();
+                let divisionId = $(this).val();
+                if (divisionId) {
+                    $.ajax({
+                        url: "{{ route('districts') }}/?division_id=" + divisionId,
+                        type: "GET",
+                        success: function (data) {
+                            $('#districtid').empty().append('<option value="">-- Select District --</option>');
+                            $('#upazilaid').empty().append('<option value="">-- Select Upazila / Thana --</option>'); // reset
+                            $.each(data.districts, function (key, district) {
+                                $('#districtid').append('<option value="' + district.id + '">' + district.name + '</option>');
+                            });
+                        }
+                    });
+                }
+            });
+
+            // When district changes → load upazilas
+            // $("#districtid").on('change',function(e){
+            // e.preventDefault();
+            //     let districtId = $(this).val();
+            //     if (districtId) {
+            //         $.ajax({
+            //             url: "{{ route('upazilas') }}/?district_id=" + districtId,
+            //             type: "GET",
+            //             success: function (data) {
+            //                 $('#upazilaid').empty().append('<option value="">-- Select Upazila / Thana --</option>');
+            //                 $.each(data.upazilas, function (key, upazila) {
+            //                     $('#upazilaid').append('<option value="' + upazila.id + '">' + upazila.name + '</option>');
+            //                 });
+            //             }
+            //         });
+            //     }
+            // });
+        });
+    </script>
+
+@endpush
