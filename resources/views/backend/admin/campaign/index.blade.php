@@ -32,10 +32,9 @@
                                             <th class="text-left">Campaign</th>
                                             <th class="text-left">Start date</th>
                                             <th class="text-left">End date</th>
-                                            <th class="text-left">No of Products</th>
+                                            <th class="text-center">No of Products</th>
                                             <th>Featured</th>
                                             <th>Status</th>
-                                            <th>Page Link</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -50,7 +49,7 @@
                                                         {{$i}}
                                                     </td>
                                                     <td align="left">
-                                                        {{$campaign->code}}
+                                                        {{$campaign->title}}
                                                     </td>
                                                     <td align="left">
                                                         {{$campaign->start_date}}
@@ -59,10 +58,16 @@
                                                         {{$campaign->end_date}}
                                                     </td>
 
-                                                    <td align="left">
-                                                        {{$campaign->value}} @if ($campaign->type == 'percent') % @else Flat rate @endif
+                                                    <td class="text-center">
+                                                        {{$campaign->campaign_product_info_count}}
                                                     </td>
 
+
+                                                    <td>
+                                                        @if ($campaign->featured == 1)
+                                                            <span class="label label-lg font-weight-bold label-light-success label-inline">Featured</span>
+                                                        @endif
+                                                    </td>
                                                     <td>
                                                         @if ($campaign->status == 1)
                                                             <span class="label label-lg font-weight-bold label-light-success label-inline">Active</span>
@@ -79,9 +84,9 @@
                                                         @endcan
 
                                                         @can('edit_campaign')
-                                                            <button title="Edit" type="button" class="btn btn-outline btn-info btn-sm btn-rounded p-1" data-toggle="modal" data-target="#campaign_edit{{$campaign->id}}">
+                                                            <a title="Edit" href="{{route('admin.campaign.edit', $campaign->id)}}" class="btn btn-outline btn-info btn-sm btn-rounded p-1" title="View">
                                                                 <i class="la la-edit p-0 text-white"></i>
-                                                            </button>
+                                                            </a>
                                                         @endcan
 
                                                         @can('delete_campaign')

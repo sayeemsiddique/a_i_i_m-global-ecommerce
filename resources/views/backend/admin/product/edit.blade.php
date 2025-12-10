@@ -146,7 +146,7 @@
 												</div>
 
 												<div class="form-group conditional_area">
-													<label class="">Sale Price Price:</label>
+													<label class="">Product Price:</label>
 													<input onchange="calculate_val()" type="number" class="form-control" step="0.01" name="price" value="{{$product->price}}">
 												</div>
 
@@ -156,7 +156,7 @@
 												</div>
 
 												<div class="form-group conditional_area">
-													<label class="">Total Sale Price:</label>
+													<label class="">Sale Price:</label>
 													<input onchange="calculate_val()" type="number" class="form-control" step="0.01" name="total_price">
 												</div>
 
@@ -281,10 +281,10 @@
 
 														<th>Weight</th>
 														<th>Initial Quantity</th>
-														<th>Sale Price</th>
+														<th>Product Price</th>
 														<th>Discount</th>
 														<th>Discount Type</th>
-														<th>Total Sale Price</th>
+														<th>Sale Price</th>
 														<th><span style="cursor: pointer;" class="btn btn-info font-weight-bolder font-size-sm mr-3 add_more">Add new variant</span></th>
 													</tr>
 													</thead>
@@ -588,7 +588,7 @@
 			if (!$("input[name=price]").val()) {
 				Swal.fire(
 					'Error!',
-					'Sale price is required',
+					'Product price is required',
 					'success'
 				);
 				$('.save_button').text('');

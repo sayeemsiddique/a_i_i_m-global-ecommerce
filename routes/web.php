@@ -180,7 +180,7 @@ Route::middleware([SetLocale::class])->group(function () {
                 Route::post('/store', [CampaignController::class, 'store'])->name('store');
                 Route::get('/show/{id}', [CampaignController::class, 'show'])->name('show');
                 Route::get('/edit/{id}', [CampaignController::class, 'edit'])->name('edit');
-                Route::PATCH('/update/{voucher}', [CampaignController::class, 'update'])->name('update');
+                Route::PATCH('/update/{id}', [CampaignController::class, 'update'])->name('update');
                 Route::DELETE('/delete/{voucher}', [CampaignController::class, 'destroy'])->name('delete');
             });
 

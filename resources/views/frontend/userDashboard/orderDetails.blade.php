@@ -95,7 +95,7 @@
                             <thead>
                                 <tr>
                                     <th class="order-id">Item Name</th>
-                                    <th class="order-date">Factory Price</th>
+                                    <th class="order-date">Product Price</th>
                                     <th class="order-date">SD & VAT</th>
                                     <th class="order-status">Quantity (pcs)</th>
                                     <th class="order-status">Weight</th>

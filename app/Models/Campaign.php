@@ -10,4 +10,9 @@ class Campaign extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function campaignProductInfo()
+    {
+        return $this->hasMany(CampaignProduct::class, 'campaign_id', 'id');
+    }
 }

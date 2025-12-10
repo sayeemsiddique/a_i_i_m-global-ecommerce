@@ -3,7 +3,7 @@
 	@section('content')
 					<!--begin::Content-->
 					<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
-						
+
 						<!--end::Subheader-->
 						<!--begin::Entry-->
 						<div class="d-flex flex-column-fluid">
@@ -23,7 +23,7 @@
 													<h3 class="card-label font-weight-bolder text-dark">{{ $product->name }} Product Details</h3>
 													<hr>
 												</div>
-												
+
 
 												<div class="example-preview" style="width: 100%">
 													<div class="row">
@@ -45,7 +45,7 @@
 																		<span class="nav-text">Gallery</span>
 																	</a>
 																</li>
-																
+
 																<li class="nav-item">
 																	<a class="nav-link" id="contact-tab-5" data-toggle="tab" href="#contact-5" aria-controls="contact">
 																		<span class="nav-icon">
@@ -107,12 +107,12 @@
 																				@else
 																				Pcs
 																				@endif
-																				
+
 																			</td>
 																		  </tr>
-																		  
-																		  
-																		  
+
+
+
 																		  <tr>
 																			<td class="w-25">Featured:</td>
 																			<td class="w-75">
@@ -123,7 +123,7 @@
 																				@endif
 																			</td>
 																		  </tr>
-																		  
+
 																		  <tr>
 																			<td class="w-25">Description:
 																			</td>
@@ -160,7 +160,7 @@
 																		<p>Gallery Not Added</p>
 																	@endif
 																	</div>
-																	
+
 																</div>
 
 																<div class="tab-pane fade" id="contact-5" role="tabpanel" aria-labelledby="contact-tab-5">
@@ -171,20 +171,20 @@
 																				<th>Variant</th>
 																				<th>Initial Quantity</th>
 																				<th>Weight</th>
-																				<th>Sale Price</th>
+																				<th>Product Price</th>
 																				{{-- <th>SD</th> --}}
 																				{{-- <th>VAT</th> --}}
 																				{{-- <th>Discount</th> --}}
-																				<th>Total Sale Price</th>
+																				<th>Sale Price</th>
 																			</thead>
-																			
+
 																			@foreach ($product->productVarient as $varient)
 																				<tbody>
 																					<tr>
-																						
+
 																						<td>
 																							@foreach ($varient->productVarientData as $VarientData)
-																								{{$VarientData->data_value}} 
+																								{{$VarientData->data_value}}
 																							@endforeach
 																						</td>
 
@@ -220,11 +220,11 @@
 																							{{-- @php
 																								if ($varient->discount_type == 1) {
 																									$total_sale_price = $varient->price - (($varient->discount * $varient->price) / 100);
-																									
+
 																								} else {
 																									$total_sale_price = $varient->price - $varient->discount;
 																								}
-																								
+
 																							@endphp --}}
 
 																							{{ $varient->discount_price }}
@@ -240,7 +240,7 @@
 																					<td class="w-75">{{$product->quantity}}</td>
 																				</tr>
 																				@endif
-																				
+
 																				{{-- <tr>
 																					<td class="w-25">Discount type:</td>
 																					<td class="w-75">
@@ -253,7 +253,7 @@
 																				</tr> --}}
 
 																				<tr>
-																					<td class="w-25">Factory Price:</td>
+																					<td class="w-25">Product Price:</td>
 																					<td class="w-75">{{ $product->price }}</td>
 																				</tr>
 																				<tr>
@@ -276,11 +276,11 @@
 																						{{-- @php
 																							if ($product->discount_type == 1) {
 																								$total_sale_price = $product->price - (($product->discount * $product->price) / 100);
-																								
+
 																							} else {
 																								$total_sale_price = $product->price - $product->discount;
 																							}
-																							
+
 																						@endphp --}}
 																						{{ $product->discount_price }}
 																					</td>
@@ -301,7 +301,7 @@
                                                 @endcan --}}
 											</div>
 											<!--end::Header-->
-                                            
+
 										</div>
 										<!--end::Card-->
 									</div>
@@ -327,4 +327,3 @@
 	}
 	</style>
 	@endpush
-					

@@ -186,7 +186,7 @@
                                             <th>Order Id</th>
                                             {{-- <th>Invoice Id</th> --}}
                                             <th>Date</th>
-                                            <th>Factory Price</th>
+                                            <th>Product Price</th>
                                             <th>SD</th>
                                             <th>VAT</th>
                                             <th>Other</th>

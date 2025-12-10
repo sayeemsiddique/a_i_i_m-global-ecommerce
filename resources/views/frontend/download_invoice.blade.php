@@ -122,7 +122,7 @@
                             <thead>
                                 <tr>
                                     <th class="font-weight-bold text-muted text-uppercase text-left" >Item Name</th>
-                                    <th class="text-right font-weight-bold text-muted text-uppercase" >Factory Price</th>
+                                    <th class="text-right font-weight-bold text-muted text-uppercase" >Product Price</th>
                                     <th class="text-right font-weight-bold text-muted text-uppercase" >SD</th>
                                     <th class="text-right font-weight-bold text-muted text-uppercase" >VAT</th>
                                     <th class="text-right font-weight-bold text-muted text-uppercase" >Quantity (pcs)</th>
