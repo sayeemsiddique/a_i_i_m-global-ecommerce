@@ -20,4 +20,9 @@ class CampaignProduct extends Model
     {
         return $this->belongsTo(Varient::class, 'varient_id', 'id');
     }
+
+    public function campaignInfo()
+    {
+        return $this->belongsTo(Campaign::class, 'campaign_id', 'id');
+    }
 }

@@ -70,6 +70,47 @@ class CampaignController extends Controller
         ]);
         $user = Auth::user();
 
+
+
+        if($request->ajax()){
+            if (($request->status ?? 0) == 1) {
+                foreach ($request->product_id as $key => $productid) {
+                    $product_id = explode('-',$productid)[0] ?? 0;
+                    $varient_id = explode('-',$productid)[1] ?? 0;
+
+                    $check_in_campaign = CampaignProduct::where([
+                        'product_id' => $product_id,
+                        'varient_id' => $varient_id,
+                    ])->whereHas('campaignInfo', function ($query) use ($request) {
+                        $query->whereDate('start_date', '<=', $request->end_date)->whereDate('end_date', '>=', $request->start_date)->where('status',1);
+                    })->get();
+
+                    if (count($check_in_campaign) > 0) {
+                        if ($varient_id > 0) {
+                            $product_info = Varient::where([
+                                'product_id' => $product_id,
+                                'id' => $varient_id
+                            ])->first();
+                            $error_content = ($product_info->productInfo->name ?? '').' is in another campaign in same time';
+                        } else {
+                            $product_info = Product::where('id', $product_id)->first();
+                            $error_content = ($product_info->name ?? '').' is in another campaign in same time';
+                        }
+
+                        return response()->json([
+                            'message' => 'The given data was invalid.',
+                            'errors' => [
+                                    'field_name' => ['This is a custom error message for a specific field.'],
+                                    'another_field' => [$error_content],
+                                ]
+                        ], 422);
+                    }
+
+
+                }
+            }
+        }
+
         if(Gate::allows('add_campaign', $user))
         {
 
@@ -194,6 +235,45 @@ class CampaignController extends Controller
 
         $user = Auth::user();
 
+        if($request->ajax()){
+            if (($request->status ?? 0) == 1) {
+                foreach ($request->product_id as $key => $productid) {
+                    $product_id = explode('-',$productid)[0] ?? 0;
+                    $varient_id = explode('-',$productid)[1] ?? 0;
+
+                    $check_in_campaign = CampaignProduct::where([
+                        'product_id' => $product_id,
+                        'varient_id' => $varient_id,
+                    ])->whereHas('campaignInfo', function ($query) use ($request,$id) {
+                        $query->whereDate('start_date', '<=', $request->end_date)->whereDate('end_date', '>=', $request->start_date)->where('status',1)->where('id','!=',$id);
+                    })->get();
+
+                    if (count($check_in_campaign) > 0) {
+                        if ($varient_id > 0) {
+                            $product_info = Varient::where([
+                                'product_id' => $product_id,
+                                'id' => $varient_id
+                            ])->first();
+                            $error_content = ($product_info->productInfo->name ?? '').' is in another campaign in same time';
+                        } else {
+                            $product_info = Product::where('id', $product_id)->first();
+                            $error_content = ($product_info->name ?? '').' is in another campaign in same time';
+                        }
+
+                        return response()->json([
+                            'message' => 'The given data was invalid.',
+                            'errors' => [
+                                    'field_name' => ['This is a custom error message for a specific field.'],
+                                    'another_field' => [$error_content],
+                                ]
+                        ], 422);
+                    }
+
+
+                }
+            }
+        }
+
         if(Gate::allows('edit_campaign', $user))
         {
             DB::transaction(function () use ($request,$user,$id) {
@@ -222,9 +302,11 @@ class CampaignController extends Controller
 
                 $campaign->save();
 
-                // if (count($request->campaign_product_table_id ?? []) > 0) {
-                    // CampaignProduct::whereNotIn('id', $request->campaign_product_table_id ?? [])->delete();
-                // }
+                if (count($request->campaign_product_table_id ?? []) > 0) {
+                    CampaignProduct::where('campaign_id',$campaign->id)->whereNotIn('id', $request->campaign_product_table_id ?? [])->delete();
+                } else {
+                    CampaignProduct::where('campaign_id',$campaign->id)->delete();
+                }
 
                 foreach ($request->product_id as $key => $productid) {
 
@@ -296,6 +378,22 @@ class CampaignController extends Controller
         {
             $campaign->delete();
             return back()->with('success', 'Campaign deleted successfully!');
+        }
+        else
+        {
+            abort(403);
+        }
+    }
+
+    public function show($id)
+    {
+        $user = Auth::user();
+        if(Gate::allows('delete_campaign', $user))
+        {
+            $campaign = Campaign::find($id);
+
+            dd($campaign);
+
         }
         else
         {
