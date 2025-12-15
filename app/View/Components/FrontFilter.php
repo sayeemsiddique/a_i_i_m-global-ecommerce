@@ -62,7 +62,11 @@ class FrontFilter extends Component
         ])
         ->get();
 
-        $brands = Brand::select('id','name')->withCount(['BrandProducts as brand_products_count'])->get();
+        $brands = Brand::select('id','name')->withCount([
+            'BrandProducts as brand_products_count' => function ($q) {
+                $q->where('status', 1)->where('type', 1);
+            }
+        ])->get();
 
         $varient_datas = VarientType::with('varientValues')->get();
 

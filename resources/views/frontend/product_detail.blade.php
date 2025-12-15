@@ -71,6 +71,7 @@
 @php
 
     $has_discount = 0;
+    $in_campiagn_content = '';
     $sale_price_without_discount = 0;
     // $cart_category = $latest_cart_item->productInfo->category_id ?? 0;
     // $product_category = $product->category_id ?? 0;
@@ -94,21 +95,51 @@
             }
         }
 
+        $campaign_porduct = $campaign_in_porducts->where('varient_id','>',0)->sortByDesc('price')->first();
+        // dd($campaign_porduct);
+
+        if ($campaign_porduct) {
+            $in_campiagn_content = 'Get up to '.$campaign_porduct->price;
+
+            $in_campiagn_content = $in_campiagn_content.$global_setting->currency;
+
+
+            $in_campiagn_content = $in_campiagn_content.' off on this product as part of the '.($campaign_porduct->campaignInfo->name ?? '').' campaign.';
+        }
 
     } else {
         $in_stock = $product->productAllStock()->where('varient_id', 0)->sum('quantity') + array_sum($pending_orders_quantity_array);
         $sale_price = $product->discount_price;
+
+        $campaign_porduct = $campaign_in_porducts->where('varient_id',0)->first();
+
+
         if (in_array(($product->discount_type ?? 0),[1,2])) {
             $has_discount = 1;
             $sale_price_without_discount = $product->price;
         }
-        if ($product->discount_type == 1) {
-            $sale_price = $product->price - $product->discount;
-        } else if($product->discount_type == 2) {
-            $sale_price = $product->price - (($product->price * $product->discount)/ 100);
+
+        if ($campaign_porduct) {
+            $sale_price = $campaign_porduct->price;
+            $in_campiagn_content = 'Get '.$campaign_porduct->discount;
+            if ($campaign_porduct->discount_type == 1) {
+                $in_campiagn_content = $in_campiagn_content.$global_setting->currency;
+            } else if ($campaign_porduct->discount_type == 2) {
+                $in_campiagn_content = $in_campiagn_content.'%';
+            }
+
+            $in_campiagn_content = $in_campiagn_content.' off on this product as part of the '.($campaign_porduct->campaignInfo->name ?? '').' campaign.';
         } else {
-            $sale_price = $product->price;
+
+            if ($product->discount_type == 1) {
+                $sale_price = $product->price - $product->discount;
+            } else if($product->discount_type == 2) {
+                $sale_price = $product->price - (($product->price * $product->discount)/ 100);
+            } else {
+                $sale_price = $product->price;
+            }
         }
+
     }
 
 @endphp
@@ -277,6 +308,9 @@
 
                         {{-- </div> --}}
                         <p style="margin-bottom: 12px;"><strong>Code:</strong> {{$product->code}}</p>
+                        @if ($in_campiagn_content != '')
+                            <p class="text-success">{{$in_campiagn_content}}</p>
+                        @endif
                         <div class="mb-4">
                             <div class="d-flex align-items-baseline">
                                 <ins class="font-size-36 text-decoration-none">
@@ -303,8 +337,12 @@
                                     @foreach ($product->productVarient->where('status',1) as $productVarient)
                                         @php
                                             $pending_orders_quantity = $pending_orders_quantity_array[$productVarient->id] ?? 0;
+                                            $discount_price = $productVarient->discount_price;
+                                            if (count($campaign_in_porducts) > 0) {
+                                                $discount_price = $campaign_in_porducts->where('varient_id',$productVarient->id)->first()->price ?? $discount_price;
+                                            }
                                         @endphp
-                                        <option @if ((($productVarient->productStock->quantity ?? 0) - $pending_orders_quantity) <= 0) style='color: #963e3eff' @endif data-price="{{round($productVarient->discount_price)}}" data-quantity="{{($productVarient->productStock->quantity ?? 0) - $pending_orders_quantity}}" value="{{$productVarient->id}}">
+                                        <option @if ((($productVarient->productStock->quantity ?? 0) - $pending_orders_quantity) <= 0) style='color: #963e3eff' @endif data-price="{{round($discount_price)}}" data-quantity="{{($productVarient->productStock->quantity ?? 0) - $pending_orders_quantity}}" value="{{$productVarient->id}}">
                                             @foreach ($productVarient->productVarientData as $VarientData)
                                                 {{-- {{$VarientData}} --}}
                                                 {{$VarientData->varientTypeInfo->name ?? ''}}: {{$VarientData->data_value}} @if(!($loop->last)) , @endif
