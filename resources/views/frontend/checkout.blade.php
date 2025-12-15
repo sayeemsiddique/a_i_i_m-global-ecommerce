@@ -95,6 +95,23 @@
         .store_pickup_option {
             z-index: 88;
         }
+
+        .shipping_edit_button_section {
+            position: absolute;
+            right: 0;
+            background: #c968002e;
+            padding: 2px 5px;
+            border-radius: 5px;
+        }
+        .store_details_button_section {
+            position: absolute;
+            right: 0;
+            background: #30a8cc2e;
+            padding: 2px 5px;
+            border-radius: 5px;
+            z-index: 999;
+            cursor: pointer;
+        }
     </style>
 @endpush
 
@@ -331,52 +348,79 @@
                                 <div class="border-bottom border-color-1 mb-3 mt-3">
                                     <h3 class="section-title mb-0 pb-2 font-size-25">Choosing Shipping Address</h3>
                                 </div>
-                                <div>
+                                <div class="d-block pt-2 pb-4">
 
                                     @if (count($shipping_addresses) == 0)
                                         <p class="text-danger">No shipping address found. Please add a shipping address first. <a class="bg-danger p-2 text-white border-radious-2" href="{{ route('shipping_address.create') }}@if(isset($_GET['cart_id']))?cart_id={{$_GET['cart_id']}} @endif">+ Add</a></p>
+                                    @else
+                                        <a class="bg-secondary p-2 text-white border-radious-2" href="{{ route('shipping_address.create') }}@if(isset($_GET['cart_id']))?cart_id={{$_GET['cart_id']}} @endif">+ Add another address</a>
                                     @endif
 
                                 </div>
                                 <div class="row">
                                     @foreach ($shipping_addresses as $address)
                                         <div class=col-md-6>
-                                            <label class="address-option d-block">
-                                                <input data-shippingcost="{{$address->divisionInfo->shipping_cost ?? 0}}" type="radio" name="shipping_address" value="{{$address->id}}" autocomplete="off" @if($address->default_shipping == 1) checked @endif>
-                                                <div class="address-content">
-                                                    <div class="address-category">{{$address->address_type}}</div>
-                                                    <div><strong>{{ $address->recipient_name }}</strong></div>
-                                                    <div>📞 {{ $address->phone_no }}</div>
-                                                    <div>{{ $address->divisionInfo->name ?? ''}}, {{ $address->districtInfo->name ?? ''}}, {{ $address->upazilaInfo->name ?? ''}}</div>
-                                                    <div>{{ $address->address }}</div>
+                                            <div style="position: relative;">
+                                                <div class="shipping_edit_button_section">
+                                                    <a href="{{ route('shipping_address.edit', Crypt::encryptString($address->id)) }}"><i class="far fa-edit"></i></a>
                                                 </div>
-                                            </label>
+                                                <label class="address-option d-block">
+                                                    <input data-shippingcost="{{$address->divisionInfo->shipping_cost ?? 0}}" type="radio" name="shipping_address" value="{{$address->id}}" autocomplete="off" @if($address->default_shipping == 1) checked @endif>
+                                                    <div class="address-content">
+                                                        <div class="address-category">{{$address->address_type}}</div>
+                                                        <div><strong>{{ $address->recipient_name }}</strong></div>
+                                                        <div>📞 {{ $address->phone_no }}</div>
+                                                        <div>{{ $address->divisionInfo->name ?? ''}}, {{ $address->districtInfo->name ?? ''}}, {{ $address->upazilaInfo->name ?? ''}}</div>
+                                                        <div>{{ $address->address }}</div>
+                                                    </div>
+                                                </label>
+                                            </div>
                                         </div>
                                     @endforeach
                                 </div>
                             </div>
-
                             <div style="display: none;" class="store_pickup_area">
                                     <div class="border-bottom border-color-1 mb-3 mt-3">
                                         <h4 class="section-title mb-0 pb-2 font-size-25">Choose Store:</h4>
                                     </div>
 
                                     <div class="row">
+
                                         @foreach ($stores as $store)
                                             <div class=col-md-6>
-                                                <label class="store-option d-block">
-                                                    <input type="radio" name="store_id" value="{{$store->id}}" autocomplete="off">
-                                                    <div class="store-content position-relative store_pickup_option">
-                                                        <div class="store-category">{{$store->name}}</div>
-                                                        {{-- <div><strong>{{ $store->address }}</strong></div> --}}
-                                                        <div>📞 {{ $store->phone }}</div>
-                                                        <div>{{ $store->divisionInfo->name ?? ''}}, {{ $store->districtInfo->name ?? ''}}, {{ $store->upazilaInfo->name ?? ''}}</div>
-                                                        <div>{{ $store->address }}</div>
-                                                        <div class="des_show_modal">
+                                                <div class="modal fade" id="store_description_{{$store->id}}">
+                                                    <div class="modal-dialog modal-lg">
+                                                        <div class="modal-content">
+
+                                                            <!-- Modal body -->
+                                                            <div class="modal-body">
+                                                                {!! $store->description !!}
+                                                            </div>
+
+                                                            <!-- Modal footer -->
+                                                            <div class="modal-footer">
+                                                            <button type="button" class="btn btn-sm p-0" data-dismiss="modal">x</button>
+                                                            </div>
 
                                                         </div>
                                                     </div>
-                                                </label>
+                                                </div>
+                                                <div style="position: relative;">
+                                                    <div class="store_details_button_section"><i class="far fa-eye" data-toggle="modal" data-target="#store_description_{{$store->id}}"></i></div>
+                                                    <label class="store-option d-block">
+                                                        <input type="radio" name="store_id" value="{{$store->id}}" autocomplete="off">
+                                                        <div class="store-content position-relative store_pickup_option">
+                                                            <div class="store-category">{{$store->name}}</div>
+                                                            {{-- <div><strong>{{ $store->address }}</strong></div> --}}
+                                                            <div>📞 {{ $store->phone }}</div>
+                                                            <div>{{ $store->divisionInfo->name ?? ''}}, {{ $store->districtInfo->name ?? ''}}, {{ $store->upazilaInfo->name ?? ''}}</div>
+                                                            <div>{{ $store->address }}</div>
+                                                            <div class="des_show_modal">
+
+                                                            </div>
+                                                        </div>
+                                                    </label>
+                                                </div>
                                             </div>
                                         @endforeach
                                     </div>

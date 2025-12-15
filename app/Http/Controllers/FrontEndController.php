@@ -43,6 +43,7 @@ use App\Models\OrderReturnDetail;
 use App\Models\Permission;
 use App\Models\Voucher;
 use App\Models\Store;
+use App\Models\CampaignProduct;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
@@ -465,6 +466,13 @@ class FrontendController extends Controller
             return back()->with('danger', "Product not found");
         }
 
+        $now = Carbon::now('Asia/Dhaka');
+        $campaign_in_porducts = CampaignProduct::where([
+                        'product_id' => $product->id,
+                    ])->whereHas('campaignInfo', function ($query) use ($id,$now) {
+                        $query->where('start_date', '<=', $now)->where('end_date', '>=', $now)->where('status',1);
+                    })->with('campaignInfo')->get();
+
         $reviews = Review::where('product_id', $id)->where('status', 1)->get();
         $review_count = Review::where('product_id', $id)->where('status', 1)->get()->count();
         $review_count1 = Review::where('product_id', $id)->where('status', 1)->where('rating', 1)->get()->count();
@@ -542,7 +550,8 @@ class FrontendController extends Controller
             'latest_cart_item',
             'user_review',
             'user_already_purchased',
-            'pending_orders_quantity_array'
+            'pending_orders_quantity_array',
+            'campaign_in_porducts'
         ));
     }
 

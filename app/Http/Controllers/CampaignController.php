@@ -245,7 +245,7 @@ class CampaignController extends Controller
                         'product_id' => $product_id,
                         'varient_id' => $varient_id,
                     ])->whereHas('campaignInfo', function ($query) use ($request,$id) {
-                        $query->whereDate('start_date', '<=', $request->end_date)->whereDate('end_date', '>=', $request->start_date)->where('status',1)->where('id','!=',$id);
+                        $query->where('start_date', '<=', $request->end_date)->where('end_date', '>=', $request->start_date)->where('status',1)->where('id','!=',$id);
                     })->get();
 
                     if (count($check_in_campaign) > 0) {

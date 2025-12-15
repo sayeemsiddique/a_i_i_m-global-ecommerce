@@ -45,16 +45,25 @@
         .rate > input:checked ~ label:hover,
         .rate > input:checked ~ label:hover ~ label,
         .rate > label:hover ~ input:checked ~ label {
-        color: #c59b08;
+            color: #c59b08;
         }
+
         .rating-container .form-control:hover, .rating-container .form-control:focus{
-        background: #fff;
-        border: 1px solid #ced4da;
+            background: #fff;
+            border: 1px solid #ced4da;
         }
+
         .rating-container textarea:focus, .rating-container input:focus {
-        color: #000;
+            color: #000;
         }
-        /* End */
+
+        .animated-shadow {
+            align-content: center;
+            background: #0909096e;
+            border-radius: 40px;
+            box-shadow: 0 0 5px 1px #e6283333;
+        }
+
     </style>
 @endpush
 
@@ -181,9 +190,9 @@
 
                         </div>
                         @foreach ($product->productGallery as $Gallery)
-                        <div class="js-slide" style="cursor: pointer;">
-                            <img loading="lazy" style="height: 60px" class="img-fluid" src="{{asset('storage/gallery')}}/{{$Gallery->name}}" alt="Image Description">
-                        </div>
+                            <div class="js-slide" style="cursor: pointer;">
+                                <img loading="lazy" style="height: 60px" class="img-fluid" src="{{asset('storage/gallery')}}/{{$Gallery->name}}" alt="Image Description">
+                            </div>
                         @endforeach
 
                         @if ($product->has_varient == 1)
@@ -201,6 +210,21 @@
                     </div>
                 </div>
                 <div class="col-md-7 mb-md-6 mb-lg-0">
+                    @if ((count($campaign_in_porducts) > 0) and (($campaign_in_porducts[0]->campaignInfo->end_date ?? Carbon::now()->subDays(10)) >= Carbon\Carbon::now()))
+                        <div class="mb-3" style="background: url('{{asset('storage/campaign')}}/{{$campaign_in_porducts[0]->campaignInfo->image ?? ''}}');width: fit-content;height: 45px;align-content: center;background-position: center;background-size: cover;background-repeat: no-repeat;">
+                            <div class="h-100 animated-shadow">
+                                <div class="d-flex flex-row pl-2 pr-2">
+                                    <div class="p-2" style="align-content: center;">
+                                        <span class="d-inline-block bg-primary text-white font-size-13 rounded-pill px-3 py-1">On Sale</span>
+                                    </div>
+                                    <div class="p-2 text-white" style="align-content: center;">
+                                        <strong>Ends In: {{ \Carbon\Carbon::parse($campaign_in_porducts[0]->campaignInfo->end_date)->format('d M Y, h:i A') }}</strong>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    @endif
                     <div class="mb-2">
                         <div class="mb-1 pb-md-1">
                             <a href="{{route('store.grid')}}?c[]={{$product->category_id}}" class="font-size-12 text-gray-5 mb-2 d-inline-block"><i class="fas fa-link mr-2"></i> {{$product->productCategory->name ?? ''}}</a>

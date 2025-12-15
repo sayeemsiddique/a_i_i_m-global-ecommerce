@@ -98,7 +98,7 @@
                                             @foreach ($products as $product)
                                                 @if ($product->has_varient == 1)
                                                     @foreach ($product->productVarient as $varient)
-                                                        <option @if(in_array($varient->id,$varient_array)) selected @endif data-price={{round($varient->discount_price)}} data-delprice={{round($varient->price)}} value="{{ $product->id }}-{{ $varient->id }}">
+                                                        <option @if(in_array($varient->id,$varient_array)) selected @endif data-price={{round($varient->discount_price)}} data-stockquantity={{number_format($varient->productStock->quantity ?? 0,0)}} data-delprice={{round($varient->price)}} value="{{ $product->id }}-{{ $varient->id }}">
                                                             {{ $product->name }} -
                                                             @foreach ($varient->productVarientData as $varient_data)
                                                                 {{$varient_data->varientTypeInfo->name ?? ''}}: {{ $varient_data->data_value }}@if(!$loop->last)-@endif
@@ -106,7 +106,7 @@
                                                         </option>
                                                     @endforeach
                                                 @else
-                                                    <option data-price={{round($product->discount_price)}} data-delprice={{round($product->price)}} @if(in_array($product->id,$product_array)) selected @endif value="{{ $product->id }}-0">{{ $product->name }}</option>
+                                                    <option data-stockquantity={{number_format($product->productSingleStock->quantity ?? 0,0)}} data-price={{round($product->discount_price)}} data-delprice={{round($product->price)}} @if(in_array($product->id,$product_array)) selected @endif value="{{ $product->id }}-0">{{ $product->name }}</option>
                                                 @endif
                                             @endforeach
                                         </select>
@@ -121,6 +121,9 @@
                                                     </th>
                                                     <th>
                                                         Base Price
+                                                    </th>
+                                                    <th>
+                                                        In Stock
                                                     </th>
                                                     <th>
                                                         Discount Type
@@ -154,6 +157,11 @@
                                                             </del> <br>
                                                             <span class="product_discount_price">
                                                                 @if($item->varient_id > 0) {{round($item->varientInfo->discount_price ?? 0)}} @else {{round($item->productInfo->discount_price ?? 0)}} @endif
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <span class="product_stock_quantity">
+                                                                @if($item->varient_id > 0) {{number_format($item->varientInfo->productStock->quantity ?? 0,0)}} @else {{number_format($item->productInfo->productSingleStock->quantity ?? 0,0)}} @endif
                                                             </span>
                                                         </td>
                                                         <td>
@@ -212,6 +220,7 @@
                     let product_text = $('#productSelect option[value="'+selected_value+'"]').text();
                     let product_price = $('#productSelect option[value="'+selected_value+'"]').attr('data-price');
                     let del_product_price = $('#productSelect option[value="'+selected_value+'"]').attr('data-delprice');
+                    let stockquantity = $('#productSelect option[value="'+selected_value+'"]').attr('data-stockquantity');
 
                     if (!del_product_price) {
                         del_product_price = 0;
@@ -251,6 +260,9 @@
                                     <td>
                                         <del class="product_price text-danger">${del_product_price}</del> <br>
                                         <span class="product_discount_price">${product_price}</span>
+                                    </td>
+                                    <td>
+                                        <span class="product_stock_quantity">${stockquantity}</span>
                                     </td>
                                     <td>
                                         <select onchange='calculate_values(this)' class='form-control varient_discount_type' name='discount_type[]'>
