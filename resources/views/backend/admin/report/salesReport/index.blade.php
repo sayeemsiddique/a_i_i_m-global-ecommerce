@@ -164,7 +164,6 @@
                                             <th>Date</th>
                                             {{-- <th>Product Price</th> --}}
                                             <th>Quantity</th>
-                                            {{-- <th>SD</th> --}}
                                             {{-- <th>VAT</th> --}}
                                             {{-- <th>Other</th> --}}
                                             {{-- <th>Packing</th> --}}
@@ -189,7 +188,6 @@
                                                 $vds = 0;
 
                                                 $factoryPrice = 0;
-                                                $sd = 0;
                                                 $vat = 0;
                                                 $fitting =0;
                                                 $discount =0;
@@ -228,10 +226,6 @@
                                                         {{$quantity}}
                                                     </td>
 
-                                                    {{-- <td>
-                                                        {{$order->orderDetails->sum('sd_total') ?? "0.00"}} <br>
-                                                        <small>({{($order->orderDetails->sum('sd')/count($order->orderDetails)) ?? "0.00"}} %)</small>
-                                                    </td> --}}
 
                                                     {{-- <td>
                                                         {{$order->orderDetails->sum('vat_total') ?? "0.00"}} <br>
@@ -245,7 +239,7 @@
                                                         @php
                                                             $salesGross = 0;
                                                             foreach ($order->orderDetails as $key => $orderDetails) {
-                                                                $salesGross += (($orderDetails->f_price ?? 0) * ($orderDetails->quantity ?? 0)) + ($orderDetails->sd_total ?? 0) + ($orderDetails->vat_total ?? 0);
+                                                                $salesGross += (($orderDetails->f_price ?? 0) * ($orderDetails->quantity ?? 0)) + ($orderDetails->vat_total ?? 0);
 
                                                                 if ($orderDetails->weight and $orderDetails->unit) {
                                                                     if ($orderDetails->unit == 1) {
@@ -279,7 +273,6 @@
                                                     $i++;
 
                                                         // $factoryPrice += $order->orderDetails->sum('f_price') ?? 0;
-                                                    //     $sd += $order->orderDetails->sum('sd_total') ?? 0;
                                                     //     $vat += $order->orderDetails->sum('vat_total') ?? 0;
 
                                                     // $fitting += $order->other_charge;
@@ -305,7 +298,6 @@
 
                                             {{-- <td><b>{{ number_format($factoryPrice ?? '0.00',2,'.','') }}</b> </td> --}}
                                             <td></td>
-                                            {{-- <td><b>{{ number_format($sd ?? '0.00',2,'.','') }}</b> </td> --}}
                                             {{-- <td><b>{{ number_format($vat ?? '0.00',2,'.','') }}</b> </td> --}}
                                             {{-- <td><b>{{ number_format($fitting,2) }}</b></td> --}}
                                             {{-- <td><b>{{ number_format($packing,2) }}</b> </td> --}}

@@ -32,7 +32,7 @@
                     <div class="card card-custom example example-compact">
 
                         <div class="card-header">
-                            <h3 class="card-title">VAT, SD, Commission and TDS Report</h3>
+                            <h3 class="card-title">VAT, Commission and TDS Report</h3>
                             <div class="d-flex align-items-center">
                                 {{-- <input type="text"data-url="{{ route('admin.searchAjax',['type'=> 'designation']) }}" class="form-control form-control-lg form-control-solid ajax-data-search" name="q" placeholder="Enter Designation, Description, Level"> --}}
                             </div>
@@ -95,7 +95,6 @@
 
                                 {{-- @if (isset($_GET['user_id']) and $_GET['user_id'] != '') --}}
                                 <div class="w-100" id="stockPrint">
-                                    {{-- <h4 class="text-center">VAT, SD, Commission Report</h4> --}}
                                 <div class="w-100 text-center">
                                     <h3 class="text-center">{{$global_setting->sub_title ?? ""}}</h3>
                                     <h4 class="text-center">
@@ -103,7 +102,7 @@
                                     </h4>
 
                                     <p class="text-center">
-                                        <strong>VAT, SD, Commission and TDS Report</strong>
+                                        <strong>VAT, Commission and TDS Report</strong>
                                     </p>
 
                                     @if ($user_data)
@@ -145,7 +144,6 @@
                                     $order_total_price = 0;
                                     $order_discount_amount = 0;
                                     $order_discount_amount_in_total = 0;
-                                    $total_sd_amount = 0;
                                     $total_vat_amount = 0;
                                     $total_tds_amount = 0;
                                     $total_vds_amount = 0;
@@ -159,7 +157,6 @@
                                                     <th>Date</th>
                                                     <th>User Name</th>
                                                     <th>User Type</th>
-                                                    <th class="text-right">SD (TK)</th>
                                                     <th class="text-right">Vat (TK)</th>
                                                     <th class="text-right">TDS (TK)</th>
                                                     <th class="text-right">VDS (TK)</th>
@@ -174,7 +171,6 @@
 
                                                     @foreach ($orders as $key => $order)
                                                         @php
-                                                        $sd_amount = 0;
                                                         $vat_amount = 0;
                                                         $tds_amount = 0;
                                                         $vds_amount = 0;
@@ -201,40 +197,17 @@
                                                                 </td>
                                                                 <td class="text-right">
                                                                     @php
-                                                                        $sd_amount = $order->orderDetails->sum('sd_total');
                                                                         $vat_amount = $order->orderDetails->sum('vat_total');
                                                                         $tds_amount = $order->tds_amount;
                                                                         $vds_amount = $order->vds_amount;
                                                                     @endphp
 
-                                                                    {{-- @foreach ($order->orderDetails as $orderDetails)
 
-                                                                        @php
-                                                                            $included_sd_amount = 0; // sd amount added with product price
-                                                                            $order_detail_total_amount = ($orderDetails->quantity * $orderDetails->price);
-                                                                            $order_detail_sd_percent = $orderDetails->productInfo->sd ?? 0;
-                                                                            $order_detail_vat_percent = $orderDetails->productInfo->vat ?? 0;
-                                                                            if ($order_detail_total_amount > 0) {
-                                                                                if ($order_detail_sd_percent > 0) {
-                                                                                    $sd_amount += ($order_detail_total_amount * $order_detail_sd_percent)/100;
-                                                                                    $included_sd_amount = $order_detail_total_amount + (($order_detail_total_amount * $order_detail_sd_percent)/100);
-                                                                                }
-
-                                                                                if ($included_sd_amount > 0) {
-                                                                                    if ($order_detail_vat_percent > 0) {
-                                                                                        $vat_amount += ($included_sd_amount * $order_detail_vat_percent)/100;
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        @endphp
-                                                                    @endforeach --}}
                                                                     @php
-                                                                        $total_sd_amount += $sd_amount;
                                                                         $total_vat_amount += $vat_amount;
                                                                         $total_tds_amount += $tds_amount;
                                                                         $total_vds_amount += $vds_amount;
                                                                     @endphp
-                                                                    {{number_format($sd_amount,2,'.','')}} <small>({{($order->orderDetails->sum('sd')/count($order->orderDetails)) ?? "0.00"}} %)</small>
                                                                 </td>
                                                                 <td class="text-right">
 
@@ -302,7 +275,6 @@
                                                     <th></th>
                                                     <th></th>
                                                     <th></th>
-                                                    <th class="text-right">{{number_format($total_sd_amount,2,'.','')}}</th>
                                                     <th class="text-right">{{number_format($total_vat_amount,2,'.','')}}</th>
                                                     <th class="text-right">{{number_format($total_tds_amount, 2, '.', '')}}</th>
                                                     <th class="text-right">{{number_format($total_vds_amount, 2, '.', '')}}</th>

@@ -182,6 +182,7 @@ class OrderReturnController extends Controller
                             $return_data['f_price'] = $order_detail->f_price;
                             $return_data['discount'] = $order_detail->discount;
                             $return_data['discount_type'] = $order_detail->discount_type;
+                            $return_data['campaign_details_id'] = $order_detail->campaign_details_id;
                             $return_data['weight'] = $order_detail->weight;
                             $return_data['unit'] = $order_detail->unit;
                             $return_data['stock_status'] = 1;

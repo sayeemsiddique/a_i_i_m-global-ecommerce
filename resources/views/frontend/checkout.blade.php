@@ -182,7 +182,12 @@
                                                         {{$cart->productInfo->name ?? ''}}<strong class="product-quantity">× {{$cart->quantity}}</strong>
                                                     </td>
                                                     <td style="min-width: 100px;">
-                                                        {{$global_setting->currency ?? ""}}   @if ($cart->variation_id == 0)
+                                                            {{$global_setting->currency ?? ""}}
+                                                            {{round($cart->cartProductPrice() * $cart->quantity)}}
+                                                            @php
+                                                                $product_total_price +=  round($cart->cartProductPrice()  * $cart->quantity);
+                                                            @endphp
+                                                            {{-- @if ($cart->variation_id == 0)
                                                                 @php
                                                                     $product_total_price +=  ($cart->productInfo->discount_price ?? 0)  * $cart->quantity;
                                                                 @endphp
@@ -194,7 +199,7 @@
                                                                 @endphp
                                                                 {{number_format((($cart->varientInfo->discount_price ?? 0) * $cart->quantity),0,".","")}}
 
-                                                            @endif
+                                                            @endif --}}
 
                                                     </td>
                                                 </tr>

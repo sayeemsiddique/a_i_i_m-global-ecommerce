@@ -187,7 +187,6 @@
                                             {{-- <th>Invoice Id</th> --}}
                                             <th>Date</th>
                                             <th>Product Price</th>
-                                            <th>SD</th>
                                             <th>VAT</th>
                                             <th>Other</th>
                                             <th>Packing</th>
@@ -210,7 +209,6 @@
                                                 $vds = 0;
 
                                                 $factoryPrice = 0;
-                                                $sd = 0;
                                                 $vat = 0;
                                                 $fitting =0;
                                                 $discount =0;
@@ -232,16 +230,13 @@
                                                     <td>{{ $order->orderDetail ? number_format($order->orderDetail->f_price, 2) : '0.00' }}</td>
 
 
-                                                    <td>{{ $order->orderDetail ? number_format($order->orderDetail->sd_total, 2) : '0.00' }}</td>
-
-
                                                     <td>{{ $order->orderDetail ? number_format($order->orderDetail->vat_total, 2) : '0.00' }}</td>
                                                     <td>{{  $order->other_charge ? number_format($order->other_charge,2) : '0.00' }}</td>
                                                     <td>{{  $order->packing_amount ? number_format($order->packing_amount,2) : '0.00' }}</td>
                                                     <td>
                                                         @if ($order->orderDetail )
                                                         @php
-                                                            $salesGross = ($order->orderDetail->f_price ?? 0) + ($order->orderDetail->sd_total ?? 0) + ($order->orderDetail->vat_total ?? 0) + ($order->packing_amount ?? 0);
+                                                            $salesGross = ($order->orderDetail->f_price ?? 0) + ($order->orderDetail->vat_total ?? 0) + ($order->packing_amount ?? 0);
                                                         @endphp
 
                                                         {{ number_format($salesGross, 2) }}
@@ -261,7 +256,6 @@
                                                     if($order->orderDetail)
                                                     {
                                                         $factoryPrice += $order->orderDetail->f_price;
-                                                        $sd += $order->orderDetail->sd_total;
                                                         $vat += $order->orderDetail->vat_total;
                                                     }
                                                     $fitting += $order->other_charge;
@@ -288,7 +282,6 @@
                                             <td><b>Total</b></td>
 
                                             <td><b>{{ number_format($factoryPrice ?? '0.00',2,'.','') }}</b> </td>
-                                            <td><b>{{ number_format($sd ?? '0.00',2,'.','') }}</b> </td>
                                             <td><b>{{ number_format($vat ?? '0.00',2,'.','') }}</b> </td>
                                             <td><b>{{ number_format($fitting,2) }}</b></td>
                                             <td><b>{{ number_format($packing,2) }}</b> </td>

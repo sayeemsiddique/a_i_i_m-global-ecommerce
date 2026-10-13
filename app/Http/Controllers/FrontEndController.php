@@ -43,6 +43,7 @@ use App\Models\OrderReturnDetail;
 use App\Models\Permission;
 use App\Models\Voucher;
 use App\Models\Store;
+use App\Models\Campaign;
 use App\Models\CampaignProduct;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -71,8 +72,18 @@ class FrontendController extends Controller
         ])->with('productVarient')->limit(12)->orderBy('discount_price')->get()->chunk(4);
 
         $sliders = Slider::where('status', 1)->orderBy('sl')->get();
+        $campaigns = Campaign::where([
+            'featured' => 1,
+            'status' => 1
+        ])->with(['campaignProductInfo' => function ($query) {
+            $query->whereHas('productInfo', function ($query_2) {
+                $query_2->where('status', 1)
+                  ->orderBy('sl_price', 'ASC')
+                  ->take(4);
+            });
+        }])->latest()->get();
 
-        return view('frontend.index', compact('main_categories', 'featured_products', 'sliders'));
+        return view('frontend.index', compact('main_categories', 'featured_products', 'sliders', 'campaigns'));
     }
 
     public function user_login(Request $request)
@@ -383,6 +394,31 @@ class FrontendController extends Controller
         $products = $query->with('productVarient','productVarientData')->paginate($paginate);
         // dd($products);
         return view('frontend.store_grid', compact('products'));
+    }
+
+    public function store_campaign(Request $request)
+    {
+        $campaigns = Campaign::where('status',1)->paginate(20);
+        return view('frontend.store_campaign', compact('campaigns'));
+    }
+
+    public function campaign_details($slug,$id)
+    {
+        $campaign = Campaign::where([
+            'id' => Crypt::decryptString($id),
+            'status' => 1
+        ])->first();
+
+        if (!$campaign) {
+            return redirect()->back()->with('error', 'Campaign not found');
+        }
+
+        $products = Product::where([
+            'type' => 1,
+            'status' => 1,
+        ])->whereIn('id', $campaign->campaignProductInfo->pluck('product_id') ?? [])->with('productVarient','productVarientData')->latest()->paginate(20);
+
+        return view('frontend.campaign_details', compact('products'));
     }
 
     public function store_category(Request $request,$id)
@@ -1134,11 +1170,13 @@ class FrontendController extends Controller
             if (($cart->productInfo->status ?? 0) != 1) {
                 return redirect()->back()->with('error', 'Product '.($cart->productInfo->name ?? "").' is not available for sale');
             }
+
+            $product_total_price  += round($cart->cartProductPrice() * $cart->quantity);
             if ($cart->variation_id == 0) {
-                $product_total_price +=  ($cart->productInfo->discount_price ?? 0)  * $cart->quantity;
+                // $product_total_price +=  ($cart->productInfo->discount_price ?? 0)  * $cart->quantity;
                 $product_before_discount +=  ($cart->productInfo->price ?? 0)  * $cart->quantity;
             } else {
-                $product_total_price +=  ($cart->varientInfo->discount_price ?? 0)  * $cart->quantity;
+                // $product_total_price +=  ($cart->varientInfo->discount_price ?? 0)  * $cart->quantity;
                 $product_before_discount +=  ($cart->varientInfo->price ?? 0)  * $cart->quantity;
 
                 if (($cart->varientInfo->status) != 1) {
@@ -1226,17 +1264,25 @@ class FrontendController extends Controller
                     $order_detail['product_id'] = $cart->product_id;
                     $order_detail['quantity'] = $cart->quantity;
                     $order_detail['varient_id'] = $cart->variation_id;
+                    $order_detail['campaign_details_id'] = $cart->getProductInCampaign()->id ?? 0;
 
                     if ($cart->variation_id == 0){
                         $order_detail['f_price'] = round($cart->productInfo->price ?? 0);
-                        $order_detail['price'] = round($cart->productInfo->discount_price ?? 0);
+                        $order_detail['price'] = round($cart->cartProductPrice());
                         $order_detail['discount'] = round($cart->productInfo->discount ?? 0);
                         $order_detail['discount_type'] = round($cart->productInfo->discount_type ?? 0);
                     } else {
                         $order_detail['f_price'] = round($cart->varientInfo->price ?? 0);
-                        $order_detail['price'] = round($cart->varientInfo->discount_price ?? 0);
+                        $order_detail['price'] = round($cart->cartProductPrice());
                         $order_detail['discount'] = round($cart->varientInfo->discount ?? 0);
                         $order_detail['discount_type'] = round($cart->varientInfo->discount_type ?? 0);
+                    }
+
+                    if ($cart->getProductInCampaign()) {
+                        // than overight the discount info
+                        $campaign_info = $cart->getProductInCampaign();
+                        $order_detail['discount'] = $campaign_info->discount;
+                        $order_detail['discount_type'] = $campaign_info->discount_type;
                     }
 
                     OrderDetail::create($order_detail);
@@ -1892,6 +1938,7 @@ class FrontendController extends Controller
                         $return_data['f_price'] = $order_detail->f_price;
                         $return_data['discount'] = $order_detail->discount;
                         $return_data['discount_type'] = $order_detail->discount_type;
+                        $return_data['campaign_details_id'] = $order_detail->campaign_details_id;
                         $return_data['weight'] = $order_detail->weight;
                         $return_data['unit'] = $order_detail->unit;
 
@@ -1918,7 +1965,7 @@ class FrontendController extends Controller
 
             $return_order->voucher_discount = round($voucher_discount);
             $return_order->total_price = round($grand_total_price);
-            $return_order->grand_total_price = rouns($grand_total_price - ($voucher_discount + ($order->shipping_cost ?? 0)));
+            $return_order->grand_total_price = round($grand_total_price - ($voucher_discount + ($order->shipping_cost ?? 0)));
             $return_order->save();
         });
 
@@ -1998,11 +2045,7 @@ class FrontendController extends Controller
         $orderTotal = 0;
 
         foreach ($carts as $key => $cart) {
-            if ($cart->variation_id == 0) {
-                $orderTotal +=  round(($cart->productInfo->discount_price ?? 0)  * $cart->quantity);
-            } else {
-                $orderTotal +=  round(($cart->varientInfo->discount_price ?? 0)  * $cart->quantity);
-            }
+            $orderTotal +=  round($cart->cartProductPrice()  * $cart->quantity);
         }
 
 

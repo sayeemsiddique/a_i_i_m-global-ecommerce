@@ -516,6 +516,7 @@
             const varient = $('.hidden_form_section').find('[name="varient"]').val() || 0;
             const quantity = $('.hidden_form_section').find('[name="quantity"]').val() || 0;
             const buy_now = $('.hidden_form_section').find('[name="buy_now"]').val() || 0;
+            $('#submit_login_button').text('Loging...');
 
             $.ajax({
                 url: "{{ route('login') }}",
@@ -539,11 +540,12 @@
                     } else {
                         location.reload();
                     }
-
+                    $('#submit_login_button').text('Login');
 
                 },
                 error: function(error) {
                     alertify.error(error.responseJSON.message);
+                    $('#submit_login_button').text('Login');
                 }
             });
         });

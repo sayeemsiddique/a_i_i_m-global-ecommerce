@@ -3,7 +3,6 @@
 <x-front-footer />
 
 
-
 @include('frontend.partials.rightSidebar')
 
 <!-- End Account Sidebar Navigation -->

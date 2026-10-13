@@ -123,7 +123,6 @@
                                 <tr>
                                     <th class="font-weight-bold text-muted text-uppercase text-left" >Item Name</th>
                                     <th class="text-right font-weight-bold text-muted text-uppercase" >Product Price</th>
-                                    <th class="text-right font-weight-bold text-muted text-uppercase" >SD</th>
                                     <th class="text-right font-weight-bold text-muted text-uppercase" >VAT</th>
                                     <th class="text-right font-weight-bold text-muted text-uppercase" >Quantity (pcs)</th>
                                     <th class="text-right font-weight-bold text-muted text-uppercase" >Weight</th>
@@ -146,9 +145,6 @@
 
                                         <td class="text-right pt-7 align-middle">
                                              {{ number_format($order_detail->f_price, 2, ".", "") }}
-                                        </td>
-                                        <td class="text-right pt-7 align-middle">
-                                             {{ number_format($order_detail->sd_total, 2, ".", "") }}
                                         </td>
                                         <td class="text-right pt-7 align-middle">
                                              {{ number_format($order_detail->vat_total, 2, ".", "") }}

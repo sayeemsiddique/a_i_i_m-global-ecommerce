@@ -185,7 +185,6 @@
                                             {{-- <th>Invoice Id</th> --}}
                                             <th>Date</th>
                                             <th>Product Price</th>
-                                            <th>SD</th>
                                             <th>VAT</th>
                                             <th>Other</th>
                                             <th>Packing</th>
@@ -208,7 +207,6 @@
                                                 $vds = 0;
 
                                                 $factoryPrice = 0;
-                                                $sd = 0;
                                                 $vat = 0;
                                                 $fitting =0;
                                                 $discount =0;
@@ -240,10 +238,6 @@
                                                     </td>
 
 
-                                                    <td>
-                                                        {{ $order->orderDetails ? number_format($order->orderDetails->sum('sd_total'), 2) : '0.00' }} <br>
-                                                        <small>({{($order->orderDetails->sum('sd')/count($order->orderDetails)) ?? "0.00"}} %)</small>
-                                                    </td>
 
 
                                                     <td>
@@ -255,10 +249,9 @@
                                                     <td>
                                                         {{-- @if ($order->orderDetail ) --}}
                                                         @php
-                                                            // $salesGross = ($order->orderDetail->f_price ?? 0) + ($order->orderDetail->sd_total ?? 0) + ($order->orderDetail->vat_total ?? 0) + ($order->packing_amount ?? 0);
                                                             $salesGross = 0;
                                                             foreach ($order->orderDetails as $key => $orderDetails) {
-                                                                $salesGross += ($orderDetails->f_price * $orderDetails->quantity) + $orderDetails->sd_total + $orderDetails->vat_total;
+                                                                $salesGross += ($orderDetails->f_price * $orderDetails->quantity) + $orderDetails->vat_total;
                                                             }
                                                             $salesGross += $order->other_categories_amount + $order->packing_amount;
                                                         @endphp
@@ -278,7 +271,6 @@
                                                 @php
                                                     $i++;
 
-                                                        $sd += $order->orderDetails->sum('sd_total');
                                                         $vat += $order->orderDetail->sum('vat_total');
 
                                                     $fitting += $order->other_charge;
@@ -303,7 +295,6 @@
                                             <td><b>Total</b></td>
 
                                             <td><b>{{ number_format($factoryPrice ?? '0.00',2,'.','') }}</b> </td>
-                                            <td><b>{{ number_format($sd ?? '0.00',2,'.','') }}</b> </td>
                                             <td><b>{{ number_format($vat ?? '0.00',2,'.','') }}</b> </td>
                                             <td><b>{{ number_format($fitting,2) }}</b></td>
                                             <td><b>{{ number_format($packing,2) }}</b> </td>

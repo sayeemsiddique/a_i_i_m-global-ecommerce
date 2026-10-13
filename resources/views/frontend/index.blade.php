@@ -12,6 +12,13 @@
         .product-item:hover .product-item__inner {
             transform: scale(1.05);
         }
+
+        .campaign-container-image {
+            max-width: 350px;
+            margin: auto;
+            display: block;
+            box-shadow: 5px 5px 5px 1px #f749531a;
+        }
     </style>
 @endpush
 
@@ -95,6 +102,13 @@
         <!-- End Banner -->
 
     </div>
+
+    @if (count($campaigns) == 1)
+        @include('frontend.campaign.single_campaign')
+    @elseif (count($campaigns) > 1)
+        @include('frontend.campaign.multiple_campaign')
+    @endif
+
 
     <div class="container">
         <!-- Trending Products -->

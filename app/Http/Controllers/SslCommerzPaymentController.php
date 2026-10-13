@@ -70,10 +70,10 @@ class SslCommerzPaymentController extends Controller
         $product_before_discount = 0;
         foreach ($carts as $key => $cart) {
             if ($cart->variation_id == 0) {
-                $product_total_price +=  ($cart->productInfo->discount_price ?? 0)  * $cart->quantity;
+                $product_total_price +=  $cart->cartProductPrice() * $cart->quantity;
                 $product_before_discount +=  ($cart->productInfo->price ?? 0)  * $cart->quantity;
             } else {
-                $product_total_price +=  ($cart->varientInfo->discount_price ?? 0)  * $cart->quantity;
+                $product_total_price +=  $cart->cartProductPrice() * $cart->quantity;
                 $product_before_discount +=  ($cart->varientInfo->price ?? 0)  * $cart->quantity;
             }
         }
@@ -321,55 +321,38 @@ class SslCommerzPaymentController extends Controller
                     $product_before_discount = 0;
                     foreach ($carts as $key => $cart) {
                         if ($cart->variation_id == 0) {
-                            $product_total_price +=  ($cart->productInfo->discount_price ?? 0)  * $cart->quantity;
+                            $product_total_price +=  $cart->cartProductPriceOnTime($order->created_at) * $cart->quantity;
                             $product_before_discount +=  ($cart->productInfo->price ?? 0)  * $cart->quantity;
                         } else {
-                            $product_total_price +=  ($cart->varientInfo->discount_price ?? 0)  * $cart->quantity;
+                            $product_total_price +=  $cart->cartProductPriceOnTime($order->created_at) * $cart->quantity;
                             $product_before_discount +=  ($cart->varientInfo->price ?? 0)  * $cart->quantity;
                         }
                     }
-
-                    // $tracking_code = date("yhis");
-                    // $order_data['tracking_code'] = $tracking_code;
-                    // $order_data['user_id'] = auth()->user()->id;
-                    // $order_data['status'] = 0;
-                    // $order_data['payment_status'] = 0;
-                    // $order_data['total_price'] = $product_total_price;
-                    // $order_data['grand_total_price'] = $product_total_price + ($shipping_address->divisionInfo->shipping_cost ?? 0);
-                    // $order_data['discount_amount'] = 0;
-                    // $order_data['coupon_discount'] = 0;
-                    // $order_data['shipping_cost'] = $shipping_address->divisionInfo->shipping_cost ?? 0;
-                    // $order_data['type'] = 2;
-                    // $order_data['vat'] = $request->vat ?? 0;
-                    // $order_data['tax'] = $request->tax ?? 0;
-                    // $order_data['shipping_address'] = $request->shipping_address ?? "";
-                    // $order_data['ship_different_address'] = 0;
-                    // $order_data['delivery_status'] = 0;
-                    // $order_data['shipping_area'] = $request->shipping_area ?? 0;
-                    // $order_data['personal_vehicle'] = $request->personal_vehicle ?? 0;
-                    // $order_data['delivery_option'] = $request->delivery_option ?? 0;
-                    // $order_data['transaction_id'] = $tracking_code;
-
-
-
-                    // $order = Order::create($order_data);
 
                     foreach ($carts as $key => $cart) {
                         $order_detail['order_id'] = $order->id;
                         $order_detail['product_id'] = $cart->product_id;
                         $order_detail['quantity'] = $cart->quantity;
                         $order_detail['varient_id'] = $cart->variation_id;
+                        $order_detail['campaign_details_id'] = $cart->getProductInCampaignOnTime($order->created_at)->id ?? 0;
 
                         if ($cart->variation_id == 0){
                             $order_detail['f_price'] = $cart->productInfo->price ?? 0;
-                            $order_detail['price'] = $cart->productInfo->discount_price ?? 0;
+                            $order_detail['price'] = $cart->cartProductPriceOnTime($order->created_at);
                             $order_detail['discount'] = $cart->productInfo->discount ?? 0;
                             $order_detail['discount_type'] = $cart->productInfo->discount_type ?? 0;
                         } else {
                             $order_detail['f_price'] = $cart->varientInfo->price ?? 0;
-                            $order_detail['price'] = $cart->varientInfo->discount_price ?? 0;
+                            $order_detail['price'] = $cart->cartProductPriceOnTime($order->created_at);
                             $order_detail['discount'] = $cart->varientInfo->discount ?? 0;
                             $order_detail['discount_type'] = $cart->varientInfo->discount_type ?? 0;
+                        }
+
+                        if ($cart->getProductInCampaignOnTime($order->created_at)) {
+                            // than overight the discount info
+                            $campaign_info = $cart->getProductInCampaignOnTime($order->created_at);
+                            $order_detail['discount'] = $campaign_info->discount;
+                            $order_detail['discount_type'] = $campaign_info->discount_type;
                         }
 
                         OrderDetail::create($order_detail);

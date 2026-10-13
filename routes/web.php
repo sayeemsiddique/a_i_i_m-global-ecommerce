@@ -75,6 +75,8 @@ Route::middleware([SetLocale::class])->group(function () {
     Route::post('/user-login', [FrontendController::class, 'user_login'])->name('login');
     Route::post('/registration', [FrontendController::class, 'registration'])->name('user_.registration');
     Route::get('/store', [FrontendController::class, 'store_grid'])->name('store.grid');
+    Route::get('/campaigns', [FrontendController::class, 'store_campaign'])->name('store.campaign');
+    Route::get('/campaign/details/{slug}/{id}', [FrontendController::class, 'campaign_details'])->name('campaign.details');
     Route::get('/product-detail/{id}', [FrontendController::class, 'product_detail'])->name('product-detail');
     Route::get('/order-track', [FrontendController::class, 'order_track'])->name('order_track');
 

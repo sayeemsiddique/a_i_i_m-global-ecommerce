@@ -25,7 +25,7 @@ class SalesReportController extends Controller
             menuSubmenu('report_management', 'sales_report');
 
             // $query = Order::whereIn('stage', [3,4]);
-            $query = Order::whereIn('status', [1]);
+            $query = Order::whereIn('status', [1])->latest();
 
             $query->whereHas('orderDetails', function ($new_query) {
                 $new_query->whereHas('productInfo', function ($n_new_query) {

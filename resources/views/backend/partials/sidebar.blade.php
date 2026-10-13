@@ -681,7 +681,7 @@
                                     </li>
                                 @endcan --}}
 
-                                @can('store_stock_report')
+                                {{-- @can('store_stock_report')
                                     <li class="menu-item {{ session('lsbsm') == 'store_stock_report' ? ' menu-item-active ' : '' }}" aria-haspopup="true">
                                         <a href="{{route('admin.stockReport.storeStock')}}" class="menu-link">
                                             <i class="far fa-dot-circle">
@@ -690,7 +690,7 @@
                                             <span class="menu-text">Store Inventory</span>
                                         </a>
                                     </li>
-                                @endcan
+                                @endcan --}}
 
                                 @can('sales_report')
                                     <li class="menu-item {{ session('lsbsm') == 'sales_report' ? ' menu-item-active ' : '' }}" aria-haspopup="true">

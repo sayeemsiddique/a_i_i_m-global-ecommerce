@@ -22,7 +22,7 @@
                                     </li>
                                 @else
                                     <li class="list-inline-item mr-0 u-header-topbar__nav-item u-header-topbar__nav-item-border">
-                                        <a id="sidebarNavTogglerRegister" href="javascript:;" role="button" class="u-header-topbar__nav-link signup_js"
+                                        <a href="javascript:;" role="button" class="u-header-topbar__nav-link signup_js sidebarNavTogglerRegister"
                                             aria-controls="sidebarContent"
                                             aria-haspopup="true"
                                             aria-expanded="false"
@@ -37,7 +37,7 @@
                                         </a>
                                     </li>
                                     <li class="list-inline-item mr-0 u-header-topbar__nav-item u-header-topbar__nav-item-border">
-                                        <a id="sidebarNavTogglerSignin" href="javascript:;" role="button" class="u-header-topbar__nav-link login_js"
+                                        <a href="javascript:;" role="button" class="u-header-topbar__nav-link login_js sidebarNavTogglerSignin"
                                             aria-controls="sidebarContent"
                                             aria-haspopup="true"
                                             aria-expanded="false"
@@ -196,6 +196,10 @@
                                     </li>
                                     <!-- End FAQs -->
 
+                                    <li class="nav-item u-header__nav-item">
+                                        <a class="nav-link u-header__nav-link" href="{{route('store.campaign')}}" aria-haspopup="true" aria-expanded="false" aria-labelledby="campaign">Campaign</a>
+                                    </li>
+
                                     @foreach ($pages as $page)
                                         <li class="nav-item u-header__nav-item">
                                             <a class="nav-link u-header__nav-link" href="{{ route('front.page_info', $page->slug) }}?page-id={{Crypt::encryptString($page->id)}}" aria-haspopup="true" aria-expanded="false">{{$page->title}}</a>
@@ -262,9 +266,27 @@
 
 
                                 <li class="col d-xl-none px-2 px-sm-3">
-                                    <a href="@if(auth()->check()) {{route('account')}} @else # @endif" class="text-gray-90" data-toggle="tooltip" data-placement="top" title="My Account b">
+                                    @if (auth()->user())
+                                        <a href="{{route('account')}}" class="text-gray-90" data-toggle="tooltip" data-placement="top" title="My Account"><i class="font-size-22 ec ec-user"></i></a>
+
+                                    @else
+                                        <a href="javascript:;" role="button" class="text-gray-90 sidebarNavTogglerSignin"
+                                            aria-controls="sidebarContent"
+                                            aria-haspopup="true"
+                                            aria-expanded="false"
+                                            data-unfold-event="click"
+                                            data-unfold-hide-on-scroll="false"
+                                            data-unfold-target="#sidebarContent"
+                                            data-unfold-type="css-animation"
+                                            data-unfold-animation-in="fadeInRight"
+                                            data-unfold-animation-out="fadeOutRight"
+                                            data-unfold-duration="500">
+                                            <i class="font-size-22 ec ec-user"></i>
+                                        </a>
+                                    @endif
+                                    {{-- <a href="@if(auth()->check()) {{route('account')}} @else # @endif" class="text-gray-90" data-toggle="tooltip" data-placement="top" title="My Account b">
                                         <i class="font-size-22 ec ec-user"></i>
-                                    </a>
+                                    </a> --}}
                                 </li>
                                 <li class="col pr-xl-0 px-2 px-sm-3">
                                     <a href="{{route('cart')}}" class="text-gray-90 position-relative d-flex " data-toggle="tooltip" data-placement="top" title="Cart">
@@ -278,11 +300,12 @@
                                             $cart_amount  = 0;
                                             if (count($carts) > 0){
                                                 foreach ($carts as $key => $cart) {
-                                                    if ($cart->variation_id == 0) {
-                                                        $cart_amount  += (($cart->productInfo->discount_price ?? 0) * $cart->quantity);
-                                                    } else {
-                                                        $cart_amount  += (($cart->varientInfo->discount_price ?? 0) * $cart->quantity);
-                                                    }
+                                                    $cart_amount  += round($cart->cartProductPrice() * $cart->quantity);
+                                                    // if ($cart->variation_id == 0) {
+                                                    //     $cart_amount  += (($cart->productInfo->discount_price ?? 0) * $cart->quantity);
+                                                    // } else {
+                                                    //     $cart_amount  += (($cart->varientInfo->discount_price ?? 0) * $cart->quantity);
+                                                    // }
                                                 }
                                             }
                                             @endphp
@@ -479,7 +502,9 @@
                                                                         </small>
                                                                     </span> <br/>
                                                                 @endif
-                                                                <span class="font-size-14">{{$cart->quantity}} × {{$global_setting->currency ?? ""}} @if ($cart->variation_id == 0){{round($cart->productInfo->discount_price ?? '')}} @else {{round($cart->varientInfo->discount_price ?? 0)}} @endif</span>
+                                                                <span class="font-size-14">{{$cart->quantity}} × {{$global_setting->currency ?? ""}}
+                                                                    {{round($cart->cartProductPrice())}}
+                                                                </span>
                                                             </li>
                                                             <li class="px-2 col-auto">
                                                                 <a href="#" class="text-gray-90"><i data-cart_id="{{$cart->id}}" class="remove-cart ec ec-close-remove"></i></a>
@@ -522,7 +547,7 @@
         }
     });
 
-    $("#sidebarNavTogglerRegister").click(function () {
+    $(".sidebarNavTogglerRegister").click(function () {
         $('#myModal').modal('toggle');
         $('#signup').css('display','block');
         $('#signup').css('opacity','1');
@@ -534,7 +559,7 @@
         $('#tab_section_2').removeClass('fade');
         $('#tab_section_2').addClass('active');
     });
-    $("#sidebarNavTogglerSignin").click(function () {
+    $(".sidebarNavTogglerSignin").click(function () {
         $('#myModal').modal('toggle');
         $('#signup').css('display','block');
         $('#signup').css('opacity','1');

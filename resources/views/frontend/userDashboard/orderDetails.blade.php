@@ -96,7 +96,7 @@
                                 <tr>
                                     <th class="order-id">Item Name</th>
                                     <th class="order-date">Product Price</th>
-                                    <th class="order-date">SD & VAT</th>
+                                    <th class="order-date">VAT</th>
                                     <th class="order-status">Quantity (pcs)</th>
                                     <th class="order-status">Weight</th>
                                     <th class="order-status text-right">Total</th>
@@ -112,7 +112,7 @@
                                     <tr>
                                         <td class="order-id">{{ $order->product ? $order->product->name : '' }}</td>
                                         <td class="order-date">{{$global_setting->currency ?? ""}} {{ number_format($order->f_price, 2, '.', '') }}</td>
-                                        <td class="order-date">{{$global_setting->currency ?? ""}} {{ number_format($order->sd_total, 2, '.', '') }} & {{$global_setting->currency ?? ""}} {{ number_format($order->vat_total, 2, '.', '') }}</td>
+                                        <td class="order-date">{{$global_setting->currency ?? ""}} & {{$global_setting->currency ?? ""}} {{ number_format($order->vat_total, 2, '.', '') }}</td>
                                         <td class="order-date">{{ number_format($order->quantity) ?? 0 }}</td>
                                         @php
                                             $sub_total = $order->price * $order->quantity;

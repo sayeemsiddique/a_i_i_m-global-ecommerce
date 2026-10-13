@@ -94,24 +94,18 @@
                         </td>
 
                         <td data-title="Price" style="white-space: nowrap;" class="text-right">
-                            <span class="">{{$global_setting->currency ?? ""}} @if ($cart->variation_id == 0){{round($cart->productInfo->discount_price ?? '')}} @else {{round($cart->varientInfo->discount_price ?? 0)}} @endif</span>
+                            <span class="">{{$global_setting->currency ?? ""}} {{round($cart->cartProductPrice())}}</span>
                         </td>
 
                         <td data-title="Total" style="white-space: nowrap;">
                             <span class="total_amount d-block text-right">
-                                {{$global_setting->currency ?? ""}} @if ($cart->variation_id == 0)
+                                {{$global_setting->currency ?? ""}}
                                     @php
-                                        $product_total_price +=  ($cart->productInfo->discount_price ?? 0)  * $cart->quantity;
+                                        $product_total_price +=  round($cart->cartProductPrice()  * $cart->quantity);
                                     @endphp
-                                    {{number_format((($cart->productInfo->discount_price ?? 0)  * $cart->quantity),0,".","")}}
+                                    {{round(($cart->cartProductPrice() * $cart->quantity))}}
 
-                                @else
-                                    @php
-                                        $product_total_price +=  ($cart->varientInfo->discount_price ?? 0)  * $cart->quantity;
-                                    @endphp
-                                    {{number_format((($cart->varientInfo->discount_price ?? 0) * $cart->quantity),0,".","")}}
 
-                                @endif
                             </span>
                         </td>
 

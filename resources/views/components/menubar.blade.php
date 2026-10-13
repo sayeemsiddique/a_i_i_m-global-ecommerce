@@ -23,7 +23,7 @@
                                 @else
 
                                     <li class="list-inline-item mr-0 u-header-topbar__nav-item u-header-topbar__nav-item-border">
-                                        <a id="sidebarNavTogglerRegister" href="javascript:;" role="button" class="u-header-topbar__nav-link signup_js"
+                                        <a href="javascript:;" role="button" class="u-header-topbar__nav-link signup_js sidebarNavTogglerRegister"
                                             aria-controls="sidebarContent"
                                             aria-haspopup="true"
                                             aria-expanded="false"
@@ -38,7 +38,7 @@
                                         </a>
                                     </li>
                                     <li class="list-inline-item mr-0 u-header-topbar__nav-item u-header-topbar__nav-item-border">
-                                        <a id="sidebarNavTogglerSignin" href="javascript:;" role="button" class="u-header-topbar__nav-link login_js"
+                                        <a href="javascript:;" role="button" class="u-header-topbar__nav-link login_js sidebarNavTogglerSignin"
                                             aria-controls="sidebarContent"
                                             aria-haspopup="true"
                                             aria-expanded="false"
@@ -73,7 +73,7 @@
                         <!-- Nav -->
                         <nav class="navbar navbar-expand u-header__navbar py-0 justify-content-xl-between max-width-270 min-width-270">
                             <!-- Logo -->
-                            <a class="order-1 order-xl-0 navbar-brand u-header__navbar-brand u-header__navbar-brand-center" href="{{route('index')}}" aria-label="Electro">
+                            <a class="order-1 order-xl-0 navbar-brand u-header__navbar-brand u-header__navbar-brand-center" href="{{route('index')}}" aria-label="#">
                                 <img src="{{ asset('storage/setting') }}/{{ $global_setting->logo ?? '' }}" alt="" srcset="">
                             </a>
                             <!-- End Logo -->
@@ -239,7 +239,27 @@
                                 <!-- End Search -->
 
 
-                                <li class="col d-xl-none px-2 px-sm-3"><a href="{{route('account')}}" class="text-gray-90" data-toggle="tooltip" data-placement="top" title="My Account a"><i class="font-size-22 ec ec-user"></i></a></li>
+                                <li class="col d-xl-none px-2 px-sm-3">
+                                    @if (auth()->user())
+                                        <a href="{{route('account')}}" class="text-gray-90" data-toggle="tooltip" data-placement="top" title="My Account"><i class="font-size-22 ec ec-user"></i></a>
+
+                                    @else
+                                        <a href="javascript:;" role="button" class="text-gray-90 sidebarNavTogglerSignin"
+                                            aria-controls="sidebarContent"
+                                            aria-haspopup="true"
+                                            aria-expanded="false"
+                                            data-unfold-event="click"
+                                            data-unfold-hide-on-scroll="false"
+                                            data-unfold-target="#sidebarContent"
+                                            data-unfold-type="css-animation"
+                                            data-unfold-animation-in="fadeInRight"
+                                            data-unfold-animation-out="fadeOutRight"
+                                            data-unfold-duration="500">
+                                            <i class="font-size-22 ec ec-user"></i>
+                                        </a>
+                                    @endif
+
+                                </li>
                                 <li class="col pr-xl-0 px-2 px-sm-3 d-xl-none">
                                     <a href="{{route('cart')}}" class="text-gray-90 position-relative d-flex " data-toggle="tooltip" data-placement="top" title="Cart">
                                         <i class="font-size-22 ec ec-shopping-bag"></i>
@@ -249,11 +269,12 @@
                                             $cart_amount  = 0;
                                             if (count($carts) > 0){
                                                 foreach ($carts as $key => $cart) {
-                                                    if ($cart->variation_id == 0) {
-                                                        $cart_amount  += (($cart->productInfo->discount_price ?? 0) * $cart->quantity);
-                                                    } else {
-                                                        $cart_amount  += (($cart->varientInfo->discount_price ?? 0) * $cart->quantity);
-                                                    }
+                                                    $cart_amount  += round($cart->cartProductPrice() * $cart->quantity);
+                                                    // if ($cart->variation_id == 0) {
+                                                    //     $cart_amount  += (($cart->productInfo->discount_price ?? 0) * $cart->quantity);
+                                                    // } else {
+                                                    //     $cart_amount  += (($cart->varientInfo->discount_price ?? 0) * $cart->quantity);
+                                                    // }
                                                 }
                                             }
                                             @endphp
@@ -303,7 +324,10 @@
                                                                     </span> <br/>
                                                                 @endif
 
-                                                                <span class="font-size-14">{{$cart->quantity}} × {{$global_setting->currency ?? ""}} @if ($cart->variation_id == 0){{round($cart->productInfo->discount_price ?? '')}} @else {{round($cart->varientInfo->discount_price ?? 0)}} @endif</span>
+                                                                <span class="font-size-14">
+                                                                    {{$cart->quantity}} × {{$global_setting->currency ?? ""}}
+                                                                    {{round($cart->cartProductPrice())}}
+                                                                </span>
 
                                                             </li>
                                                             <li class="px-2 col-auto">
@@ -442,6 +466,10 @@
                                 </li>
                                 <!-- End Trending Styles -->
 
+                                <li class="nav-item u-header__nav-item">
+                                    <a class="nav-link u-header__nav-link" href="{{route('store.campaign')}}" aria-haspopup="true" aria-expanded="false" aria-labelledby="campaign">Campaign</a>
+                                </li>
+
                                 @foreach ($pages as $page)
                                     <li class="nav-item u-header__nav-item">
                                         <a class="nav-link u-header__nav-link" href="{{ route('front.page_info', $page->slug) }}?page-id={{Crypt::encryptString($page->id)}}" aria-haspopup="true" aria-expanded="false">{{$page->title}}</a>
@@ -460,6 +488,7 @@
         </div>
         <!-- End Vertical-and-secondary-menu -->
     </div>
+
 </header>
 <!-- ========== END HEADER ========== -->
 @push('script')
@@ -472,7 +501,7 @@
             window.location.replace(url);
         }
     });
-    $("#sidebarNavTogglerRegister").click(function () {
+    $(".sidebarNavTogglerRegister").click(function () {
         $('#myModal').modal('toggle');
         $('#signup').css('display','block');
         $('#signup').css('opacity','1');
@@ -484,7 +513,7 @@
         $('#tab_section_2').removeClass('fade');
         $('#tab_section_2').addClass('active');
     });
-    $("#sidebarNavTogglerSignin").click(function () {
+    $(".sidebarNavTogglerSignin").click(function () {
         $('#myModal').modal('toggle');
         $('#signup').css('display','block');
         $('#signup').css('opacity','1');
